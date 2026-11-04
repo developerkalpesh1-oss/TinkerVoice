@@ -132,8 +132,8 @@ importers:
         specifier: ^2.20.0
         version: 2.23.0(@types/dom-mediacapture-record@1.0.22)
       lucide-react:
-        specifier: ^1.7.0
-        version: 1.67.0(@types/react@19.3.0)(react@19.2.4)
+        specifier: ^1.66.0
+        version: 1.66.0(@types/react@19.3.0)(react@19.2.4)
       next:
         specifier: 16.4.1
         version: 16.4.1(@babel/core@7.29.6)(@opentelemetry/api@1.10.0)(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.107.1)
@@ -229,8 +229,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       lucide-react:
-        specifier: ^0.553.0
-        version: 0.553.0(react@19.2.4)
+        specifier: ^1.66.0
+        version: 1.66.0(@types/react@19.3.0)(react@19.2.4)
       next:
         specifier: 16.4.1
         version: 16.4.1(@babel/core@7.29.6)(@opentelemetry/api@1.10.0)(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.107.1)
@@ -502,8 +502,8 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3
       lucide-react:
-        specifier: ^0.553.0
-        version: 0.553.0(react@19.2.4)
+        specifier: ^1.66.0
+        version: 1.66.0(@types/react@19.3.0)(react@19.2.4)
       motion:
         specifier: ^12.38.0
         version: 12.43.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -5979,13 +5979,8 @@ packages:
     resolution: {integrity: sha512-5J9ysMYUpYIg9RF2vJpy9SinEmSviFSe0GyPpCQ4L5QSkLAgeLXlTAOu2ZwWUU5m+0SBl6gUU1R1ZQB3aKypfA==}
     engines: {bun: '>=1.0.0', deno: '>=1.30.0', node: '>=8.0.0'}
 
-  lucide-react@0.553.0:
-    resolution: {integrity: sha512-BRgX5zrWmNy/lkVAe0dXBgd7XQdZ3HTf+Hwe3c9WK6dqgnj9h+hxV+MDncM88xDWlCq27+TKvHGE70ViODNILw==}
-    peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  lucide-react@1.67.0:
-    resolution: {integrity: sha512-z7kd21YNm/Gw3E7mTnq5dTuvV+yc+OEwA//oDENSG1SbZ/NVgKdjxALJFNdGoC0Ji7HaJR2Dha9ev7VUPxy9CQ==}
+  lucide-react@1.66.0:
+    resolution: {integrity: sha512-8zjbi/Us+ETXqfBwmXF/FHrWGIqOdE6zT1yUdRJLQVoptomSkB0zdFWVIM667t9K8djWDaXdkBkqi2qVTuDNiw==}
     peerDependencies:
       '@types/react': '*'
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -13425,11 +13420,7 @@ snapshots:
 
   lru.min@1.1.5: {}
 
-  lucide-react@0.553.0(react@19.2.4):
-    dependencies:
-      react: 19.2.4
-
-  lucide-react@1.67.0(@types/react@19.3.0)(react@19.2.4):
+  lucide-react@1.66.0(@types/react@19.3.0)(react@19.2.4):
     dependencies:
       react: 19.2.4
     optionalDependencies:
