@@ -259,6 +259,15 @@ export default function AgentConfigPage() {
                     <Radio /> Preview
                   </Button>
                   <Button
+                    variant="default"
+                    className="w-full lg:w-auto"
+                    asChild
+                  >
+                    <Link href={`/agents/${agentId}?tab=call`}>
+                      <Phone /> Call
+                    </Link>
+                  </Button>
+                  <Button
                     variant="outline"
                     className="w-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive lg:w-auto"
                     onClick={() => setDeleteOpen(true)}

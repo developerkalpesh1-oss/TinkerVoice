@@ -162,11 +162,11 @@ export function VoiceTab({ agentId }: { agentId: string }) {
     const form = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
-            voiceId: "aura-2-asteria-en",
+            voiceId: "EXAVITQu4vr4xnSDxMaL",
             agent_language: "en",
-            llmModel: "bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0",
-            sttModel: "deepgram/nova-3",
-            ttsModel: "deepgram/aura-2",
+            llmModel: "openai/gpt-4.1-mini",
+            sttModel: "elevenlabs/scribe_v2_realtime",
+            ttsModel: "elevenlabs/eleven_flash_v2_5",
             timezone: "UTC",
         },
     });
@@ -177,8 +177,8 @@ export function VoiceTab({ agentId }: { agentId: string }) {
             voiceId: config.voiceId,
             agent_language: normalizeLanguageCode(config.agent_language, languages),
             llmModel: config.llmModel,
-            sttModel: config.sttModel ?? "deepgram/nova-3",
-            ttsModel: config.ttsModel ?? "deepgram/aura-2",
+            sttModel: config.sttModel ?? "elevenlabs/scribe_v2_realtime",
+            ttsModel: config.ttsModel ?? "elevenlabs/eleven_flash_v2_5",
             timezone: config.timezone,
         });
     }, [config, form, form.formState.isDirty, languages]);

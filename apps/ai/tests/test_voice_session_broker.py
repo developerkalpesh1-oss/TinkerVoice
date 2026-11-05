@@ -62,6 +62,44 @@ class VoiceSessionBrokerTests(unittest.IsolatedAsyncioTestCase):
         metadata = json.loads(dispatch.calls[0]["metadata"])
         self.assertEqual(metadata["client_metadata"]["mode"], "preview")
 
+    async def test_create_session_rejects_placeholder_livekit_url(self):
+        from handlers.voice_session_broker import VoiceSessionBrokerError
+
+        with patch.dict(
+            os.environ,
+            {
+                "LIVEKIT_URL": "wss://your-livekit-host",
+                "LIVEKIT_API_KEY": "key",
+                "LIVEKIT_API_SECRET": "test-livekit-secret-at-least-32-bytes",
+            },
+            clear=True,
+        ):
+            broker = VoiceSessionBroker(
+                catalog_loader=load_voice_catalog,
+                dispatch_client=FakeDispatchClient(),
+            )
+            with self.assertRaisesRegex(VoiceSessionBrokerError, "LIVEKIT_URL still uses"):
+                await broker.create_session({"participant": {"identity": "caller-1"}})
+
+    async def test_create_session_rejects_placeholder_livekit_credentials(self):
+        from handlers.voice_session_broker import VoiceSessionBrokerError
+
+        with patch.dict(
+            os.environ,
+            {
+                "LIVEKIT_URL": "wss://livekit.example.com",
+                "LIVEKIT_API_KEY": "dev-livekit-api-key",
+                "LIVEKIT_API_SECRET": "test-livekit-secret-at-least-32-bytes",
+            },
+            clear=True,
+        ):
+            broker = VoiceSessionBroker(
+                catalog_loader=load_voice_catalog,
+                dispatch_client=FakeDispatchClient(),
+            )
+            with self.assertRaisesRegex(VoiceSessionBrokerError, "LIVEKIT_API_KEY still uses"):
+                await broker.create_session({"participant": {"identity": "caller-1"}})
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -55,7 +55,7 @@ async def analyze_call(config: dict[str, Any], payload: dict[str, Any]) -> None:
     try:
         fields = {str(index): item for index, item in enumerate(config.get("data_needed") or [])}
         model_config = config.get("voice_config", {}).get("llm")
-        if not model_config or model_config.get("provider") != "bedrock":
+        if not model_config or model_config.get("provider") not in {"bedrock", "openai"}:
             raise ValueError("unsupported analysis model")
         request = json.dumps({
             "callStartedAt": payload["startTime"],

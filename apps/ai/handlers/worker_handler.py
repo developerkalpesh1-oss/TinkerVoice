@@ -16,6 +16,7 @@ from utils.safe_http import safe_https_request
 
 PREVIEW_TRANSCRIPT_TOPIC = "quickvoice.preview.transcript"
 PREVIEW_TRANSCRIPT_TYPE = "preview_user_transcript"
+TINKERISM_CALL_VARIABLE = "tinkerism_call"
 MAX_INITIATION_WEBHOOK_RESPONSE_BYTES = 256_000
 DYNAMIC_VARIABLE_TOKEN_RE = re.compile(r"\{\{\s*([A-Za-z_][A-Za-z0-9_]*)\s*\}\}")
 
@@ -667,6 +668,55 @@ def render_dynamic_variables(template: str, variables: dict[str, Any]) -> str:
         return str(variables[key])
 
     return DYNAMIC_VARIABLE_TOKEN_RE.sub(replace, template)
+
+
+def is_tinkerism_call(config: dict[str, Any]) -> bool:
+    variables = config.get("dynamic_variables")
+    if not isinstance(variables, dict):
+        return False
+    return str(variables.get(TINKERISM_CALL_VARIABLE) or "").strip() == "1"
+
+
+def tinkerism_reply_language(language: Any, transcript: str) -> str | None:
+    """Map a detected caller turn to the TTS language. Unknown results leave the current voice language."""
+    code = str(language or "").strip().lower().replace("_", "-")
+    if code.startswith("hi"):
+        return "hi"
+    if code.startswith("en"):
+        return "en"
+    if any("\u0900" <= character <= "\u097f" for character in transcript):
+        return "hi"
+    return None
+
+
+# One short pause ends the turn. The max delay is the cap, not an extra wait after STT.
+TINKERISM_ENDPOINTING = {"mode": "fixed", "min_delay": 0.1, "max_delay": 0.3}
+
+
+def configure_tinkerism_conversation(session: Any, config: dict[str, Any]) -> None:
+    """Phone turns for Tinkerism only: committed STT ends the turn, then the LLM and TTS reply."""
+    if not is_tinkerism_call(config):
+        return
+    session.update_options(
+        turn_detection="stt",
+        endpointing_opts=dict(TINKERISM_ENDPOINTING),
+        keyterms=["Tinkerism", "website", "websites"],
+    )
+    tts = getattr(session, "tts", None)
+    if tts is None or not hasattr(tts, "update_options") or not hasattr(session, "on"):
+        return
+
+    def follow_caller_language(event: Any) -> None:
+        if not getattr(event, "is_final", False):
+            return
+        language = tinkerism_reply_language(
+            getattr(event, "language", None),
+            str(getattr(event, "transcript", "") or ""),
+        )
+        if language:
+            tts.update_options(language=language)
+
+    session.on("user_input_transcribed", follow_caller_language)
 
 
 def speak_first_message(session: Any, config: dict[str, Any]):

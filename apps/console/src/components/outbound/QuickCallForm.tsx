@@ -51,15 +51,26 @@ function formatProvider(provider: PhoneNumber["provider"]) {
   return provider.toLowerCase() === "telnyx" ? "Telnyx" : "Twilio";
 }
 
-export function QuickCallForm() {
+type QuickCallFormProps = {
+  /** When set, locks the form to this agent and hides the agent picker. */
+  fixedAgentId?: string;
+  /** Hide the multi-agent "Ready lines" aside (useful inside agent Call tab). */
+  hideReadyLines?: boolean;
+};
+
+export function QuickCallForm({
+  fixedAgentId,
+  hideReadyLines = false,
+}: QuickCallFormProps = {}) {
   const { data: agents = [], isLoading: agentsLoading, refetch: refetchAgents } = useAgents();
   const { data: numbers = [], isLoading: numbersLoading, refetch: refetchNumbers } = useNumbers();
   const quickCall = useQuickOutboundCall();
-  const dialableAgents = useMemo(
-    () => asDialableAgents(agents, numbers),
-    [agents, numbers]
-  );
-  const [requestedAgentId, setRequestedAgentId] = useState("");
+  const dialableAgents = useMemo(() => {
+    const ready = asDialableAgents(agents, numbers);
+    if (!fixedAgentId) return ready;
+    return ready.filter((agent) => agent.agentId === fixedAgentId);
+  }, [agents, numbers, fixedAgentId]);
+  const [requestedAgentId, setRequestedAgentId] = useState(fixedAgentId ?? "");
   const [requestedFromNumber, setRequestedFromNumber] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [username, setUsername] = useState("");
@@ -72,9 +83,13 @@ export function QuickCallForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [startedCall, setStartedCall] = useState<StartedCall | null>(null);
 
-  const agentId = dialableAgents.some((agent) => agent.agentId === requestedAgentId)
-    ? requestedAgentId
-    : dialableAgents[0]?.agentId ?? "";
+  const agentId = fixedAgentId
+    ? dialableAgents.some((agent) => agent.agentId === fixedAgentId)
+      ? fixedAgentId
+      : ""
+    : dialableAgents.some((agent) => agent.agentId === requestedAgentId)
+      ? requestedAgentId
+      : dialableAgents[0]?.agentId ?? "";
   const selectedAgent = dialableAgents.find((agent) => agent.agentId === agentId);
   const fromNumber = selectedAgent?.numbers.some(
     (number) => number.number === requestedFromNumber
@@ -179,8 +194,12 @@ export function QuickCallForm() {
     return (
       <EmptyState
         icon={PhoneOutgoing}
-        title="No outbound-ready agents"
-        description="Configure an active agent and assign a phone number before starting an outbound call."
+        title={fixedAgentId ? "This agent is not outbound-ready" : "No outbound-ready agents"}
+        description={
+          fixedAgentId
+            ? "Activate the agent, finish voice configuration, and assign a phone number before placing a phone call."
+            : "Configure an active agent and assign a phone number before starting an outbound call."
+        }
         action={
           <Button variant="outline" onClick={refresh}>
             <RefreshCw /> Refresh
@@ -191,32 +210,42 @@ export function QuickCallForm() {
   }
 
   return (
-    <div className="grid gap-4 pb-20 xl:grid-cols-[minmax(0,1fr)_340px] xl:pb-0">
+    <div
+      className={
+        hideReadyLines
+          ? "grid gap-4 pb-20"
+          : "grid gap-4 pb-20 xl:grid-cols-[minmax(0,1fr)_340px] xl:pb-0"
+      }
+    >
       <form onSubmit={onSubmit} className="border bg-card">
         <div className="flex flex-col gap-2 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-base font-semibold text-foreground">Quick call</h2>
+          <h2 className="text-base font-semibold text-foreground">
+            {fixedAgentId ? "Phone call" : "Quick call"}
+          </h2>
           {selectedNumber ? (
             <Badge variant="outline">{formatProvider(selectedNumber.provider)}</Badge>
           ) : null}
         </div>
 
         <div className="grid gap-5 p-5">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="agent">Agent</Label>
-              <Select value={agentId} onValueChange={selectAgent}>
-                <SelectTrigger id="agent" className="w-full">
-                  <SelectValue placeholder="Select agent" />
-                </SelectTrigger>
-                <SelectContent>
-                  {dialableAgents.map((agent) => (
-                    <SelectItem key={agent.agentId} value={agent.agentId}>
-                      {agent.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <div className={`grid gap-4 ${fixedAgentId ? "" : "md:grid-cols-2"}`}>
+            {fixedAgentId ? null : (
+              <div className="grid gap-2">
+                <Label htmlFor="agent">Agent</Label>
+                <Select value={agentId} onValueChange={selectAgent}>
+                  <SelectTrigger id="agent" className="w-full">
+                    <SelectValue placeholder="Select agent" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {dialableAgents.map((agent) => (
+                      <SelectItem key={agent.agentId} value={agent.agentId}>
+                        {agent.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div className="grid gap-2">
               <Label htmlFor="fromNumber">From</Label>
@@ -323,37 +352,39 @@ export function QuickCallForm() {
         </div>
       </form>
 
-      <aside className="border bg-card p-5">
-        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          <CheckCircle2 className="size-4 text-emerald-500" />
-          Ready lines
-        </div>
-        <div className="mt-4 space-y-3">
-          {dialableAgents.map((agent: DialableAgent) => (
-            <div key={agent.agentId} className="border-b pb-3 last:border-0 last:pb-0">
-              <p className="truncate text-sm font-medium text-foreground">{agent.name}</p>
-              <div className="mt-2 space-y-2">
-                {agent.numbers.map((number) => (
-                  <div
-                    key={number.phId}
-                    className="flex min-w-0 items-center justify-between gap-2 text-xs"
-                  >
-                    <div className="min-w-0">
-                      <p className="truncate text-foreground">
-                        {number.friendlyName || number.number}
-                      </p>
-                      <p className="break-all text-muted-foreground">{number.number}</p>
+      {hideReadyLines ? null : (
+        <aside className="border bg-card p-5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <CheckCircle2 className="size-4 text-emerald-500" />
+            Ready lines
+          </div>
+          <div className="mt-4 space-y-3">
+            {dialableAgents.map((agent: DialableAgent) => (
+              <div key={agent.agentId} className="border-b pb-3 last:border-0 last:pb-0">
+                <p className="truncate text-sm font-medium text-foreground">{agent.name}</p>
+                <div className="mt-2 space-y-2">
+                  {agent.numbers.map((number) => (
+                    <div
+                      key={number.phId}
+                      className="flex min-w-0 items-center justify-between gap-2 text-xs"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-foreground">
+                          {number.friendlyName || number.number}
+                        </p>
+                        <p className="break-all text-muted-foreground">{number.number}</p>
+                      </div>
+                      <Badge variant="secondary" className="shrink-0">
+                        {formatProvider(number.provider)}
+                      </Badge>
                     </div>
-                    <Badge variant="secondary" className="shrink-0">
-                      {formatProvider(number.provider)}
-                    </Badge>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </aside>
+            ))}
+          </div>
+        </aside>
+      )}
     </div>
   );
 }

@@ -16,7 +16,10 @@ from handlers.worker_handler import (
     merge_participant_metadata,
     parse_metadata,
     parse_preview_user_transcript_packet,
+    configure_tinkerism_conversation,
     consume_preview_user_transcript_stream,
+    is_tinkerism_call,
+    tinkerism_reply_language,
     resolve_webhook_dynamic_variables,
     speak_first_message,
     value_at_json_path,
@@ -231,7 +234,7 @@ class WorkerHandlerTests(unittest.TestCase):
         self.assertEqual(provider_section("bedrock/us.amazon.nova-micro-v1:0"), {"provider": "bedrock", "model": "us.amazon.nova-micro-v1:0"})
         self.assertIsNone(provider_section("google/gemini-2.5-flash"))
 
-    def test_attach_resolved_voice_config_resolves_deepgram_aura_2(self):
+    def test_attach_resolved_voice_config_remaps_legacy_deepgram_to_elevenlabs(self):
         config = attach_resolved_voice_config(
             {
                 "agent_language": "en-US",
@@ -242,11 +245,13 @@ class WorkerHandlerTests(unittest.TestCase):
             }
         )
 
+        self.assertEqual(config["voice_config"]["stt"]["provider"], "elevenlabs")
+        self.assertEqual(config["voice_config"]["stt"]["model"], "scribe_v2_realtime")
         self.assertEqual(config["voice_config"]["tts"], {
-            "provider": "deepgram",
-            "model": "aura-2",
-            "voice": "aura-2-asteria-en",
-            "billing_model": "deepgram/aura-2",
+            "provider": "elevenlabs",
+            "model": "eleven_flash_v2_5",
+            "voice": "EXAVITQu4vr4xnSDxMaL",
+            "billing_model": "elevenlabs/eleven_flash_v2_5",
         })
 
     def test_selected_billing_model_ids_preserve_catalog_ids(self):
@@ -493,6 +498,52 @@ class WorkerHandlerTests(unittest.TestCase):
         self.assertEqual(result, "speech-handle")
         self.assertEqual(session.calls, [("Hello caller.", {"allow_interruptions": True})])
 
+    def test_tinkerism_calls_commit_turns_from_stt_and_other_calls_do_not(self):
+        session = SimpleNamespace(update_options=lambda **kwargs: updates.append(kwargs))
+        updates = []
+        configure_tinkerism_conversation(session, {"dynamic_variables": {}})
+        self.assertEqual(updates, [])
+        self.assertFalse(is_tinkerism_call({"dynamic_variables": {"tinkerism_call": "0"}}))
+
+        configure_tinkerism_conversation(session, {"dynamic_variables": {"tinkerism_call": "1"}})
+        self.assertEqual(updates, [{
+            "turn_detection": "stt",
+            "endpointing_opts": {"mode": "fixed", "min_delay": 0.1, "max_delay": 0.3},
+            "keyterms": ["Tinkerism", "website", "websites"],
+        }])
+        self.assertEqual(tinkerism_reply_language("hi-IN", "hello"), "hi")
+        self.assertEqual(tinkerism_reply_language("en", "website"), "en")
+        self.assertEqual(tinkerism_reply_language(None, "नमस्ते"), "hi")
+        self.assertIsNone(tinkerism_reply_language(None, "hello"))
+        languages = []
+        streaming = SimpleNamespace(
+            tts=SimpleNamespace(update_options=lambda **kwargs: languages.append(kwargs)),
+            update_options=lambda **kwargs: None,
+            on=lambda event, handler: handlers.append((event, handler)),
+        )
+        handlers = []
+        configure_tinkerism_conversation(streaming, {"dynamic_variables": {"tinkerism_call": "1"}})
+        self.assertEqual(handlers[0][0], "user_input_transcribed")
+        handlers[0][1](SimpleNamespace(is_final=False, language="hi", transcript="नमस्ते"))
+        handlers[0][1](SimpleNamespace(is_final=True, language="hi-IN", transcript="क्या आप वेबसाइट बनाते हैं"))
+        self.assertEqual(languages, [{"language": "hi"}])
+        rendered = apply_metadata_overrides(
+            {"system_prompt": "Saved prompt.", "first_message": "Saved greeting."},
+            {
+                "direction": "outbound",
+                "first_message": "Hi, this is Tinkerism.",
+                "system_prompt": "Answer the question.",
+                "dynamic_variables": {"tinkerism_call": "1"},
+            },
+        )
+        self.assertTrue(is_tinkerism_call(rendered))
+        self.assertEqual(rendered["first_message"], "Hi, this is Tinkerism.")
+        instructions = build_agent_instructions(rendered)
+        self.assertIn("Do not greet again", instructions)
+        self.assertIn("natural spoken Hindi", instructions)
+        self.assertIn("professional Indian English", instructions)
+        self.assertNotIn("Do not greet again", build_agent_instructions({"system_prompt": "Saved prompt."}))
+
     def test_hindi_agent_localizes_standard_greeting_and_instruction(self):
         session = SimpleNamespace(say=lambda text, **kwargs: text)
         greeting = speak_first_message(session, {
@@ -531,10 +582,10 @@ class WorkerHandlerTests(unittest.TestCase):
         with self.assertRaises(VoiceConfigValidationError):
             attach_resolved_voice_config({
                 "agent_language": "en-IN",
-                "stt_model": "deepgram/nova-3",
+                "stt_model": "elevenlabs/scribe_v2_realtime",
                 "llm_model": "bedrock/us.amazon.nova-micro-v1:0",
-                "tts_model": "deepgram/aura-2",
-                "voice": "aura-2-asteria-en",
+                "tts_model": "elevenlabs/eleven_flash_v2_5",
+                "voice": "not-a-real-voice-id",
             })
 
     def test_parse_preview_user_transcript_packet_accepts_preview_user_text(self):

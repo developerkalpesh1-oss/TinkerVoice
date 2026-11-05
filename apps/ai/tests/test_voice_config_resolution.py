@@ -14,86 +14,23 @@ class VoiceConfigResolutionTests(unittest.TestCase):
         config = resolve_voice_config({}, load_voice_catalog())
 
         self.assertEqual(config["language"], "en")
-        self.assertEqual(config["stt"]["provider"], "deepgram")
-        self.assertEqual(config["stt"]["model"], "nova-3")
-        self.assertEqual(config["stt"]["billing_model"], "deepgram/nova-3")
-        self.assertEqual(config["llm"]["provider"], "bedrock")
+        self.assertEqual(config["stt"]["provider"], "elevenlabs")
+        self.assertEqual(config["stt"]["model"], "scribe_v2_realtime")
+        self.assertEqual(config["stt"]["language"], "auto")
+        self.assertEqual(config["stt"]["billing_model"], "elevenlabs/scribe_v2_realtime")
+        self.assertEqual(config["llm"]["provider"], "openai")
+        self.assertEqual(config["llm"]["model"], "gpt-4.1-mini")
+        self.assertEqual(config["llm"]["billing_model"], "openai/gpt-4.1-mini")
         self.assertTrue(config["llm"]["streaming"])
-        self.assertEqual(config["tts"]["provider"], "deepgram")
+        self.assertEqual(config["tts"]["provider"], "elevenlabs")
+        self.assertEqual(config["tts"]["model"], "eleven_flash_v2_5")
+        self.assertEqual(config["tts"]["voice"], "EXAVITQu4vr4xnSDxMaL")
 
-    def test_resolve_voice_config_accepts_deepgram_aura_2_selection(self):
+    def test_resolve_voice_config_accepts_elevenlabs_scribe_selection(self):
         config = resolve_voice_config(
             {
                 "language": "en",
-                "tts": {"provider": "deepgram", "model": "aura-2", "voice": "aura-2-asteria-en"},
-            },
-            load_voice_catalog(),
-        )
-
-        self.assertEqual(config["tts"]["provider"], "deepgram")
-        self.assertEqual(config["tts"]["model"], "aura-2")
-        self.assertEqual(config["tts"]["voice"], "aura-2-asteria-en")
-
-    def test_prefixed_preview_models_resolve_without_explicit_providers(self):
-        config = resolve_voice_config(
-            {
-                "language": "en-US",
-                "stt": {"model": "deepgram/nova-3"},
-                "llm": {
-                    "model": "bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0"
-                },
-                "tts": {
-                    "model": "deepgram/aura-2",
-                    "voice": "aura-2-asteria-en",
-                },
-            },
-            load_voice_catalog(),
-        )
-
-        self.assertEqual(config["stt"]["model"], "nova-3")
-        self.assertEqual(config["stt"]["billing_model"], "deepgram/nova-3")
-        self.assertEqual(
-            config["llm"]["billing_model"],
-            "bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0",
-        )
-        self.assertEqual(config["tts"]["billing_model"], "deepgram/aura-2")
-
-    def test_hindi_nova_3_uses_multilingual_billing_id_and_runtime_language(self):
-        config = resolve_voice_config(
-            {
-                "language": "hi-IN",
-                "stt": {"model": "deepgram/nova-3"},
-                "tts": {
-                    "model": "elevenlabs/eleven_flash_v2_5",
-                    "voice": "EXAVITQu4vr4xnSDxMaL",
-                },
-            },
-            load_voice_catalog(),
-        )
-
-        self.assertEqual(config["stt"]["model"], "nova-3")
-        self.assertEqual(config["stt"]["language"], "multi")
-        self.assertEqual(
-            config["stt"]["billing_model"],
-            "deepgram/nova-3-multilingual",
-        )
-
-    def test_resolve_voice_config_rejects_unavailable_sarvam_selection(self):
-        with self.assertRaisesRegex(VoiceConfigValidationError, "stt.model is not supported"):
-            resolve_voice_config(
-                {
-                    "language": "hi",
-                    "tts": {"provider": "sarvam", "model": "bulbul:v3", "voice": "shubh"},
-                    "stt": {"provider": "sarvam", "model": "saaras:v3"},
-                },
-                load_voice_catalog(),
-            )
-
-    def test_french_voice_agent_uses_supported_provider_path(self):
-        config = resolve_voice_config(
-            {
-                "language": "fr",
-                "stt": {"provider": "deepgram", "model": "nova-3"},
+                "stt": {"provider": "elevenlabs", "model": "scribe_v2_realtime"},
                 "tts": {
                     "provider": "elevenlabs",
                     "model": "eleven_flash_v2_5",
@@ -102,34 +39,84 @@ class VoiceConfigResolutionTests(unittest.TestCase):
             },
             load_voice_catalog(),
         )
-        self.assertEqual(config["stt"]["language"], "fr")
+
+        self.assertEqual(config["stt"]["provider"], "elevenlabs")
+        self.assertEqual(config["stt"]["model"], "scribe_v2_realtime")
+        self.assertEqual(config["tts"]["voice"], "EXAVITQu4vr4xnSDxMaL")
+
+    def test_prefixed_preview_models_resolve_without_explicit_providers(self):
+        config = resolve_voice_config(
+            {
+                "language": "en-US",
+                "stt": {"model": "elevenlabs/scribe_v2_realtime"},
+                "llm": {
+                    "model": "bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0"
+                },
+                "tts": {
+                    "model": "elevenlabs/eleven_flash_v2_5",
+                    "voice": "EXAVITQu4vr4xnSDxMaL",
+                },
+            },
+            load_voice_catalog(),
+        )
+
+        self.assertEqual(config["stt"]["model"], "scribe_v2_realtime")
+        self.assertEqual(config["stt"]["billing_model"], "elevenlabs/scribe_v2_realtime")
+        self.assertEqual(config["llm"]["provider"], "openai")
+        self.assertEqual(config["llm"]["billing_model"], "openai/gpt-4.1-mini")
+        self.assertEqual(config["tts"]["billing_model"], "elevenlabs/eleven_flash_v2_5")
+
+    def test_legacy_deepgram_stt_and_tts_remap_to_elevenlabs(self):
+        config = resolve_voice_config(
+            {
+                "language": "hi",
+                "stt": {"model": "deepgram/nova-3-multilingual"},
+                "tts": {
+                    "model": "deepgram/aura-2",
+                    "voice": "aura-2-asteria-en",
+                },
+            },
+            load_voice_catalog(),
+        )
+
+        self.assertEqual(config["stt"]["provider"], "elevenlabs")
+        self.assertEqual(config["stt"]["model"], "scribe_v2_realtime")
+        self.assertEqual(config["tts"]["provider"], "elevenlabs")
+        self.assertEqual(config["tts"]["model"], "eleven_flash_v2_5")
+        self.assertEqual(config["tts"]["voice"], "EXAVITQu4vr4xnSDxMaL")
+
+    def test_marathi_language_resolves_with_scribe_and_elevenlabs_tts(self):
+        config = resolve_voice_config(
+            {
+                "language": "mr",
+                "stt": {"model": "elevenlabs/scribe_v2_realtime"},
+                "tts": {
+                    "model": "elevenlabs/eleven_flash_v2_5",
+                    "voice": "EXAVITQu4vr4xnSDxMaL",
+                },
+            },
+            load_voice_catalog(),
+        )
+
+        self.assertEqual(config["language"], "mr")
+        self.assertEqual(config["stt"]["model"], "scribe_v2_realtime")
         self.assertEqual(config["tts"]["model"], "eleven_flash_v2_5")
 
-    def test_filipino_uses_direct_nova_3_not_ten_language_multilingual_mode(self):
-        catalog = load_voice_catalog()
-        base = {
-            "language": "fil",
-            "stt": {"provider": "deepgram", "model": "nova-3"},
-            "tts": {
-                "provider": "elevenlabs",
-                "model": "eleven_flash_v2_5",
-                "voice": "EXAVITQu4vr4xnSDxMaL",
-            },
-        }
-        self.assertEqual(resolve_voice_config(base, catalog)["stt"]["language"], "fil")
-        with self.assertRaisesRegex(VoiceConfigValidationError, "stt.model does not support"):
-            resolve_voice_config({**base, "stt": {"provider": "deepgram", "model": "nova-3-multilingual"}}, catalog)
-
-    def test_non_english_deepgram_voice_is_rejected(self):
-        with self.assertRaisesRegex(VoiceConfigValidationError, "tts.model does not support"):
-            resolve_voice_config(
-                {
-                    "language": "fr",
-                    "stt": {"provider": "deepgram", "model": "nova-3"},
-                    "tts": {"provider": "deepgram", "model": "aura-2", "voice": "aura-2-asteria-en"},
+    def test_french_voice_agent_uses_supported_provider_path(self):
+        config = resolve_voice_config(
+            {
+                "language": "fr",
+                "stt": {"provider": "elevenlabs", "model": "scribe_v2_realtime"},
+                "tts": {
+                    "provider": "elevenlabs",
+                    "model": "eleven_flash_v2_5",
+                    "voice": "EXAVITQu4vr4xnSDxMaL",
                 },
-                load_voice_catalog(),
-            )
+            },
+            load_voice_catalog(),
+        )
+        self.assertEqual(config["language"], "fr")
+        self.assertEqual(config["tts"]["model"], "eleven_flash_v2_5")
 
     def test_resolve_voice_config_rejects_invalid_voice(self):
         with self.assertRaisesRegex(VoiceConfigValidationError, "voice is not supported"):
@@ -137,6 +124,22 @@ class VoiceConfigResolutionTests(unittest.TestCase):
                 {"tts": {"provider": "elevenlabs", "model": "eleven_flash_v2_5", "voice": "missing"}},
                 load_voice_catalog(),
             )
+
+    def test_unprefixed_elevenlabs_model_overrides_default_provider_merge(self):
+        config = resolve_voice_config(
+            {
+                "language": "en",
+                "tts": {
+                    "model": "eleven_turbo_v2_5",
+                    "voice": "UgBBYS2sOqTuMpoF3BR0",
+                },
+            },
+            load_voice_catalog(),
+        )
+
+        self.assertEqual(config["tts"]["provider"], "elevenlabs")
+        self.assertEqual(config["tts"]["model"], "eleven_turbo_v2_5")
+        self.assertEqual(config["tts"]["voice"], "UgBBYS2sOqTuMpoF3BR0")
 
 
 if __name__ == "__main__":

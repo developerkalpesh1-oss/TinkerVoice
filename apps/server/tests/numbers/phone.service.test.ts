@@ -4,7 +4,27 @@ import { test } from "node:test";
 import { TelephonyProvider } from "../../prisma/generated/prisma/client.js";
 import { telnyxClient } from "../../src/config/telnyx.js";
 import { twilioClient } from "../../src/config/twilio.js";
-import { listNumberCountries, searchAvailableNumbers } from "../../src/modules/numbers/phone.service.js";
+import {
+  listNumberCountries,
+  matchOwnedTwilioNumber,
+  searchAvailableNumbers,
+} from "../../src/modules/numbers/phone.service.js";
+
+test("an owned Twilio number can be selected without buying it again", () => {
+  const owned = matchOwnedTwilioNumber([
+    { sid: "PN123", phoneNumber: "+14155550100", friendlyName: "Main line", capabilities: { voice: true } },
+    { sid: "PN456", phoneNumber: "+14155550101", friendlyName: "SMS only", capabilities: { voice: false } },
+  ], "+14155550100");
+  assert.equal("number" in owned && owned.number.sid, "PN123");
+  assert.deepEqual(matchOwnedTwilioNumber([], "+14155550100"), { error: "not-owned" });
+  assert.deepEqual(
+    matchOwnedTwilioNumber(
+      [{ sid: "PN456", phoneNumber: "+14155550101", capabilities: { voice: false } }],
+      "+14155550101",
+    ),
+    { error: "no-voice" },
+  );
+});
 
 test("Telnyx number search maps areaCode to national_destination_code", async (t) => {
   t.mock.method(telnyxClient.countryCoverage, "retrieve", async () => ({ data: {

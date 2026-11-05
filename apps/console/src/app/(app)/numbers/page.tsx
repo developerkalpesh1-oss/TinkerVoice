@@ -44,6 +44,7 @@ import {
     TooltipTrigger,
 } from "@/src/components/ui/tooltip";
 import { BuyNumberDrawer } from "@/src/components/numbers/BuyNumberDrawer";
+import { UseTwilioNumberButton } from "@/src/components/numbers/UseTwilioNumberButton";
 import { AssignAgentSelect } from "@/src/components/numbers/AssignAgentSelect";
 import { ReleaseNumberDialog } from "@/src/components/numbers/ReleaseNumberDialog";
 import { useNumbers } from "@/src/hooks/queries/numbers";
@@ -53,6 +54,15 @@ import { isBuiltInNumberManager } from "@/src/lib/numbers/permissions";
 import { cn } from "@/src/lib/utils";
 
 // ── helpers ───────────────────────────────────────────────────────────────────
+
+function NumberManagementActions() {
+    return (
+        <div className="flex flex-wrap items-center justify-end gap-2">
+            <UseTwilioNumberButton />
+            <BuyNumberDrawer />
+        </div>
+    );
+}
 
 function formatDate(value: string) {
     return new Date(value).toLocaleDateString([], {
@@ -282,7 +292,7 @@ export default function NumbersPage() {
             <PageHeader
                 title="Phone numbers"
                 description="Route owned numbers to agents and keep assignment coverage visible."
-                actions={canManageNumbers ? <BuyNumberDrawer /> : undefined}
+                actions={canManageNumbers ? <NumberManagementActions /> : undefined}
             />
 
             {isLoading ? (
@@ -303,9 +313,9 @@ export default function NumbersPage() {
                     icon={Phone}
                     title="No phone numbers yet"
                     description={canManageNumbers
-                        ? "Buy a number from your telephony provider to start routing calls."
+                        ? "Buy a number, or use a voice number you already own in Twilio."
                         : "No phone numbers have been added to this organization."}
-                    action={canManageNumbers ? <BuyNumberDrawer /> : undefined}
+                    action={canManageNumbers ? <NumberManagementActions /> : undefined}
                 />
             ) : (
                 <>
@@ -584,6 +594,7 @@ export default function NumbersPage() {
                                         <ReleaseNumberDialog
                                             phId={number.phId}
                                             phoneNumber={number.number}
+                                            externallyOwned={number.externallyOwned}
                                         />
                                     ) : null}
                                 </div>
@@ -694,6 +705,7 @@ export default function NumbersPage() {
                                                         <ReleaseNumberDialog
                                                             phId={number.phId}
                                                             phoneNumber={number.number}
+                                                            externallyOwned={number.externallyOwned}
                                                             compact
                                                         />
                                                     ) : null}

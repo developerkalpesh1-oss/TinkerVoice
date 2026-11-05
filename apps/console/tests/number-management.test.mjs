@@ -21,7 +21,7 @@ test("only built-in owners and admins receive phone-number management controls",
   assert.match(page, /isBuiltInNumberManager/);
   assert.match(
     page,
-    /actions=\{canManageNumbers \? <BuyNumberDrawer \/> : undefined\}/,
+    /actions=\{canManageNumbers \? <NumberManagementActions \/> : undefined\}/,
   );
   assert.match(page, /readOnly=\{!canManageNumbers\}/);
   assert.match(page, /canManageNumbers &&[\s\S]*<ReleaseNumberDialog/);

@@ -6,6 +6,7 @@ import type { VoiceCatalog } from "@/src/lib/api/types";
 export const LANGUAGES = [
   { code: "en", label: "English" },
   { code: "hi", label: "Hindi" },
+  { code: "mr", label: "Marathi" },
   { code: "en-IN", label: "English (India)" },
 ] as const;
 
@@ -47,78 +48,6 @@ export interface VoiceOptions {
 }
 
 export const VOICES: Voice[] = [
-  {
-    id: "aura-2-asteria-en",
-    name: "Asteria",
-    provider: "Deepgram",
-    gender: "feminine",
-    locale: "en-US",
-    accent: "American",
-    languages: ["en"],
-    ttsModels: ["deepgram/aura-2"],
-    styles: ["Clear", "Confident", "Energetic"],
-    useCases: ["Advertising", "Customer service"],
-  },
-  {
-    id: "aura-2-apollo-en",
-    name: "Apollo",
-    provider: "Deepgram",
-    gender: "masculine",
-    locale: "en-US",
-    accent: "American",
-    languages: ["en"],
-    ttsModels: ["deepgram/aura-2"],
-    styles: ["Confident", "Comfortable"],
-    useCases: ["Casual chat"],
-  },
-  {
-    id: "aura-2-hera-en",
-    name: "Hera",
-    provider: "Deepgram",
-    gender: "feminine",
-    locale: "en-US",
-    accent: "American",
-    languages: ["en"],
-    ttsModels: ["deepgram/aura-2"],
-    styles: ["Smooth", "Warm", "Professional"],
-    useCases: ["Informative"],
-  },
-  {
-    id: "aura-2-zeus-en",
-    name: "Zeus",
-    provider: "Deepgram",
-    gender: "masculine",
-    locale: "en-US",
-    accent: "American",
-    languages: ["en"],
-    ttsModels: ["deepgram/aura-2"],
-    styles: ["Deep", "Trustworthy", "Smooth"],
-    useCases: ["IVR"],
-  },
-  {
-    id: "aura-2-luna-en",
-    name: "Luna",
-    provider: "Deepgram",
-    gender: "feminine",
-    locale: "en-US",
-    accent: "American",
-    languages: ["en"],
-    ttsModels: ["deepgram/aura-2"],
-    styles: ["Friendly", "Natural"],
-    useCases: ["IVR"],
-  },
-  {
-    id: "aura-2-draco-en",
-    name: "Draco",
-    provider: "Deepgram",
-    gender: "masculine",
-    locale: "en-GB",
-    accent: "British",
-    languages: ["en"],
-    ttsModels: ["deepgram/aura-2"],
-    styles: ["Warm", "Trustworthy", "Baritone"],
-    useCases: ["Storytelling"],
-  },
   {
     id: "21m00Tcm4TlvDq8ikWAM",
     name: "Rachel",
@@ -325,24 +254,9 @@ export function getDefaultVoiceForTtsModel(
 
 export const LLM_MODELS: ModelOption[] = [
   {
-    id: "bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0",
-    label: "Claude Haiku 4.5",
-    provider: "Amazon Bedrock",
-  },
-  {
-    id: "bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0",
-    label: "Claude Sonnet 4.5",
-    provider: "Amazon Bedrock",
-  },
-  {
-    id: "bedrock/us.amazon.nova-micro-v1:0",
-    label: "Amazon Nova Micro",
-    provider: "Amazon Bedrock",
-  },
-  {
-    id: "bedrock/us.amazon.nova-lite-v1:0",
-    label: "Amazon Nova Lite",
-    provider: "Amazon Bedrock",
+    id: "openai/gpt-4.1-mini",
+    label: "GPT-4.1 mini",
+    provider: "OpenAI",
   },
 ];
 
@@ -362,22 +276,10 @@ export const COMMON_TIMEZONES = [
 
 export const STT_MODELS: LanguageAwareModelOption[] = [
   {
-    id: "deepgram/nova-3",
-    label: "Nova-3",
-    provider: "Deepgram",
-    languages: ["en", "en-IN"],
-  },
-  {
-    id: "deepgram/nova-3-multilingual",
-    label: "Nova-3 Multilingual",
-    provider: "Deepgram",
-    languages: ["en", "en-IN", "hi"],
-  },
-  {
-    id: "deepgram/nova-2",
-    label: "Nova-2",
-    provider: "Deepgram",
-    languages: ["en", "en-IN"],
+    id: "elevenlabs/scribe_v2_realtime",
+    label: "Scribe v2 Realtime",
+    provider: "ElevenLabs",
+    languages: [...ALL_LANGUAGE_CODES],
   },
 ];
 
@@ -393,12 +295,6 @@ export const TTS_MODELS: LanguageAwareModelOption[] = [
     label: "Eleven Turbo v2.5",
     provider: "ElevenLabs",
     languages: [...ALL_LANGUAGE_CODES],
-  },
-  {
-    id: "deepgram/aura-2",
-    label: "Aura-2",
-    provider: "Deepgram",
-    languages: ["en"],
   },
 ];
 

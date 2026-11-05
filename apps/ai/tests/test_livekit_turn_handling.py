@@ -25,6 +25,8 @@ class CallerBargeInTests(unittest.IsolatedAsyncioTestCase):
         self.session = eval(compile(ast.Expression(call), MAIN_PATH, "eval"), {
             "AgentSession": AgentSession, "TurnHandlingOptions": TurnHandlingOptions,
             "provider_kwargs": {}, "config": {"ivr_navigation_enabled": False},
+            "prepared_vad": None,
+            "is_tinkerism_call": lambda config: False,
             "silero": SimpleNamespace(VAD=SimpleNamespace(load=lambda: Mock())),
             "inference": SimpleNamespace(TurnDetector=lambda: "vad"),
         })

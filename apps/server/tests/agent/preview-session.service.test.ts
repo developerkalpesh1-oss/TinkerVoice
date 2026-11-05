@@ -124,3 +124,40 @@ test("requestAgentPreviewSession calls AI sessions with internal auth and maps r
   assert.equal(session.agent.dispatchId, "AD_123");
   assert.match(session.expiresAt, /^\d{4}-\d{2}-\d{2}T/);
 });
+
+test("requestAgentPreviewSession surfaces AI detail on failure", async () => {
+  process.env.AI_API_URL = "http://ai.local:5555";
+  process.env.INTERNAL_API_KEY = "internal-key";
+  globalThis.fetch = async () =>
+    Response.json(
+      { detail: "LIVEKIT_URL still uses the local placeholder" },
+      { status: 503 },
+    );
+
+  const { requestAgentPreviewSession } =
+    await import("../../src/modules/agent/agent.service.js");
+
+  await assert.rejects(
+    () =>
+      requestAgentPreviewSession({
+        room: { name: "preview-room" },
+        participant: { identity: "preview-user", name: "Preview user" },
+        config: {
+          language: "en",
+          timezone: "UTC",
+          stt: { model: "nova-3" },
+          llm: { model: "us.amazon.nova-micro-v1:0" },
+          tts: { model: "eleven_flash_v2_5", voice: "EXAVITQu4vr4xnSDxMaL" },
+        },
+        metadata: { mode: "preview", retention: "ephemeral" },
+        ttl_seconds: 10800,
+      }),
+    (error: any) => {
+      assert.match(
+        String(error?.message ?? error),
+        /LIVEKIT_URL still uses the local placeholder/,
+      );
+      return true;
+    },
+  );
+});

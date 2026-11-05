@@ -1198,6 +1198,44 @@ export const swaggerSpec = {
         },
       },
     },
+    "/numbers/twilio": {
+      get: {
+        tags: ["Numbers"],
+        summary: "List voice numbers already owned on the connected Twilio account",
+        security: userAuthSecurity,
+        responses: {
+          200: { description: "Owned Twilio numbers" },
+          401: { $ref: "#/components/responses/Unauthorized" },
+          403: { $ref: "#/components/responses/Forbidden" },
+        },
+      },
+    },
+    "/numbers/import": {
+      post: {
+        tags: ["Numbers"],
+        summary: "Use an already purchased Twilio number",
+        security: userAuthSecurity,
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["phoneNumber"],
+                properties: {
+                  phoneNumber: { type: "string", example: "+14155551234" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          201: { description: "Twilio number added" },
+          401: { $ref: "#/components/responses/Unauthorized" },
+          403: { $ref: "#/components/responses/Forbidden" },
+        },
+      },
+    },
     "/numbers": {
       get: {
         tags: ["Numbers"],

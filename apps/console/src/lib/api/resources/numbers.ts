@@ -25,6 +25,13 @@ export interface BuyNumberInput {
   friendlyName?: string;
 }
 
+export interface OwnedTwilioNumber {
+  sid: string;
+  phoneNumber: string;
+  friendlyName: string;
+  alreadyAdded: boolean;
+}
+
 export interface UpdateNumberInput {
   agentId?: string | null;
   friendlyName?: string;
@@ -39,6 +46,16 @@ export const numbersApi = {
   },
   list: async (): Promise<PhoneNumber[]> => {
     const res = await apiClient.get<ApiEnvelope<PhoneNumber[]>>("/numbers");
+    return res.data.data;
+  },
+  listOwnedTwilio: async (): Promise<OwnedTwilioNumber[]> => {
+    const res = await apiClient.get<ApiEnvelope<OwnedTwilioNumber[]>>("/numbers/twilio");
+    return res.data.data;
+  },
+  importTwilio: async (phoneNumber: string): Promise<PhoneNumber> => {
+    const res = await apiClient.post<ApiEnvelope<PhoneNumber>>("/numbers/import", {
+      phoneNumber,
+    });
     return res.data.data;
   },
   search: async (params: NumberSearchParams): Promise<AvailableNumber[]> => {

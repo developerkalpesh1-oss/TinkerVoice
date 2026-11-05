@@ -684,6 +684,7 @@ model PhoneNumber {
   sid                       String
   friendlyName              String
   provider                  TelephonyProvider        @default(TWILIO)
+  externallyOwned           Boolean                  @default(false)
   billingStatus             PhoneNumberBillingStatus @default(ACTIVE)
   providerMonthlyCostMicros BigInt?
   rentalPriceMicros         BigInt?

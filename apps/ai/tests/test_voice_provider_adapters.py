@@ -14,13 +14,25 @@ class VoiceProviderAdapterTests(unittest.TestCase):
         with patch.dict(os.environ, {"ELEVENLABS_API_KEY": "sample-key"}, clear=True), patch(
             "handlers.voice_provider_adapters.elevenlabs.TTS"
         ) as tts:
-            build_tts_adapter({"provider": "elevenlabs", "model": "eleven_flash_v2_5", "voice": "UgBBYS2sOqTuMpoF3BR0"}, "hi")
-        tts.assert_called_once_with(model="eleven_flash_v2_5", voice_id="UgBBYS2sOqTuMpoF3BR0", language="hi", api_key="sample-key")
+            build_tts_adapter(
+                {
+                    "provider": "elevenlabs",
+                    "model": "eleven_flash_v2_5",
+                    "voice": "UgBBYS2sOqTuMpoF3BR0",
+                },
+                "hi",
+            )
+        tts.assert_called_once_with(
+            model="eleven_flash_v2_5",
+            voice_id="UgBBYS2sOqTuMpoF3BR0",
+            language="hi",
+            api_key="sample-key",
+        )
 
     def setUp(self):
         self.config = {
             "language": "en",
-            "stt": {"provider": "deepgram", "model": "nova-3"},
+            "stt": {"provider": "elevenlabs", "model": "scribe_v2_realtime", "language": "auto"},
             "llm": {"provider": "bedrock", "model": "us.amazon.nova-micro-v1:0", "streaming": True},
             "tts": {
                 "provider": "elevenlabs",
@@ -35,49 +47,155 @@ class VoiceProviderAdapterTests(unittest.TestCase):
             {
                 "AWS_ACCESS_KEY_ID": "a",
                 "AWS_SECRET_ACCESS_KEY": "s",
-                "ELEVENLABS_API_KEY": "e",
             },
             clear=True,
         ):
-            with self.assertRaisesRegex(ProviderAdapterError, "DEEPGRAM_API_KEY"):
+            with self.assertRaisesRegex(ProviderAdapterError, "ELEVENLABS_API_KEY"):
                 build_voice_provider_adapters(self.config)
 
     def test_build_voice_provider_adapters_returns_summary(self):
         with patch.dict(
             os.environ,
             {
-                "DEEPGRAM_API_KEY": "d",
                 "ELEVENLABS_API_KEY": "e",
             },
             clear=True,
         ):
-            adapters = build_voice_provider_adapters(self.config)
+            with (
+                patch("handlers.voice_provider_adapters.elevenlabs.STT"),
+                patch("handlers.voice_provider_adapters.aws.LLM"),
+                patch("handlers.voice_provider_adapters.elevenlabs.TTS"),
+            ):
+                adapters = build_voice_provider_adapters(self.config)
 
-        self.assertEqual(adapters.summary["stt_provider"], "deepgram")
+        self.assertEqual(adapters.summary["stt_provider"], "elevenlabs")
         self.assertEqual(adapters.summary["llm_provider"], "bedrock")
         self.assertEqual(adapters.summary["tts_provider"], "elevenlabs")
 
-    def test_build_voice_provider_adapters_uses_deepgram_aura_2_voice_model(self):
+    def test_openai_llm_uses_livekit_inference_without_aws(self):
+        with patch.dict(os.environ, {"ELEVENLABS_API_KEY": "e"}, clear=True):
+            with (
+                patch("handlers.voice_provider_adapters.elevenlabs.STT"),
+                patch("handlers.voice_provider_adapters.inference.LLM") as llm,
+                patch("handlers.voice_provider_adapters.elevenlabs.TTS"),
+            ):
+                config = {
+                    **self.config,
+                    "llm": {"provider": "openai", "model": "gpt-4.1-mini", "streaming": True},
+                }
+                adapters = build_voice_provider_adapters(config)
+        llm.assert_called_once_with(model="openai/gpt-4.1-mini", extra_kwargs={})
+        self.assertEqual(adapters.summary["llm_provider"], "openai")
+        self.assertEqual(adapters.summary["llm_model"], "gpt-4.1-mini")
+
+    def test_elevenlabs_stt_uses_scribe_realtime_with_auto_language_detection(self):
+        with patch.dict(os.environ, {"ELEVENLABS_API_KEY": "e"}, clear=True):
+            with (
+                patch("handlers.voice_provider_adapters.elevenlabs.STT") as stt,
+                patch("handlers.voice_provider_adapters.aws.LLM"),
+                patch("handlers.voice_provider_adapters.elevenlabs.TTS"),
+            ):
+                build_voice_provider_adapters(self.config)
+
+        stt.assert_called_once_with(
+            model="scribe_v2_realtime",
+            api_key="e",
+            include_language_detection=True,
+            server_vad={},
+            secondary_languages=["en", "hi", "mr"],
+        )
+
+    def test_elevenlabs_stt_hints_primary_language_and_keeps_en_hi_mr_secondaries(self):
         config = {
             **self.config,
-            "tts": {
-                "provider": "deepgram",
-                "model": "aura-2",
-                "voice": "aura-2-asteria-en",
+            "language": "hi",
+            "stt": {
+                "provider": "elevenlabs",
+                "model": "scribe_v2_realtime",
+                "language": "hi",
             },
         }
-        with patch.dict(os.environ, {"DEEPGRAM_API_KEY": "d"}, clear=True):
-            with patch("handlers.voice_provider_adapters.deepgram.TTS") as tts:
+        with patch.dict(os.environ, {"ELEVENLABS_API_KEY": "e"}, clear=True):
+            with (
+                patch("handlers.voice_provider_adapters.elevenlabs.STT") as stt,
+                patch("handlers.voice_provider_adapters.aws.LLM"),
+                patch("handlers.voice_provider_adapters.elevenlabs.TTS"),
+            ):
                 build_voice_provider_adapters(config)
 
-        tts.assert_called_once_with(model="aura-2-asteria-en", api_key="d")
+        stt.assert_called_once_with(
+            model="scribe_v2_realtime",
+            api_key="e",
+            include_language_detection=True,
+            server_vad={},
+            language_code="hi",
+            secondary_languages=["en", "mr"],
+        )
+
+    def test_tinkerism_calls_commit_scribe_sooner_and_other_calls_keep_default_vad(self):
+        from handlers.voice_provider_adapters import TINKERISM_SERVER_VAD
+
+        config = {**self.config, "tinkerism_call": True}
+        with patch.dict(os.environ, {"ELEVENLABS_API_KEY": "e"}, clear=True):
+            with (
+                patch("handlers.voice_provider_adapters.elevenlabs.STT") as stt,
+                patch("handlers.voice_provider_adapters.aws.LLM"),
+                patch("handlers.voice_provider_adapters.elevenlabs.TTS"),
+            ):
+                build_voice_provider_adapters(config)
+
+        kwargs = stt.call_args.kwargs
+        self.assertEqual(kwargs["server_vad"], TINKERISM_SERVER_VAD)
+        self.assertEqual(kwargs["keyterms"], ["Tinkerism", "website", "websites"])
+        self.assertEqual(kwargs["secondary_languages"], ["en", "hi"])
+        self.assertNotIn("language_code", kwargs)
+        self.assertEqual(kwargs["audio_chunk_duration_ms"], 20)
+        self.assertLess(TINKERISM_SERVER_VAD["min_silence_duration_ms"], 250)
+
+    def test_tinkerism_calls_stream_an_indian_english_voice_and_keep_other_voices(self):
+        from handlers.voice_provider_adapters import TINKERISM_TTS_CHUNK_SCHEDULE, TINKERISM_VOICE_ID
+
+        config = {
+            **self.config,
+            "tinkerism_call": True,
+            "llm": {"provider": "openai", "model": "gpt-4.1-mini", "streaming": True},
+        }
+        with patch.dict(os.environ, {"ELEVENLABS_API_KEY": "e"}, clear=True):
+            with (
+                patch("handlers.voice_provider_adapters.elevenlabs.STT"),
+                patch("handlers.voice_provider_adapters.inference.LLM") as llm,
+                patch("handlers.voice_provider_adapters.elevenlabs.TTS") as tts,
+            ):
+                build_voice_provider_adapters(config)
+
+        tts.assert_called_once_with(
+            model="eleven_flash_v2_5",
+            voice_id=TINKERISM_VOICE_ID,
+            language="en",
+            api_key="e",
+            chunk_length_schedule=TINKERISM_TTS_CHUNK_SCHEDULE,
+            streaming_latency=4,
+        )
+        self.assertEqual(TINKERISM_TTS_CHUNK_SCHEDULE[0], 50)
+        llm.assert_called_once_with(
+            model="openai/gpt-4.1-mini",
+            extra_kwargs={"max_completion_tokens": 100},
+        )
+
+    def test_build_voice_provider_adapters_rejects_deepgram(self):
+        config = {
+            **self.config,
+            "stt": {"provider": "deepgram", "model": "nova-3"},
+        }
+        with patch.dict(os.environ, {"ELEVENLABS_API_KEY": "e"}, clear=True):
+            with self.assertRaisesRegex(ProviderAdapterError, "Deepgram STT is no longer supported"):
+                build_voice_provider_adapters(config)
 
     def test_build_voice_provider_adapters_rejects_partial_static_aws_credentials(self):
         with patch.dict(
             os.environ,
             {
                 "AWS_ACCESS_KEY_ID": "a",
-                "DEEPGRAM_API_KEY": "d",
                 "ELEVENLABS_API_KEY": "e",
             },
             clear=True,
@@ -93,7 +211,6 @@ class VoiceProviderAdapterTests(unittest.TestCase):
                 "AWS_SECRET_ACCESS_KEY": "s",
                 "AWS_SESSION_TOKEN": "t",
                 "AWS_REGION": "us-west-2",
-                "DEEPGRAM_API_KEY": "d",
                 "ELEVENLABS_API_KEY": "e",
             },
             clear=True,
@@ -101,6 +218,8 @@ class VoiceProviderAdapterTests(unittest.TestCase):
             with (
                 patch("handlers.voice_provider_adapters.get_session") as get_session,
                 patch("handlers.voice_provider_adapters.aws.LLM") as llm,
+                patch("handlers.voice_provider_adapters.elevenlabs.STT"),
+                patch("handlers.voice_provider_adapters.elevenlabs.TTS"),
             ):
                 build_voice_provider_adapters(self.config)
 
@@ -112,23 +231,6 @@ class VoiceProviderAdapterTests(unittest.TestCase):
             region="us-west-2",
             session=session,
         )
-
-    def test_multilingual_nova_3_uses_runtime_multi_language(self):
-        config = {
-            **self.config,
-            "language": "hi",
-            "stt": {
-                "provider": "deepgram",
-                "model": "nova-3",
-                "language": "multi",
-                "billing_model": "deepgram/nova-3-multilingual",
-            },
-        }
-        with patch.dict(os.environ, {"DEEPGRAM_API_KEY": "d", "ELEVENLABS_API_KEY": "e"}, clear=True):
-            with patch("handlers.voice_provider_adapters.deepgram.STT") as stt:
-                build_voice_provider_adapters(config)
-
-        stt.assert_called_once_with(model="nova-3", language="multi", api_key="d")
 
 
 if __name__ == "__main__":

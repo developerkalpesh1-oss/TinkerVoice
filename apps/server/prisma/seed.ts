@@ -71,7 +71,7 @@ const AGENT_FIXTURES = [
       "You are a friendly sales development rep qualifying inbound leads for QuickVoice. Ask about team size, use case, and timeline. Keep turns under 20 seconds.",
     firstMessage:
       "Hey, thanks for reaching out to QuickVoice! Mind if I ask a few quick questions to point you to the right product?",
-    voiceId: "aura-2-asteria-en",
+    voiceId: "EXAVITQu4vr4xnSDxMaL",
   },
   {
     name: "Support Intake",
@@ -82,7 +82,7 @@ const AGENT_FIXTURES = [
       "You are a polite support agent. Collect the caller's email, account ID, and a one-sentence summary of the issue. Confirm before hanging up.",
     firstMessage:
       "Hi, you've reached QuickVoice support. Can I get your email and a quick description of what's going on?",
-    voiceId: "aura-2-hera-en",
+    voiceId: "EXAVITQu4vr4xnSDxMaL",
   },
   {
     name: "Appointment Setter",
@@ -92,7 +92,7 @@ const AGENT_FIXTURES = [
     systemPrompt:
       "You confirm appointments the day before. Greet by first name, read back the time, and offer to reschedule.",
     firstMessage: "Hi, this is QuickVoice calling to confirm your appointment tomorrow.",
-    voiceId: "aura-2-zeus-en",
+    voiceId: "UgBBYS2sOqTuMpoF3BR0",
   },
 ] as const;
 
@@ -227,9 +227,9 @@ async function main() {
           voice_similarity_boost: 0.75,
           voice_speed: 1.0,
           voice_stability: 0.5,
-          llmModel: "bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0",
-          sttModel: "deepgram/nova-3",
-          ttsModel: "deepgram/aura-2",
+          llmModel: "openai/gpt-4.1-mini",
+          sttModel: "elevenlabs/scribe_v2_realtime",
+          ttsModel: "elevenlabs/eleven_flash_v2_5",
           agent_language: "en",
           timezone: "UTC",
         },

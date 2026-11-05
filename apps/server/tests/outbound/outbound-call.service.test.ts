@@ -239,6 +239,66 @@ test("createQuickOutboundCall stops before billing and dialing when the agent li
   assert.deepEqual(calls, ["failed"]);
 });
 
+test("tinkerism quick calls ring the phone while agent dispatch is still starting", async () => {
+  let releaseDispatch: (value: { dispatchId: string }) => void = () => {};
+  const dispatchGate = new Promise<{ dispatchId: string }>((resolve) => {
+    releaseDispatch = resolve;
+  });
+  let sipStarted = false;
+  const repo = {
+    getDialableNumber: async () => ({
+      number: "+15551230000",
+      sid: "carrier-sid-123",
+      provider: "TWILIO",
+    }),
+    createQuickCall: async (input: any) => ({
+      outboundId: "2b1f6d53-42f5-4cc7-9689-7b6f51a0c113",
+      ...input,
+    }),
+    markInProgress: async (outboundId: string) => ({ outboundId, status: "IN_PROGRESS" }),
+    markFailed: async () => {
+      throw new Error("should not fail");
+    },
+  };
+  const pending = createQuickOutboundCall(
+    {
+      organizationId: "org_123",
+      userId: "user_123",
+      agentId: "8d55565f-1111-4111-8111-f95fd03f0df2",
+      phoneNumber: "+15550001111",
+      fromNumber: "+15551230000",
+      dynamicVariables: { tinkerism_call: "1" },
+    },
+    {
+      repository: repo,
+      sipClient: {
+        createSipParticipant: async () => {
+          sipStarted = true;
+          return { participantId: "sip-participant-123" };
+        },
+      },
+      dispatchClient: {
+        createDispatch: async () => dispatchGate,
+      },
+      outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
+      agentName: "QuickVoice",
+    },
+  );
+
+  try {
+    const deadline = Date.now() + 1000;
+    while (!sipStarted && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+    assert.equal(sipStarted, true);
+    releaseDispatch({ dispatchId: "agent-dispatch-123" });
+    const result = await pending;
+    assert.equal(result.livekitParticipant.participantId, "sip-participant-123");
+  } finally {
+    releaseDispatch({ dispatchId: "agent-dispatch-123" });
+  }
+});
+
 test("createQuickOutboundCall deletes the LiveKit dispatch when SIP participant creation fails", async () => {
   const calls: unknown[] = [];
   const repo = {

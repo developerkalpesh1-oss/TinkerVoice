@@ -87,7 +87,7 @@ class VoiceSampleTests(unittest.IsolatedAsyncioTestCase):
     async def test_invalid_combination_cannot_reach_provider(self):
         with self.assertRaises(VoiceConfigValidationError):
             await voice_samples.synthesize_voice_sample(
-                {**self.payload, "ttsModel": "deepgram/aura-2"}, self.catalog)
+                {**self.payload, "ttsModel": "elevenlabs/not-a-real-model"}, self.catalog)
         self.builder.assert_not_called()
 
     async def test_failed_and_empty_samples_are_not_cached_and_resources_close(self):

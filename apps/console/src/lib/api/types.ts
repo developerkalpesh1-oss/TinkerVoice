@@ -224,6 +224,7 @@ export interface PhoneNumber {
   sid: string;
   friendlyName: string;
   provider: TelephonyProvider;
+  externallyOwned?: boolean;
   createdAt: string;
   updatedAt: string;
   billingStatus: PhoneNumberBillingStatus;

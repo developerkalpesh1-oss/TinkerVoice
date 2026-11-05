@@ -10,6 +10,7 @@ type CreatePhoneNumberInput = {
   sid: string;
   friendlyName: string;
   provider: TelephonyProvider;
+  externallyOwned?: boolean;
   billingStatus?: PhoneNumberBillingStatus;
   providerMonthlyCostMicros?: bigint;
   rentalPriceMicros?: bigint;
@@ -34,6 +35,7 @@ export const createPhoneNumber = async (input: CreatePhoneNumberInput) => {
       sid: input.sid,
       friendlyName: input.friendlyName,
       provider: input.provider,
+      externallyOwned: input.externallyOwned ?? false,
       ...(input.billingStatus ? { billingStatus: input.billingStatus } : {}),
       ...(input.providerMonthlyCostMicros !== undefined
         ? { providerMonthlyCostMicros: input.providerMonthlyCostMicros }

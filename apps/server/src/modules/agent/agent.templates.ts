@@ -5,11 +5,11 @@ type ConfiguredTemplateSlug = Exclude<AgentTemplateSlug, "blank">;
 
 const baseConfig = {
   agent_language: "en",
-  llmModel: "bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0",
-  sttModel: "deepgram/nova-3",
-  ttsModel: "deepgram/aura-2",
+  llmModel: "openai/gpt-4.1-mini",
+  sttModel: "elevenlabs/scribe_v2_realtime",
+  ttsModel: "elevenlabs/eleven_flash_v2_5",
   use_rag: false,
-  voiceId: "aura-2-asteria-en",
+  voiceId: "EXAVITQu4vr4xnSDxMaL",
   initiation_webhook: null,
   post_call_webhook: null,
   variables: {

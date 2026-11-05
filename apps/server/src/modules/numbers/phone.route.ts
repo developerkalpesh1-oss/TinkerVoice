@@ -5,7 +5,11 @@ import { requirePermission } from "../../middleware/authorize.middleware.js";
 import validate from "../../middleware/validate.middleware.js";
 import { requireBuiltInBillingManager } from "../billing/billing-manager.middleware.js";
 import * as phoneController from "./phone.controller.js";
-import { buyNumberSchema, updateNumberSchema } from "./phone.schema.js";
+import {
+  buyNumberSchema,
+  importTwilioNumberSchema,
+  updateNumberSchema,
+} from "./phone.schema.js";
 
 type PhoneRouterDeps = {
   authenticate?: RequestHandler;
@@ -18,6 +22,8 @@ type PhoneRouterDeps = {
   listCountries?: RequestHandler;
   searchNumbers?: RequestHandler;
   listNumbers?: RequestHandler;
+  listOwnedTwilioNumbers?: RequestHandler;
+  importTwilioNumber?: RequestHandler;
   buyNumber?: RequestHandler;
   updateNumber?: RequestHandler;
   deleteNumber?: RequestHandler;
@@ -40,6 +46,10 @@ export function createPhoneRouter(deps: PhoneRouterDeps = {}) {
     deps.requireBillingManager ?? requireBuiltInBillingManager;
   const searchNumbers = deps.searchNumbers ?? phoneController.searchNumbers;
   const listNumbers = deps.listNumbers ?? phoneController.listNumbers;
+  const listOwnedTwilioNumbers =
+    deps.listOwnedTwilioNumbers ?? phoneController.listOwnedTwilioNumbers;
+  const importTwilioNumber =
+    deps.importTwilioNumber ?? phoneController.importTwilioNumber;
   const buyNumber = deps.buyNumber ?? phoneController.buyNumber;
   const updateNumber = deps.updateNumber ?? phoneController.updateNumber;
   const deleteNumber = deps.deleteNumber ?? phoneController.deleteNumber;
@@ -50,6 +60,21 @@ export function createPhoneRouter(deps: PhoneRouterDeps = {}) {
   router.get("/search", authenticate, authorizeCreate, searchNumbers);
 
   router.get("/", authenticate, authorizeRead, listNumbers);
+  router.get(
+    "/twilio",
+    authenticate,
+    authorizeCreate,
+    listOwnedTwilioNumbers,
+  );
+  router.post(
+    "/import",
+    authenticate,
+    authorizeCreate,
+    authorizeBillingManage,
+    requireBillingManager,
+    validate(importTwilioNumberSchema),
+    importTwilioNumber,
+  );
 
   router.post(
     "/",

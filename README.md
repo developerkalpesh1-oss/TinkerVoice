@@ -187,7 +187,6 @@ LIVEKIT_API_SECRET=your-livekit-secret
 AWS_ACCESS_KEY_ID=your-aws-key
 AWS_SECRET_ACCESS_KEY=your-aws-secret
 AWS_REGION=us-east-1
-DEEPGRAM_API_KEY=your-deepgram-key
 ELEVENLABS_API_KEY=your-elevenlabs-key
 ELEVENLABS_DEFAULT_VOICE_ID=your-voice-id
 SARVAM_API_KEY=your-sarvam-key

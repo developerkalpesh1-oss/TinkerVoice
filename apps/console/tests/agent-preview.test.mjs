@@ -37,7 +37,7 @@ test("agent preview panel uses LiveKit microphone flow and is available on the a
 
   assert.match(packageJson, /"livekit-client"/);
   assert.ok(panel.includes("new Room("));
-  assert.ok(panel.includes("createLocalAudioTrack"));
+  assert.ok(panel.includes("acquirePreviewMicrophone"));
   assert.ok(panel.includes("Agent preview"));
   assert.ok(panel.includes("DynamicVariableInputs"));
   assert.ok(panel.includes("Preview variables"));
@@ -66,7 +66,10 @@ test("agent preview renders a conversation view with LiveKit transcript hooks", 
   assert.match(panel, /handleLiveKitData/);
   assert.match(panel, /TextDecoder/);
   assert.match(panel, /TranscriptionReceived/);
+  assert.match(panel, /registerTextStreamHandler/);
+  assert.match(panel, /lk\.transcription/);
   assert.match(panel, /DataReceived/);
+  assert.match(panel, /ignoreExpectedLiveKitDisconnectLogs/);
 });
 
 test("agent preview cancels in-flight microphone acquisition and stops every acquired track", () => {
@@ -77,7 +80,11 @@ test("agent preview cancels in-flight microphone acquisition and stops every acq
   assert.match(panel, /if \(!open\) disconnectPreview\(\)/);
   assert.match(
     panel,
-    /const localTrack = await createLocalAudioTrack[\s\S]*if \(wasCancelled\(\)\) \{[\s\S]*localTrack\.stop\(\)/,
+    /const microphone = await acquirePreviewMicrophone[\s\S]*if \(wasCancelled\(\)\) \{\s*microphone\.track\.stop\(\)/s,
+  );
+  assert.match(
+    panel,
+    /await room\.localParticipant\.publishTrack\(localTrack,[\s\S]*source: Track\.Source\.Microphone[\s\S]*if \(wasCancelled\(\)\) \{\s*localTrack\.stop\(\)/s,
   );
   assert.match(
     panel,

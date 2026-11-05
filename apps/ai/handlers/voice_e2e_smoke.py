@@ -125,8 +125,26 @@ async def create_voice_session(
     if client is None:
         client = httpx.AsyncClient(timeout=30)
     try:
-        response = await client.post(request.url, headers=request.headers, json=request.payload)
-        response.raise_for_status()
+        try:
+            response = await client.post(
+                request.url, headers=request.headers, json=request.payload
+            )
+        except httpx.ConnectError as exc:
+            raise VoiceSmokeError(
+                f"AI API unreachable at {request.url}; start it with "
+                "`task ai:api` (or ensure AI_API_BASE_URL is correct)"
+            ) from exc
+        if response.status_code >= 400:
+            detail = ""
+            try:
+                payload = response.json()
+                if isinstance(payload, dict) and payload.get("detail"):
+                    detail = f": {payload['detail']}"
+            except Exception:
+                detail = f": {response.text[:300]}"
+            raise VoiceSmokeError(
+                f"POST /voice/sessions failed with HTTP {response.status_code}{detail}"
+            )
         body = response.json()
     finally:
         if close_client:

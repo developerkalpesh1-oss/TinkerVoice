@@ -20,12 +20,12 @@ DEFAULT_CONFIG = {
     "first_message": "Hello, how can I help you today?",
     "system_prompt": "You are a friendly, reliable voice assistant that answers questions, explains topics, and completes tasks with available tools.",
     "agent_language": "en-US",
-    "llm_model": "bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0",
-    "llm_provider": "bedrock",
-    "stt_model": "deepgram/nova-3",
-    "tts_model": "deepgram/aura-2",
+    "llm_model": "openai/gpt-4.1-mini",
+    "llm_provider": "openai",
+    "stt_model": "elevenlabs/scribe_v2_realtime",
+    "tts_model": "elevenlabs/eleven_flash_v2_5",
     "use_rag": False,
-    "voice": "aura-2-asteria-en",
+    "voice": "EXAVITQu4vr4xnSDxMaL",
     "data_needed": [],
     "data_evaluation": [],
     "data_extracted": [],
@@ -257,9 +257,48 @@ def _infer_llm_provider(model: str) -> str:
     return "openai"
 
 
+_LEGACY_STT_MODELS = {
+    "deepgram/nova-3": "elevenlabs/scribe_v2_realtime",
+    "deepgram/nova-3-multilingual": "elevenlabs/scribe_v2_realtime",
+    "deepgram/nova-2": "elevenlabs/scribe_v2_realtime",
+    "nova-3": "elevenlabs/scribe_v2_realtime",
+    "nova-3-multilingual": "elevenlabs/scribe_v2_realtime",
+    "nova-2": "elevenlabs/scribe_v2_realtime",
+    "scribe_v2_realtime": "elevenlabs/scribe_v2_realtime",
+    "scribe_v2": "elevenlabs/scribe_v2_realtime",
+}
+_LEGACY_TTS_MODELS = {
+    "deepgram/aura-2": "elevenlabs/eleven_flash_v2_5",
+    "aura-2": "elevenlabs/eleven_flash_v2_5",
+    "eleven_flash_v2_5": "elevenlabs/eleven_flash_v2_5",
+    "eleven_turbo_v2_5": "elevenlabs/eleven_turbo_v2_5",
+    "eleven-flash-v2.5": "elevenlabs/eleven_flash_v2_5",
+    "eleven-turbo-v2.5": "elevenlabs/eleven_turbo_v2_5",
+}
+_LEGACY_TTS_VOICES = {
+    "aura-2-asteria-en": "EXAVITQu4vr4xnSDxMaL",
+    "aura-2-athena-en": "EXAVITQu4vr4xnSDxMaL",
+    "aura-2-apollo-en": "UgBBYS2sOqTuMpoF3BR0",
+    "aura-2-thalia-en": "EXAVITQu4vr4xnSDxMaL",
+    "aura-2-hera-en": "EXAVITQu4vr4xnSDxMaL",
+    "aura-2-zeus-en": "UgBBYS2sOqTuMpoF3BR0",
+    "asteria": "EXAVITQu4vr4xnSDxMaL",
+    "athena": "EXAVITQu4vr4xnSDxMaL",
+    "apollo": "UgBBYS2sOqTuMpoF3BR0",
+    "thalia": "EXAVITQu4vr4xnSDxMaL",
+    "hera": "EXAVITQu4vr4xnSDxMaL",
+    "zeus": "UgBBYS2sOqTuMpoF3BR0",
+}
+
+
 def _normalize_tts_model(model: str) -> str:
     value = model.strip()
+    if value in _LEGACY_TTS_MODELS:
+        return _LEGACY_TTS_MODELS[value]
     if "/" in value:
+        provider, model_id = value.split("/", 1)
+        if provider.lower() == "deepgram":
+            return _LEGACY_TTS_MODELS.get(value, "elevenlabs/eleven_flash_v2_5")
         return value
 
     provider = _infer_tts_provider(value)
@@ -276,22 +315,16 @@ def _infer_tts_provider(model: str) -> str:
         return "openai"
     if lower.startswith("rime-"):
         return "rime"
-    return "deepgram"
+    if lower.startswith("bulbul"):
+        return "sarvam"
+    return "elevenlabs"
 
 
 def _normalize_tts_voice(tts_model: str, voice: str) -> str:
     value = voice.strip()
-    provider = _tts_provider_from_model(tts_model)
-    if provider != "deepgram":
-        return value
-
-    voice_id = value.rsplit("/", 1)[-1]
-    lower = voice_id.lower()
-    if lower.startswith("aura-2-") and lower.endswith("-en"):
-        return voice_id[len("aura-2-") : -len("-en")]
-    if lower.startswith("aura-2-"):
-        return voice_id[len("aura-2-") :]
-    return voice_id
+    if value in _LEGACY_TTS_VOICES:
+        return _LEGACY_TTS_VOICES[value]
+    return value
 
 
 def _tts_provider_from_model(model: str) -> str:
@@ -302,7 +335,12 @@ def _tts_provider_from_model(model: str) -> str:
 
 def _normalize_stt_model(model: str) -> str:
     value = model.strip()
+    if value in _LEGACY_STT_MODELS:
+        return _LEGACY_STT_MODELS[value]
     if "/" in value:
+        provider, _model_id = value.split("/", 1)
+        if provider.lower() == "deepgram":
+            return "elevenlabs/scribe_v2_realtime"
         return value
 
     provider = _infer_stt_provider(value)
@@ -317,9 +355,11 @@ def _infer_stt_provider(model: str) -> str:
         return "gladia"
     if lower.startswith("speechmatics"):
         return "speechmatics"
-    if lower.startswith("elevenlabs"):
+    if lower.startswith("scribe") or lower.startswith("eleven"):
         return "elevenlabs"
-    return "deepgram"
+    if lower.startswith("saaras"):
+        return "sarvam"
+    return "elevenlabs"
 
 
 def _normalize_language(language: str) -> str:
@@ -332,6 +372,7 @@ def _normalize_language(language: str) -> str:
         "fr": "fr-FR",
         "de": "de-DE",
         "hi": "hi-IN",
+        "mr": "mr-IN",
         "pt": "pt-BR",
     }.get(value.lower(), value)
 

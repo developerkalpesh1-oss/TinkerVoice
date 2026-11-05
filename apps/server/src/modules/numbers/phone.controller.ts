@@ -36,6 +36,38 @@ export const searchNumbers = authorized(async (req, res) => {
   });
 });
 
+export const listOwnedTwilioNumbers = authorized(async (req, res) => {
+  const numbers = await phoneService.listOwnedTwilioNumbers(
+    req.auth.activeOrganizationId,
+  );
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Twilio numbers fetched successfully",
+    data: numbers,
+  });
+});
+
+export const importTwilioNumber = authorized(async (req, res) => {
+  const number = await phoneService.importOwnedTwilioNumber({
+    phoneNumber: req.body.phoneNumber,
+    organizationId: req.auth.activeOrganizationId,
+    userId: req.auth!.userId,
+  });
+  res.status(StatusCodes.CREATED).json({
+    success: true,
+    message: "Twilio number added successfully",
+    data: toBillingJson(number),
+  });
+  void recordAuditEvent({
+    organizationId: req.auth.activeOrganizationId,
+    userId: req.auth.userId,
+    action: "phone_number.imported",
+    resourceType: "phone_number",
+    resourceId: number.phId,
+    metadata: { provider: number.provider },
+  });
+});
+
 export const listNumbers = authorized(async (req, res) => {
   const numbers = await phoneService.listOrgNumbers(req.auth.activeOrganizationId);
   res.status(StatusCodes.OK).json({

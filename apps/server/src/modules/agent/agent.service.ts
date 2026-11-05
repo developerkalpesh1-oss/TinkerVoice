@@ -392,7 +392,16 @@ export const requestVoiceSession = async (
   );
 
   if (!response.ok) {
-    throw new CustomApiError(unavailableMessage, 503);
+    let detail = unavailableMessage;
+    try {
+      const errorBody = (await response.json()) as { detail?: unknown };
+      if (typeof errorBody.detail === "string" && errorBody.detail.trim()) {
+        detail = `${unavailableMessage}: ${errorBody.detail.trim()}`;
+      }
+    } catch {
+      // Keep the generic message when the AI response is not JSON.
+    }
+    throw new CustomApiError(detail, 503);
   }
 
   const body = (await response.json()) as {
@@ -677,15 +686,24 @@ async function withEstimatedPrice<
   if (!resolved)
     return { ...configuration, estimatedPricePerMinuteMicros: null };
   const { catalog } = resolved;
-  return {
-    ...configuration,
-    estimatedPricePerMinuteMicros: estimateConfiguredMinuteMicros({
-      sttModel: configuration.sttModel,
-      llmModel: configuration.llmModel,
-      ttsModel: configuration.ttsModel,
-      rateCatalog: catalog,
-    }).toString(),
-  };
+  try {
+    return {
+      ...configuration,
+      estimatedPricePerMinuteMicros: estimateConfiguredMinuteMicros({
+        sttModel: configuration.sttModel,
+        llmModel: configuration.llmModel,
+        ttsModel: configuration.ttsModel,
+        rateCatalog: catalog,
+      }).toString(),
+    };
+  } catch (error) {
+    // Unknown catalog models must not break config/preview reads; wallet
+    // admission still validates billable models separately when placing calls.
+    if (error instanceof RangeError) {
+      return { ...configuration, estimatedPricePerMinuteMicros: null };
+    }
+    throw error;
+  }
 }
 
 export const getAgentConfigByNumber = async (phoneNumber: string) => {

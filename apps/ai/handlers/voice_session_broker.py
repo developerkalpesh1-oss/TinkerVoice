@@ -11,6 +11,11 @@ from handlers.voice_config_resolution import resolve_voice_config
 
 SCHEMA_VERSION = "quickvoice.voice-session.v1"
 MAX_SESSION_TTL_SECONDS = 10800
+_PLACEHOLDER_LIVEKIT_URL_MARKERS = ("your-livekit-host",)
+_PLACEHOLDER_LIVEKIT_CREDENTIALS = {
+    "dev-livekit-api-key",
+    "dev-livekit-api-secret",
+}
 
 
 class VoiceSessionBrokerError(RuntimeError):
@@ -74,9 +79,9 @@ class VoiceSessionBroker:
         self.dispatch_client = dispatch_client
 
     async def create_session(self, payload: dict[str, Any]) -> dict[str, Any]:
-        livekit_url = _required_env("LIVEKIT_URL")
-        api_key = _required_env("LIVEKIT_API_KEY")
-        api_secret = _required_env("LIVEKIT_API_SECRET")
+        livekit_url = _livekit_url()
+        api_key = _livekit_credential("LIVEKIT_API_KEY")
+        api_secret = _livekit_credential("LIVEKIT_API_SECRET")
         agent_name = os.getenv("LIVEKIT_AGENT_NAME", "quickvoice-voice-agent")
         ttl_seconds = _ttl_seconds(payload)
 
@@ -108,8 +113,12 @@ class VoiceSessionBroker:
                 api_key=api_key,
                 api_secret=api_secret,
             ).create_dispatch(room_name, agent_name, dispatch_metadata)
+        except VoiceSessionBrokerError:
+            raise
         except Exception as exc:
-            raise VoiceSessionBrokerError("LiveKit agent dispatch failed") from exc
+            raise VoiceSessionBrokerError(
+                f"LiveKit agent dispatch failed: {exc}"
+            ) from exc
 
         return {
             "livekit_url": livekit_url,
@@ -138,6 +147,31 @@ def _required_env(name: str) -> str:
     value = os.getenv(name)
     if not value:
         raise VoiceSessionBrokerError(f"{name} is not configured")
+    return value
+
+
+def _livekit_url() -> str:
+    value = _required_env("LIVEKIT_URL").strip()
+    lowered = value.lower()
+    if any(marker in lowered for marker in _PLACEHOLDER_LIVEKIT_URL_MARKERS):
+        raise VoiceSessionBrokerError(
+            "LIVEKIT_URL still uses the local placeholder; set a real LiveKit "
+            "Cloud or self-hosted wss:// URL in apps/ai/.env.dev"
+        )
+    if not lowered.startswith(("wss://", "ws://", "https://", "http://")):
+        raise VoiceSessionBrokerError(
+            "LIVEKIT_URL must be an absolute ws(s):// or http(s):// URL"
+        )
+    return value
+
+
+def _livekit_credential(name: str) -> str:
+    value = _required_env(name).strip()
+    if value in _PLACEHOLDER_LIVEKIT_CREDENTIALS:
+        raise VoiceSessionBrokerError(
+            f"{name} still uses the local placeholder; set real LiveKit "
+            "API credentials in apps/ai/.env.dev"
+        )
     return value
 
 

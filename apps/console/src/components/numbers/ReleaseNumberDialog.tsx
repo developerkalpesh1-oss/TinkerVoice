@@ -22,10 +22,12 @@ import { useReleaseNumber } from "@/src/hooks/queries/numbers";
 export function ReleaseNumberDialog({
   phId,
   phoneNumber,
+  externallyOwned = false,
   compact = false,
 }: {
   phId: string;
   phoneNumber: string;
+  externallyOwned?: boolean;
   compact?: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -37,7 +39,7 @@ export function ReleaseNumberDialog({
   async function confirmRelease() {
     if (!confirmed || release.isPending) return;
     try {
-      await release.mutateAsync(phId);
+      await release.mutateAsync({ phId, externallyOwned });
       setOpen(false);
       setConfirmation("");
     } catch {
@@ -67,18 +69,20 @@ export function ReleaseNumberDialog({
           aria-label={`Release ${phoneNumber}`}
         >
           <Trash2 />
-          {compact ? null : "Release number"}
+          {compact ? null : externallyOwned ? "Remove" : "Release number"}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Release {phoneNumber} permanently?
+            {externallyOwned
+              ? `Remove ${phoneNumber} from TinkerVoice?`
+              : `Release ${phoneNumber} permanently?`}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This immediately removes the number from QuickVoice and releases it
-            at the telephony provider. Calls and routing stop, and the same
-            number may never be available to buy again. This cannot be undone.
+            {externallyOwned
+              ? "This removes the number from TinkerVoice only. It stays on your Twilio account, and you can add it again later."
+              : "This immediately removes the number from QuickVoice and releases it at the telephony provider. Calls and routing stop, and the same number may never be available to buy again. This cannot be undone."}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -86,9 +90,9 @@ export function ReleaseNumberDialog({
           <div className="flex items-start gap-2">
             <TriangleAlert className="mt-0.5 size-4 shrink-0" />
             <p>
-              Releasing does not preserve or reserve this number. Update any
-              published caller IDs, forwarding rules, and customer records
-              first.
+              {externallyOwned
+                ? "Calls from TinkerVoice stop. The number remains purchased in Twilio."
+                : "Releasing does not preserve or reserve this number. Update any published caller IDs, forwarding rules, and customer records first."}
             </p>
           </div>
         </div>
@@ -124,7 +128,7 @@ export function ReleaseNumberDialog({
                 <Loader2 className="animate-spin" /> Releasing…
               </>
             ) : (
-              "Release permanently"
+              externallyOwned ? "Remove from TinkerVoice" : "Release permanently"
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

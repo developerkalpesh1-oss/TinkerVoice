@@ -19,6 +19,9 @@ def main() -> int:
     load_default_env(args.env_file)
 
     run_id = f"phase2d-{int(time.time())}"
+    config = json.loads(args.config_json) if args.config_json else {}
+    if not config:
+        config = default_smoke_voice_config(args.probe_language)
     settings = SmokeSettings(
         api_base_url=args.api_base_url,
         internal_api_key=required_env("INTERNAL_API_KEY"),
@@ -27,12 +30,13 @@ def main() -> int:
         participant_identity=args.participant_identity or run_id,
         participant_name=args.participant_name,
         probe_text=args.probe_text,
-        config=json.loads(args.config_json) if args.config_json else {},
+        config=config,
         metadata={"run_id": run_id},
         probe_wav_path=args.probe_wav,
-        elevenlabs_api_key=os.getenv("ELEVENLABS_API_KEY"),
-        elevenlabs_voice_id=os.getenv("ELEVENLABS_DEFAULT_VOICE_ID"),
-        elevenlabs_model=os.getenv("ELEVENLABS_DEFAULT_MODEL", "eleven_flash_v2_5"),
+        elevenlabs_api_key=os.getenv("ELEVENLABS_API_KEY") or None,
+        elevenlabs_voice_id=os.getenv("ELEVENLABS_DEFAULT_VOICE_ID") or None,
+        elevenlabs_model=os.getenv("ELEVENLABS_DEFAULT_MODEL", "eleven_flash_v2_5")
+        or "eleven_flash_v2_5",
         elevenlabs_language=args.probe_language,
         wait_timeout_seconds=args.timeout,
         min_agent_audio_frames=args.min_agent_audio_frames,
@@ -57,7 +61,10 @@ def parse_args() -> argparse.Namespace:
         "--probe-text",
         default="Hello, please reply with one short sentence.",
     )
-    parser.add_argument("--probe-language", default=os.getenv("DEEPGRAM_DEFAULT_LANGUAGE", "en"))
+    parser.add_argument(
+        "--probe-language",
+        default=os.getenv("ELEVENLABS_DEFAULT_LANGUAGE", "en"),
+    )
     parser.add_argument("--probe-wav", help="Optional 16-bit PCM WAV file to publish instead of generated speech.")
     parser.add_argument("--config-json", help="Optional session config JSON.")
     parser.add_argument("--timeout", type=float, default=90.0)
@@ -87,8 +94,30 @@ def load_env_file(path: str) -> None:
         key, value = line.split("=", 1)
         key = key.strip()
         value = value.strip().strip('"').strip("'")
-        if key:
-            os.environ.setdefault(key, value)
+        if not key:
+            continue
+        # Allow a later non-empty file value to replace an earlier empty one.
+        # Never overwrite a non-empty process environment variable.
+        current = os.environ.get(key)
+        if current is None or (not current and value):
+            os.environ[key] = value
+
+
+def default_smoke_voice_config(language: str) -> dict:
+    """Prefer ElevenLabs when configured so smoke does not depend on Deepgram defaults."""
+    voice_id = (os.getenv("ELEVENLABS_DEFAULT_VOICE_ID") or "").strip()
+    api_key = (os.getenv("ELEVENLABS_API_KEY") or "").strip()
+    if not api_key or not voice_id:
+        return {}
+    model = (os.getenv("ELEVENLABS_DEFAULT_MODEL") or "eleven_flash_v2_5").strip()
+    return {
+        "language": language,
+        "tts": {
+            "provider": "elevenlabs",
+            "model": model,
+            "voice": voice_id,
+        },
+    }
 
 
 def required_env(name: str) -> str:

@@ -54,6 +54,14 @@ before(async () => {
         calls.push("list-handler");
         res.status(200).json({ success: true, data: [] });
       },
+      listOwnedTwilioNumbers: (_req, res) => {
+        calls.push("twilio-handler");
+        res.status(200).json({ success: true, data: [] });
+      },
+      importTwilioNumber: (_req, res) => {
+        calls.push("import-handler");
+        res.status(201).json({ success: true });
+      },
       buyNumber: (_req, res) => {
         calls.push("buy-handler");
         res.status(201).json({ success: true });
@@ -151,6 +159,27 @@ test("listing remains read-only and does not require billing management", async 
   assert.deepEqual(calls, ["auth", "phone:read", "list-handler"]);
 });
 
+
+test("using an existing Twilio number requires create and billing management", async () => {
+  const listed = await requestJson(`${baseUrl}/api/v1/numbers/twilio`);
+  assert.equal(listed.status, 200);
+  assert.deepEqual(calls, ["auth", "phone:create", "twilio-handler"]);
+
+  calls = [];
+  const imported = await requestJson(`${baseUrl}/api/v1/numbers/import`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phoneNumber: "+14155550123" }),
+  });
+  assert.equal(imported.status, 201);
+  assert.deepEqual(calls, [
+    "auth",
+    "phone:create",
+    "billing:manage",
+    "owner-or-admin",
+    "import-handler",
+  ]);
+});
 
 test("country discovery requires authentication and number-create permission", async () => {
   const response = await requestJson(`${baseUrl}/api/v1/numbers/countries?provider=TWILIO`);

@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  createLocalAudioTrack,
   Room,
   RoomEvent,
   Track,
@@ -42,6 +41,12 @@ import {
   normalizeAgentVariables,
   uniqueDynamicVariableNames,
 } from "@/src/lib/agents/dynamic-variables";
+import {
+  acquirePreviewMicrophone,
+  formatMicrophoneError,
+  observePreviewMicrophoneLevel,
+} from "@/src/lib/agents/preview-microphone";
+import { ignoreExpectedLiveKitDisconnectLogs } from "@/src/lib/agents/livekit-preview-logs";
 import { cn } from "@/src/lib/utils";
 
 type PreviewState =
@@ -72,6 +77,39 @@ type AgentPreviewPanelProps = {
   onOpenChange: (open: boolean) => void;
 };
 
+const TRANSCRIPTION_TOPIC = "lk.transcription";
+
+function visibleTranscriptionText(raw: string): string {
+  const parts: string[] = [];
+  for (const line of raw.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    try {
+      const parsed = JSON.parse(trimmed) as { text?: unknown };
+      if (typeof parsed.text === "string" && parsed.text.trim()) {
+        parts.push(parsed.text);
+        continue;
+      }
+    } catch {
+      // A chunk can split a JSON line. Keep the raw text if it is not JSON.
+    }
+    if (!trimmed.startsWith("{")) parts.push(trimmed);
+  }
+  return parts.join("");
+}
+
+function transcriptionRole(
+  identity: string,
+  trackId: string | undefined,
+  localIdentity: string,
+  localTrackSid: string | null,
+): ConversationMessage["role"] {
+  if (localTrackSid && trackId === localTrackSid) return "user";
+  if (identity && localIdentity && identity === localIdentity) return "user";
+  if (identity.startsWith("agent-")) return "agent";
+  return "user";
+}
+
 const statusCopy: Record<PreviewState, string> = {
   idle: "Ready",
   requesting: "Requesting microphone",
@@ -91,6 +129,7 @@ export function AgentPreviewPanel({
   const { data: config } = useAgentConfig(agentId);
   const roomRef = useRef<Room | null>(null);
   const localTrackRef = useRef<LocalAudioTrack | null>(null);
+  const localPublicationSidRef = useRef<string | null>(null);
   const previewAttemptRef = useRef(0);
   const remoteAudioRef = useRef<HTMLDivElement | null>(null);
   const [preview, setPreview] = useState<AgentPreviewSession | null>(null);
@@ -101,7 +140,7 @@ export function AgentPreviewPanel({
   const [conversationMessages, setConversationMessages] = useState<
     ConversationMessage[]
   >([]);
-  const [interimTranscript, setInterimTranscript] = useState("");
+  const [micLevel, setMicLevel] = useState(0);
   const [previewVariableValues, setPreviewVariableValues] = useState<
     Record<string, string>
   >({});
@@ -124,22 +163,23 @@ export function AgentPreviewPanel({
     );
   }, []);
 
-  const addConversationMessage = useCallback(
-    (role: ConversationMessage["role"], text: string, pending = false) => {
+  const upsertConversationMessage = useCallback(
+    (id: string, role: ConversationMessage["role"], text: string, final: boolean) => {
       const trimmedText = text.trim();
       if (!trimmedText) return;
-
-      setConversationMessages((current) =>
-        [
-          ...current,
-          {
-            id: `${Date.now()}-${current.length}`,
-            role,
-            text: trimmedText,
-            pending,
-          },
-        ].slice(-24),
-      );
+      setConversationMessages((current) => {
+        const nextMessage: ConversationMessage = {
+          id,
+          role,
+          text: trimmedText,
+          pending: !final,
+        };
+        const index = current.findIndex((message) => message.id === id);
+        if (index === -1) return [...current, nextMessage].slice(-24);
+        const next = current.slice();
+        next[index] = nextMessage;
+        return next;
+      });
     },
     [],
   );
@@ -150,24 +190,29 @@ export function AgentPreviewPanel({
       segmentList.forEach((segment) => {
         if (!segment || typeof segment !== "object") return;
         const value = segment as {
+          id?: unknown;
           text?: unknown;
           final?: unknown;
           isFinal?: unknown;
         };
         const text = typeof value.text === "string" ? value.text : "";
         if (!text.trim()) return;
-        const isFinal = Boolean(value.final ?? value.isFinal);
         const role = participant?.identity?.startsWith("agent-")
           ? "agent"
           : "user";
-        if (isFinal) {
-          addConversationMessage(role, text);
-        } else if (role === "user") {
-          setInterimTranscript(text);
-        }
+        const id =
+          typeof value.id === "string" && value.id
+            ? value.id
+            : `${role}-${text}`;
+        upsertConversationMessage(
+          id,
+          role,
+          text,
+          Boolean(value.final ?? value.isFinal),
+        );
       });
     },
-    [addConversationMessage],
+    [upsertConversationMessage],
   );
 
   const handleLiveKitData = useCallback(
@@ -189,13 +234,13 @@ export function AgentPreviewPanel({
             ? "agent"
             : "user";
         if (parsed.type === "transcript" || parsed.type === "message") {
-          addConversationMessage(role, text);
+          upsertConversationMessage(`${role}-${text}`, role, text, true);
         }
       } catch {
         // Non-transcript data packets are expected in LiveKit rooms.
       }
     },
-    [addConversationMessage],
+    [upsertConversationMessage],
   );
 
   const attachRemoteAudio = useCallback((track: RemoteTrack) => {
@@ -214,11 +259,16 @@ export function AgentPreviewPanel({
 
   const disconnectPreview = useCallback(() => {
     previewAttemptRef.current += 1;
-    localTrackRef.current?.stop();
-    localTrackRef.current = null;
-    cleanupAudioElements();
-    roomRef.current?.disconnect();
+    const room = roomRef.current;
+    const track = localTrackRef.current;
     roomRef.current = null;
+    localTrackRef.current = null;
+    localPublicationSidRef.current = null;
+    // Close the room first so LiveKit detaches data-channel handlers before
+    // the peer connection aborts them.
+    room?.disconnect();
+    track?.stop();
+    cleanupAudioElements();
   }, [cleanupAudioElements]);
 
   const endPreview = useCallback(async () => {
@@ -229,6 +279,7 @@ export function AgentPreviewPanel({
   }, [disconnectPreview]);
 
   useEffect(() => {
+    ignoreExpectedLiveKitDisconnectLogs();
     return () => {
       disconnectPreview();
     };
@@ -258,18 +309,40 @@ export function AgentPreviewPanel({
         text: "Call started",
       },
     ]);
-    setInterimTranscript("");
     setState("requesting");
     addEvent("Microphone", "Waiting for browser permission.");
 
+    let localTrack: LocalAudioTrack | null = null;
     try {
+      // Acquire the mic before creating a billed LiveKit session so permission
+      // / device failures fail fast with a clear message.
+      const microphone = await acquirePreviewMicrophone((detail) => {
+        addEvent("Microphone", detail);
+      });
+      if (wasCancelled()) {
+        microphone.track.stop();
+        return;
+      }
+      localTrack = microphone.track;
+      localTrackRef.current = localTrack;
+      addEvent(
+        "Microphone",
+        microphone.fallbackUsed
+          ? `Using fallback capture (${microphone.deviceLabel}).`
+          : `Microphone ready (${microphone.deviceLabel}).`,
+      );
+
       const session = await createPreview.mutateAsync({
         dynamicVariables: dynamicVariablePayload(
           agentVariables,
           previewVariableValues,
         ),
       });
-      if (wasCancelled()) return;
+      if (wasCancelled()) {
+        localTrack.stop();
+        localTrackRef.current = null;
+        return;
+      }
       setPreview(session);
       setState("connecting");
       addEvent("Session", "Temporary LiveKit room created.");
@@ -315,26 +388,60 @@ export function AgentPreviewPanel({
         room.on(transcriptionEvent, handleLiveKitTranscript);
       }
       room.on(RoomEvent.DataReceived, handleLiveKitData);
+      room.registerTextStreamHandler(TRANSCRIPTION_TOPIC, (reader, participant) => {
+        const attributes = reader.info.attributes ?? {};
+        const segmentId = String(
+          attributes["lk.segment_id"] || reader.info.id || Date.now(),
+        );
+        void (async () => {
+          let raw = "";
+          for await (const chunk of reader) {
+            raw += chunk;
+            const text = visibleTranscriptionText(raw);
+            if (!text) continue;
+            upsertConversationMessage(
+              segmentId,
+              transcriptionRole(
+                participant.identity,
+                attributes["lk.transcribed_track_id"],
+                room.localParticipant.identity,
+                localPublicationSidRef.current,
+              ),
+              text,
+              false,
+            );
+          }
+          const text = visibleTranscriptionText(raw);
+          if (!text) return;
+          const finalAttributes = reader.info.attributes ?? attributes;
+          upsertConversationMessage(
+            segmentId,
+            transcriptionRole(
+              participant.identity,
+              finalAttributes["lk.transcribed_track_id"],
+              room.localParticipant.identity,
+              localPublicationSidRef.current,
+            ),
+            text,
+            finalAttributes["lk.transcription_final"] !== "false",
+          );
+        })();
+      });
 
       await room.connect(session.livekitUrl, session.participant.token);
       if (wasCancelled()) {
+        localTrack.stop();
+        localTrackRef.current = null;
         room.disconnect();
         return;
       }
-      const localTrack = await createLocalAudioTrack({
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true,
+      const publication = await room.localParticipant.publishTrack(localTrack, {
+        source: Track.Source.Microphone,
       });
+      localPublicationSidRef.current = publication.trackSid;
       if (wasCancelled()) {
         localTrack.stop();
-        room.disconnect();
-        return;
-      }
-      localTrackRef.current = localTrack;
-      await room.localParticipant.publishTrack(localTrack);
-      if (wasCancelled()) {
-        localTrack.stop();
+        localTrackRef.current = null;
         room.disconnect();
         return;
       }
@@ -342,13 +449,11 @@ export function AgentPreviewPanel({
       addEvent("Live", "Speak naturally. The agent can hear your microphone.");
     } catch (err) {
       if (wasCancelled()) return;
+      localTrack?.stop();
+      localTrackRef.current = null;
       await endPreview();
       setState("error");
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Could not start the live preview.",
-      );
+      setError(formatMicrophoneError(err));
     }
   }
 
@@ -369,6 +474,15 @@ export function AgentPreviewPanel({
   const isBusy =
     state === "requesting" || state === "connecting" || createPreview.isPending;
   const isLive = state === "live";
+
+  useEffect(() => {
+    const track = localTrackRef.current;
+    if (!isLive || !track) {
+      setMicLevel(0);
+      return;
+    }
+    return observePreviewMicrophoneLevel(track, setMicLevel);
+  }, [isLive]);
   const isInConversation = Boolean(preview) || isLive;
   const expiresAt = preview?.expiresAt
     ? new Date(preview.expiresAt).toLocaleTimeString([], {
@@ -567,20 +681,15 @@ export function AgentPreviewPanel({
                         "mr-auto rounded-2xl rounded-bl-md border bg-card text-foreground",
                       message.role === "system" &&
                         "mx-auto rounded-full border bg-muted/40 px-3 py-1 text-xs text-muted-foreground",
+                      message.pending && "opacity-80",
                     )}
                   >
                     {message.text}
                   </div>
                 ))}
-                {interimTranscript ? (
-                  <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-md bg-primary/80 px-3 py-2 text-sm leading-relaxed text-primary-foreground opacity-80">
-                    {interimTranscript}
-                  </div>
-                ) : null}
-                {conversationMessages.length === 1 && !interimTranscript ? (
+                {conversationMessages.length === 1 ? (
                   <div className="mx-auto max-w-xs text-center text-xs text-muted-foreground">
-                    Speak naturally. Your words appear here when browser
-                    captions or LiveKit transcription are available.
+                    Speak naturally. Your words and the agent reply appear here as they are recognized.
                   </div>
                 ) : null}
               </div>
@@ -591,7 +700,22 @@ export function AgentPreviewPanel({
 
         <SheetFooter className="border-t bg-background p-4">
           {isLive ? (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex w-full flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <span className="w-16 shrink-0 text-xs text-muted-foreground">
+                  Mic level
+                </span>
+                <div className="h-1.5 flex-1 bg-muted">
+                  <div
+                    className={cn(
+                      "h-full",
+                      micLevel > 0.02 ? "bg-emerald-500" : "bg-amber-500",
+                    )}
+                    style={{ width: `${Math.min(100, Math.round(micLevel * 400))}%` }}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
               <Button variant="outline" onClick={toggleMute}>
                 {muted ? <Mic /> : <MicOff />}
                 {muted ? "Unmute" : "Mute"}
@@ -604,6 +728,7 @@ export function AgentPreviewPanel({
               >
                 <PhoneOff /> End
               </Button>
+            </div>
             </div>
           ) : (
             <Button

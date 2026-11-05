@@ -37,6 +37,17 @@ export type BuyNumberArgs = BuyNumberInput & {
   userId: string;
 };
 
+export const importTwilioNumberSchema = z.object({
+  phoneNumber: z
+    .string()
+    .regex(/^\+[1-9]\d{1,14}$/, "phoneNumber must be E.164 format (e.g. +14155551234)"),
+});
+export type ImportTwilioNumberInput = z.infer<typeof importTwilioNumberSchema>;
+export type ImportTwilioNumberArgs = ImportTwilioNumberInput & {
+  organizationId: string;
+  userId: string;
+};
+
 // Body for PATCH /numbers/:phId. `agentId: null` unlinks; a uuid links to that
 // agent. `agentId` must be explicitly present — partial update surface
 // deliberately narrow for v1.

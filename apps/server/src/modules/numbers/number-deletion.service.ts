@@ -90,17 +90,19 @@ export function createNumberDeleter(deps: NumberDeletionDeps) {
       if (!existing) throw new PhoneNumberReleaseClaimLostError();
     }
 
-    try {
-      if (existing.provider === TelephonyProvider.TWILIO) {
-        await deps.removeTwilioNumber(existing.sid);
-      } else {
-        await deps.deleteTelnyxNumber(existing.sid);
+    if (!existing.externallyOwned) {
+      try {
+        if (existing.provider === TelephonyProvider.TWILIO) {
+          await deps.removeTwilioNumber(existing.sid);
+        } else {
+          await deps.deleteTelnyxNumber(existing.sid);
+        }
+      } catch (error) {
+        // A previous attempt may have released the provider resource and crashed
+        // before deleting the local row. Provider 404 therefore means this step
+        // is already complete and the local cleanup should continue.
+        if (!isProviderNotFoundError(error)) throw error;
       }
-    } catch (error) {
-      // A previous attempt may have released the provider resource and crashed
-      // before deleting the local row. Provider 404 therefore means this step
-      // is already complete and the local cleanup should continue.
-      if (!isProviderNotFoundError(error)) throw error;
     }
 
     const deleted = options.releaseClaim

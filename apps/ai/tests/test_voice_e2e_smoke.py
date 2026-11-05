@@ -75,6 +75,29 @@ class VoiceE2ESmokeTests(unittest.TestCase):
         self.assertEqual(session.dispatch_id, "AD_123")
         self.assertEqual(session.participant_token, "secret-token")
 
+    def test_create_voice_session_surfaces_ai_error_detail(self):
+        from handlers.voice_e2e_smoke import SmokeSettings, VoiceSmokeError, create_voice_session
+
+        async def handler(_request):
+            return httpx.Response(
+                503,
+                json={"detail": "LIVEKIT_URL still uses the local placeholder"},
+            )
+
+        settings = SmokeSettings(
+            api_base_url="https://ai.example.com",
+            internal_api_key="internal-secret",
+            livekit_api_key="lk-key",
+            livekit_api_secret="lk-secret",
+            participant_identity="phase2d-test",
+            participant_name="Phase 2D Test",
+            probe_text="Say hello.",
+        )
+        client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+
+        with self.assertRaisesRegex(VoiceSmokeError, "LIVEKIT_URL still uses"):
+            asyncio.run(create_voice_session(settings, client=client))
+
     def test_smoke_evidence_reports_success_without_token(self):
         from handlers.voice_e2e_smoke import SmokeEvidence
 

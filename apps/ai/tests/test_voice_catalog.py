@@ -16,48 +16,40 @@ class VoiceCatalogTests(unittest.TestCase):
     def test_load_voice_catalog_returns_static_provider_options(self):
         catalog = load_voice_catalog()
 
-        self.assertEqual(catalog["version"], "2026-10-16")
-        self.assertTrue(any(item["provider"] == "deepgram" for item in catalog["stt_models"]))
-        self.assertTrue(any(item["provider"] == "bedrock" for item in catalog["llm_models"]))
+        self.assertEqual(catalog["version"], "2026-11-04")
+        self.assertEqual(catalog["defaults"]["stt"]["provider"], "elevenlabs")
+        self.assertEqual(catalog["defaults"]["stt"]["model"], "scribe_v2_realtime")
+        self.assertEqual(catalog["defaults"]["tts"]["provider"], "elevenlabs")
+        self.assertEqual(catalog["defaults"]["llm"]["provider"], "openai")
+        self.assertEqual(catalog["defaults"]["llm"]["model"], "gpt-4.1-mini")
         self.assertTrue(
             any(
-                item["id"] == "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
-                and item["label"] == "Claude Sonnet 4.5"
+                item["provider"] == "openai"
+                and item["id"] == "gpt-4.1-mini"
+                and item["label"] == "GPT-4.1 mini"
                 for item in catalog["llm_models"]
             )
         )
+        self.assertFalse(any(item["provider"] == "bedrock" for item in catalog["llm_models"]))
         self.assertTrue(any(item["provider"] == "elevenlabs" for item in catalog["tts_models"]))
         self.assertTrue(
             any(
-                item["provider"] == "deepgram"
-                and item["id"] == "aura-2"
-                and item["label"] == "Deepgram Aura-2"
-                for item in catalog["tts_models"]
-            )
-        )
-        self.assertTrue(
-            any(
-                item["provider"] == "deepgram"
-                and item["id"] == "aura-2-asteria-en"
-                and item["runtime_voice"] == "aura-2-asteria-en"
-                and "aura-2" in item["tts_models"]
-                for item in catalog["voices"]
-            )
-        )
-        for category in ("stt_models", "tts_models", "voices"):
-            self.assertFalse(any(item["provider"] == "sarvam" for item in catalog[category]))
-        self.assertTrue(
-            any(
-                item["id"] == "nova-3-multilingual"
-                and item["runtime_model"] == "nova-3"
-                and item["runtime_language"] == "multi"
+                item["provider"] == "elevenlabs"
+                and item["id"] == "scribe_v2_realtime"
+                and item["runtime_language"] == "auto"
                 for item in catalog["stt_models"]
             )
         )
+        self.assertFalse(any(item["provider"] == "deepgram" for item in catalog["stt_models"]))
+        self.assertFalse(any(item["provider"] == "deepgram" for item in catalog["tts_models"]))
+        self.assertFalse(any(item["provider"] == "deepgram" for item in catalog["voices"]))
+        for category in ("stt_models", "tts_models", "voices"):
+            self.assertFalse(any(item["provider"] == "sarvam" for item in catalog[category]))
+        self.assertTrue(any(language["id"] == "mr" for language in catalog["languages"]))
 
     def test_every_listed_language_has_complete_speech_path(self):
         catalog = load_voice_catalog()
-        self.assertEqual(len(catalog["languages"]), 33)
+        self.assertEqual(len(catalog["languages"]), 34)
         for language in catalog["languages"]:
             code = language["id"]
             with self.subTest(language=code):
@@ -74,7 +66,6 @@ class VoiceCatalogTests(unittest.TestCase):
                     )
                     for model in catalog["tts_models"]
                 ))
-        self.assertNotIn("fil", next(model for model in catalog["stt_models"] if model["id"] == "nova-3-multilingual")["languages"])
 
     def test_load_voice_catalog_prefers_configured_json_path(self):
         with tempfile.TemporaryDirectory() as tmp:

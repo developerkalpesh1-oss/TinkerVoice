@@ -40,17 +40,17 @@ test("buildVoiceOptionsFromCatalog maps AI catalog values to console dropdown op
     timezones: ["UTC", "Asia/Kolkata"],
     stt_models: [
       {
-        provider: "deepgram",
-        id: "nova-3",
-        label: "Deepgram Nova-3",
+        provider: "elevenlabs",
+        id: "scribe_v2_realtime",
+        label: "ElevenLabs Scribe v2 Realtime",
         languages: ["en-IN"],
       },
     ],
     llm_models: [
       {
-        provider: "bedrock",
-        id: "us.amazon.nova-lite-v1:0",
-        label: "Amazon Nova Lite",
+        provider: "openai",
+        id: "gpt-4.1-mini",
+        label: "GPT-4.1 mini",
       },
     ],
     tts_models: [
@@ -74,8 +74,8 @@ test("buildVoiceOptionsFromCatalog maps AI catalog values to console dropdown op
 
   assert.deepEqual(plain(options.languages), [{ code: "en-IN", label: "English (India)", sampleText: "Hello! How can I help you today?" }]);
   assert.deepEqual(plain(options.timezones), ["UTC", "Asia/Kolkata"]);
-  assert.equal(options.sttModels[0].id, "deepgram/nova-3");
-  assert.equal(options.llmModels[0].id, "bedrock/us.amazon.nova-lite-v1:0");
+  assert.equal(options.sttModels[0].id, "elevenlabs/scribe_v2_realtime");
+  assert.equal(options.llmModels[0].id, "openai/gpt-4.1-mini");
   assert.equal(options.ttsModels[0].id, "elevenlabs/eleven_flash_v2_5");
   assert.equal(options.voices[0].id, "EXAVITQu4vr4xnSDxMaL");
   assert.deepEqual(plain(options.voices[0].ttsModels), ["elevenlabs/eleven_flash_v2_5"]);
@@ -94,12 +94,27 @@ test("Indian English stays distinct when filtering speech models and voices", ()
   assert.equal(normalizeLanguageCode("en-US"), "en");
   assert.equal(normalizeLanguageCode("es"), "es");
   assert.equal(normalizeLanguageCode("fr-CA", [{ code: "fr" }]), "fr");
-  assert.ok(getSttModelsForLanguage("en-IN").some((model) => model.id === "deepgram/nova-3"));
-  assert.ok(getTtsModelsForLanguage("en-IN").some((model) => model.id === "elevenlabs/eleven_flash_v2_5"));
-  assert.ok(!getTtsModelsForLanguage("en-IN").some((model) => model.id === "deepgram/aura-2"));
+  assert.ok(
+    getSttModelsForLanguage("en-IN").some(
+      (model) => model.id === "elevenlabs/scribe_v2_realtime",
+    ),
+  );
+  assert.ok(
+    getTtsModelsForLanguage("en-IN").some(
+      (model) => model.id === "elevenlabs/eleven_flash_v2_5",
+    ),
+  );
+  assert.ok(
+    !getTtsModelsForLanguage("en-IN").some((model) => model.id === "deepgram/aura-2"),
+  );
   assert.ok(getVoicesForTtsModel("elevenlabs/eleven_flash_v2_5", "en-IN").length > 0);
   assert.ok(!getSttModelsForLanguage("hi").some((model) => model.provider === "Sarvam"));
   assert.ok(!getTtsModelsForLanguage("hi").some((model) => model.provider === "Sarvam"));
+  assert.ok(
+    getSttModelsForLanguage("mr").some(
+      (model) => model.id === "elevenlabs/scribe_v2_realtime",
+    ),
+  );
 });
 
 test("voice tab keeps configured model and voice values visible after refresh", () => {

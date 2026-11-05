@@ -147,3 +147,20 @@ test("each claim verification extends its lease from the current clock", async (
     ["2026-08-01T12:05:00.000Z", "2026-08-01T12:06:00.000Z"],
   );
 });
+
+test("removing an imported Twilio number keeps it on the Twilio account", async () => {
+  const phone = claimedPhone({ externallyOwned: true, billingStatus: "ACTIVE", agentId: null });
+  let providerDeleteCalls = 0;
+  const release = createNumberDeleter(
+    deps({
+      getByIdForOrg: async () => phone,
+      removeTwilioNumber: async () => {
+        providerDeleteCalls += 1;
+      },
+      deletePhoneNumber: async () => true,
+    }),
+  );
+
+  assert.equal(await release("org-1", "phone-1"), true);
+  assert.equal(providerDeleteCalls, 0);
+});

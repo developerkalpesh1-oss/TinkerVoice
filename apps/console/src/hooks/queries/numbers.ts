@@ -41,6 +41,32 @@ export function useNumberSearch(
   });
 }
 
+export function useOwnedTwilioNumbers(enabled: boolean) {
+  return useQuery({
+    queryKey: queryKeys.numbers.twilioOwned(),
+    queryFn: () => numbersApi.listOwnedTwilio(),
+    enabled,
+    retry: false,
+  });
+}
+
+export function useImportTwilioNumber() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (phoneNumber: string) => numbersApi.importTwilio(phoneNumber),
+    onSuccess: async () => {
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: queryKeys.numbers.list() }),
+        qc.invalidateQueries({ queryKey: queryKeys.numbers.twilioOwned() }),
+      ]);
+      toast.success("Twilio number added. Assign it to an agent to use it as the caller ID.");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Could not add the Twilio number");
+    },
+  });
+}
+
 export function useBuyNumber() {
   const qc = useQueryClient();
   return useMutation({
@@ -73,13 +99,19 @@ export function useUpdateNumber() {
 export function useReleaseNumber() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (phId: string) => numbersApi.release(phId),
-    onSuccess: async () => {
+    mutationFn: ({ phId }: { phId: string; externallyOwned?: boolean }) =>
+      numbersApi.release(phId),
+    onSuccess: async (_data, variables) => {
       await Promise.all([
         qc.invalidateQueries({ queryKey: queryKeys.numbers.list() }),
+        qc.invalidateQueries({ queryKey: queryKeys.numbers.twilioOwned() }),
         qc.invalidateQueries({ queryKey: queryKeys.agents.list() }),
       ]);
-      toast.success("Phone number released permanently");
+      toast.success(
+        variables.externallyOwned
+          ? "Removed from TinkerVoice. The number stays on your Twilio account."
+          : "Phone number released permanently",
+      );
     },
     onError: (err: Error) => {
       toast.error(err.message || "Could not release number");

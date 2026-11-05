@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026-09-29.1",
+  "catalogVersion": "2026-11-04.1",
   "currency": "USD",
   "effectiveAt": "2026-09-29T00:00:00.000Z",
   "priceBasis": "regular",
@@ -31,6 +31,10 @@
         "baseMicrosPerAudioMinute": "5834",
         "source": "https://deepgram.com/pricing"
       },
+      "elevenlabs/scribe_v2_realtime": {
+        "baseMicrosPerAudioMinute": "6500",
+        "source": "https://elevenlabs.io/pricing/api"
+      },
       "sarvam/saaras:v3": {
         "baseMicrosPerAudioMinute": "5179",
         "source": "https://www.sarvam.ai/pricing"
@@ -56,6 +60,11 @@
         "baseInputMicrosPerMillionTokens": "60000",
         "baseOutputMicrosPerMillionTokens": "240000",
         "source": "https://aws.amazon.com/bedrock/pricing/"
+      },
+      "openai/gpt-4.1-mini": {
+        "baseInputMicrosPerMillionTokens": "400000",
+        "baseOutputMicrosPerMillionTokens": "1600000",
+        "source": "https://openai.com/api/pricing/"
       }
     },
     "tts": {

@@ -208,23 +208,50 @@ export async function createQuickOutboundCall(
     const metadata = buildOutboundMetadata(args, outbound.outboundId, provider);
     const metadataJson = JSON.stringify(metadata);
     let agentDispatch: unknown;
+    const overlapDial = dynamicVariables.tinkerism_call === "1";
+    const participantOptions = {
+      fromNumber: args.fromNumber,
+      participantIdentity: `outbound-${outbound.outboundId}`,
+      participantName: args.username,
+      participantMetadata: metadataJson,
+      waitUntilAnswered: false,
+      ...outboundCallLimits(),
+    };
     try {
-      agentDispatch = await dispatchClient.createDispatch(roomName, agentName, {
+      const dispatchPromise = dispatchClient.createDispatch(roomName, agentName, {
         metadata: metadataJson,
       });
-      const livekitParticipant = await sipClient.createSipParticipant(
-        trunkId,
-        args.phoneNumber,
-        roomName,
-        {
-          fromNumber: args.fromNumber,
-          participantIdentity: `outbound-${outbound.outboundId}`,
-          participantName: args.username,
-          participantMetadata: metadataJson,
-          waitUntilAnswered: false,
-          ...outboundCallLimits(),
-        }
-      );
+      // Tinkerism starts the phone ring while the agent worker is still being
+      // dispatched. Other calls keep dispatch-then-dial.
+      let sipFailure: unknown;
+      const sipPromise = overlapDial
+        ? sipClient
+            .createSipParticipant(
+              trunkId,
+              args.phoneNumber,
+              roomName,
+              participantOptions,
+            )
+            .then(
+              (participant) => participant,
+              (error: unknown) => {
+                sipFailure = error;
+                return undefined;
+              },
+            )
+        : null;
+      agentDispatch = await dispatchPromise;
+      const livekitParticipant = sipPromise
+        ? await sipPromise
+        : await sipClient.createSipParticipant(
+            trunkId,
+            args.phoneNumber,
+            roomName,
+            participantOptions,
+          );
+      if (sipFailure) {
+        throw sipFailure;
+      }
 
       const updated = await repository.markInProgress(
         outbound.outboundId,
@@ -245,6 +272,9 @@ export async function createQuickOutboundCall(
       return { outbound: updated, livekitParticipant, agentDispatch };
     } catch (error) {
       await cleanupAgentDispatch(dispatchClient, agentDispatch, roomName);
+      if (overlapDial) {
+        await roomClient.deleteRoom(roomName).catch(() => undefined);
+      }
       throw error;
     }
   } catch (error) {

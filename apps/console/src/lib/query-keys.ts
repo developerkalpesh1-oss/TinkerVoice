@@ -17,6 +17,7 @@ export const queryKeys = {
     countries: (provider: string) => [...queryKeys.numbers.all, "countries", provider] as const,
     all: ["numbers"] as const,
     list: () => [...queryKeys.numbers.all, "list"] as const,
+    twilioOwned: () => [...queryKeys.numbers.all, "twilio-owned"] as const,
     search: (p: Record<string, unknown>) =>
       [...queryKeys.numbers.all, "search", p] as const,
   },

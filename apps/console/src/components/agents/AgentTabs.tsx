@@ -7,6 +7,7 @@ import {
   Bot,
   Gauge,
   Globe2,
+  PhoneCall,
   Settings,
   ClipboardCheck,
   Webhook,
@@ -20,6 +21,7 @@ import {
 } from "@/src/components/ui/tabs";
 import { BehaviorTab } from "@/src/components/agents/tabs/BehaviorTab";
 import { VoiceTab } from "@/src/components/agents/tabs/VoiceTab";
+import { CallTab } from "@/src/components/agents/tabs/CallTab";
 import { WebhooksTab } from "@/src/components/agents/tabs/WebhooksTab";
 import { ToolsTab } from "@/src/components/agents/tabs/ToolsTab";
 import { KnowledgeTab } from "@/src/components/agents/tabs/KnowledgeTab";
@@ -31,6 +33,7 @@ import { WebsiteWidgetTab } from "@/src/components/agents/tabs/WebsiteWidgetTab"
 const TABS = [
   { id: "behavior", label: "Behavior", icon: Bot },
   { id: "voice", label: "Models & Voices", icon: AudioLines },
+  { id: "call", label: "Call", icon: PhoneCall },
   { id: "analysis", label: "Analysis", icon: ClipboardCheck },
   { id: "webhooks", label: "Webhooks", icon: Webhook },
   { id: "tools", label: "Tools", icon: Wrench },
@@ -80,6 +83,9 @@ export function AgentTabs({ agentId }: { agentId: string }) {
       </TabsContent>
       <TabsContent value="voice" className="mt-6 min-w-0">
         <VoiceTab agentId={agentId} />
+      </TabsContent>
+      <TabsContent value="call" className="mt-6 min-w-0">
+        <CallTab agentId={agentId} />
       </TabsContent>
       <TabsContent value="analysis" forceMount hidden={current !== "analysis"} className="mt-6 min-w-0">
         <AnalysisTab agentId={agentId} />

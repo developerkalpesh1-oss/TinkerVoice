@@ -5,6 +5,39 @@ class VoiceConfigValidationError(ValueError):
     pass
 
 
+# Existing agents may still store Deepgram STT/TTS ids. Remap them onto the
+# ElevenLabs calling-agent defaults so saved configs keep working.
+_LEGACY_STT = {
+    ("deepgram", "nova-3"): ("elevenlabs", "scribe_v2_realtime"),
+    ("deepgram", "nova-3-general"): ("elevenlabs", "scribe_v2_realtime"),
+    ("deepgram", "nova-3-multilingual"): ("elevenlabs", "scribe_v2_realtime"),
+    ("deepgram", "nova-2"): ("elevenlabs", "scribe_v2_realtime"),
+}
+# Bedrock needs AWS credentials this local stack does not have. Saved agents
+# keep working by resolving onto LiveKit Inference's OpenAI model.
+_LEGACY_LLM = {
+    ("bedrock", "us.anthropic.claude-haiku-4-5-20251001-v1:0"): ("openai", "gpt-4.1-mini"),
+    ("bedrock", "us.anthropic.claude-sonnet-4-5-20250929-v1:0"): ("openai", "gpt-4.1-mini"),
+    ("bedrock", "us.amazon.nova-micro-v1:0"): ("openai", "gpt-4.1-mini"),
+    ("bedrock", "us.amazon.nova-lite-v1:0"): ("openai", "gpt-4.1-mini"),
+}
+_LEGACY_TTS_MODELS = {
+    ("deepgram", "aura-2"): ("elevenlabs", "eleven_flash_v2_5"),
+}
+_LEGACY_TTS_VOICES = {
+    "aura-2-asteria-en": "EXAVITQu4vr4xnSDxMaL",
+    "aura-2-athena-en": "EXAVITQu4vr4xnSDxMaL",
+    "aura-2-apollo-en": "UgBBYS2sOqTuMpoF3BR0",
+    "aura-2-thalia-en": "EXAVITQu4vr4xnSDxMaL",
+    "aura-2-hera-en": "EXAVITQu4vr4xnSDxMaL",
+    "aura-2-zeus-en": "UgBBYS2sOqTuMpoF3BR0",
+    "asteria": "EXAVITQu4vr4xnSDxMaL",
+    "athena": "EXAVITQu4vr4xnSDxMaL",
+    "apollo": "UgBBYS2sOqTuMpoF3BR0",
+    "thalia": "EXAVITQu4vr4xnSDxMaL",
+}
+
+
 def resolve_voice_config(client_config: dict[str, Any], catalog: dict[str, Any]) -> dict[str, Any]:
     defaults = catalog["defaults"]
     language = _pick(client_config, "language", "agent_language") or defaults["language"]
@@ -16,9 +49,8 @@ def resolve_voice_config(client_config: dict[str, Any], catalog: dict[str, Any])
     if timezone not in catalog["timezones"]:
         raise VoiceConfigValidationError(f"timezone is not supported: {timezone}")
 
-    stt_input = _section(client_config, "stt", defaults["stt"])
-    stt_input = _language_sensitive_stt(stt_input, language)
-    llm_input = _section(client_config, "llm", defaults["llm"])
+    stt_input = _normalize_legacy_stt(_section(client_config, "stt", defaults["stt"]))
+    llm_input = _normalize_legacy_llm(_section(client_config, "llm", defaults["llm"]))
 
     stt_model = _find_option(
         catalog["stt_models"],
@@ -66,7 +98,7 @@ def resolve_tts_config(client_config: dict[str, Any], catalog: dict[str, Any]) -
     )
     if not _contains_id(catalog["languages"], language):
         raise VoiceConfigValidationError(f"language is not supported: {language}")
-    tts_input = _section(client_config, "tts", catalog["defaults"]["tts"])
+    tts_input = _normalize_legacy_tts(_section(client_config, "tts", catalog["defaults"]["tts"]))
     tts_model = _find_option(
         catalog["tts_models"],
         "tts.model",
@@ -74,11 +106,13 @@ def resolve_tts_config(client_config: dict[str, Any], catalog: dict[str, Any]) -
         tts_input["model"],
         language,
     )
+    # Use the resolved catalog model (not the possibly-stale default provider
+    # left behind when only model/voice were overridden).
     voice = _find_voice(
         catalog["voices"],
-        provider=tts_input["provider"],
+        provider=tts_model["provider"],
         voice_id=tts_input["voice"],
-        tts_model_id=tts_input["model"],
+        tts_model_id=tts_model["id"],
         language=language,
     )
 
@@ -122,17 +156,40 @@ def _section(client_config: dict[str, Any], name: str, defaults: dict[str, str])
     return merged
 
 
-def _language_sensitive_stt(
-    stt_config: dict[str, str],
-    language: str,
-) -> dict[str, str]:
-    if (
-        language == "hi"
-        and stt_config.get("provider") == "deepgram"
-        and stt_config.get("model") in {"nova-3", "nova-3-general"}
-    ):
-        return {**stt_config, "model": "nova-3-multilingual"}
-    return stt_config
+def _normalize_legacy_llm(llm_config: dict[str, str]) -> dict[str, str]:
+    provider = str(llm_config.get("provider") or "").strip().lower()
+    model = str(llm_config.get("model") or "").strip()
+    if provider != "bedrock":
+        return llm_config
+    next_provider, next_model = _LEGACY_LLM.get((provider, model), ("openai", "gpt-4.1-mini"))
+    return {**llm_config, "provider": next_provider, "model": next_model}
+
+
+def _normalize_legacy_stt(stt_config: dict[str, str]) -> dict[str, str]:
+    provider = str(stt_config.get("provider") or "").strip().lower()
+    model = str(stt_config.get("model") or "").strip()
+    remapped = _LEGACY_STT.get((provider, model))
+    if not remapped:
+        return stt_config
+    next_provider, next_model = remapped
+    return {**stt_config, "provider": next_provider, "model": next_model}
+
+
+def _normalize_legacy_tts(tts_config: dict[str, str]) -> dict[str, str]:
+    provider = str(tts_config.get("provider") or "").strip().lower()
+    model = str(tts_config.get("model") or "").strip()
+    voice = str(tts_config.get("voice") or "").strip()
+    updated = dict(tts_config)
+    remapped = _LEGACY_TTS_MODELS.get((provider, model))
+    if remapped:
+        next_provider, next_model = remapped
+        updated["provider"] = next_provider
+        updated["model"] = next_model
+    if voice in _LEGACY_TTS_VOICES:
+        updated["voice"] = _LEGACY_TTS_VOICES[voice]
+    elif not voice and remapped:
+        updated["voice"] = "EXAVITQu4vr4xnSDxMaL"
+    return updated
 
 
 def _pick(source: dict[str, Any], *keys: str):
@@ -148,6 +205,7 @@ def _catalog_language_id(language: str) -> str:
     return {
         "en-US": "en",
         "hi-IN": "hi",
+        "mr-IN": "mr",
     }.get(value, value)
 
 
@@ -162,13 +220,27 @@ def _find_option(
     option_id: str,
     language: str | None = None,
 ) -> dict[str, Any]:
+    id_matches: list[dict[str, Any]] = []
     for option in options:
-        if option["provider"] != provider or option["id"] != option_id:
+        if option["id"] != option_id:
+            continue
+        id_matches.append(option)
+        if option["provider"] != provider:
             continue
         languages = option.get("languages")
         if language and languages and language not in languages:
             raise VoiceConfigValidationError(f"{field_name} does not support language {language}")
         return option
+
+    # Unprefixed model ids can keep a default provider from catalog merge.
+    # If the model id is unique in the catalog, resolve it instead of failing.
+    if len(id_matches) == 1:
+        option = id_matches[0]
+        languages = option.get("languages")
+        if language and languages and language not in languages:
+            raise VoiceConfigValidationError(f"{field_name} does not support language {language}")
+        return option
+
     raise VoiceConfigValidationError(f"{field_name} is not supported: {provider}/{option_id}")
 
 
@@ -180,8 +252,9 @@ def _find_voice(
     tts_model_id: str,
     language: str,
 ) -> dict[str, Any]:
+    requested = _LEGACY_TTS_VOICES.get(voice_id, voice_id)
     for voice in voices:
-        if voice["provider"] != provider or not _voice_id_matches(voice, voice_id):
+        if voice["provider"] != provider or not _voice_id_matches(voice, requested):
             continue
         if tts_model_id not in voice.get("tts_models", []):
             raise VoiceConfigValidationError(f"voice {voice_id} is not compatible with {tts_model_id}")
@@ -193,8 +266,4 @@ def _find_voice(
 
 def _voice_id_matches(voice: dict[str, Any], requested_voice_id: str) -> bool:
     candidates = {str(voice.get("id", "")), str(voice.get("runtime_voice", ""))}
-    for value in list(candidates):
-        lower = value.lower()
-        if lower.startswith("aura-2-") and lower.endswith("-en"):
-            candidates.add(value[len("aura-2-") : -len("-en")])
     return requested_voice_id in candidates

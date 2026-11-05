@@ -40,7 +40,7 @@ the provider, model, and character count for each uncached generation.
 ## Deployment and verification
 
 Deploy AI, then API server, then console. Reuse the existing AI-service
-`ELEVENLABS_API_KEY` and/or `DEEPGRAM_API_KEY`, server `AI_API_URL`, and shared
+`ELEVENLABS_API_KEY` (STT + TTS), server `AI_API_URL`, and shared
 `INTERNAL_API_KEY`. No new environment variables or database migrations are needed.
 The AI catalog version is `2026-10-16` and includes `languages[].sample_text`.
 

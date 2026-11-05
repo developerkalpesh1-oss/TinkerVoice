@@ -28,6 +28,7 @@ test("deploy-time catalog covers every selectable voice model", () => {
     "bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0",
     "bedrock/us.amazon.nova-micro-v1:0",
     "bedrock/us.amazon.nova-lite-v1:0",
+    "openai/gpt-4.1-mini",
   ]) {
     assert.ok(catalog.ai.llm[model], `missing ${model}`);
   }
@@ -50,10 +51,14 @@ test("deploy-time catalog covers every selectable voice model", () => {
 test("Deepgram uses regular PAYG streaming and TTS prices with the existing 20% markup", () => {
   const catalog = getRateCatalog();
   assert.equal(catalog.priceBasis, "regular");
-  assert.equal(catalog.catalogVersion, "2026-09-29.1");
+  assert.equal(catalog.catalogVersion, "2026-11-04.1");
   assert.equal(
     catalog.ai.stt["deepgram/nova-3"]?.baseMicrosPerAudioMinute,
     "7700",
+  );
+  assert.equal(
+    catalog.ai.stt["elevenlabs/scribe_v2_realtime"]?.baseMicrosPerAudioMinute,
+    "6500",
   );
   assert.equal(
     catalog.ai.stt["deepgram/nova-3-multilingual"]?.baseMicrosPerAudioMinute,

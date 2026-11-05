@@ -37,8 +37,10 @@ from handlers.worker_handler import (
     apply_metadata_overrides,
     attach_call_limits,
     build_call_context,
+    configure_tinkerism_conversation,
     consume_preview_user_transcript_stream,
     delete_call_room,
+    is_tinkerism_call,
     merge_participant_metadata,
     log_task_failure,
     parse_preview_user_transcript_packet,
@@ -67,7 +69,11 @@ import threading
 import time
 
 APP_DIR = Path(__file__).resolve().parent
+# Production/runtime secrets typically live in `.env`. Local Taskfile workflows
+# use `.env.dev`; load it second so missing keys are filled without clobbering
+# an already-exported process environment (dotenv default: override=False).
 load_dotenv(APP_DIR / ".env")
+load_dotenv(APP_DIR / ".env.dev")
 
 API_PORT = int(os.getenv("AI_API_PORT", "5555"))
 DEFAULT_SYSTEM_PROMPT = (
@@ -177,6 +183,13 @@ def build_agent_instructions(config: dict, call_context: dict | None = None) -> 
             f"\n\nSpeak and respond in {language_name} ({language}), unless the caller "
             "explicitly asks for another language."
         )
+    if is_tinkerism_call(config):
+        instructions += (
+            "\n\nThe opening greeting was already spoken. Do not greet again or repeat the introduction. "
+            "Listen, then answer only the caller's latest question in one or two short sentences. "
+            "If the caller speaks Hindi, answer in natural spoken Hindi. "
+            "If the caller speaks English, answer in professional Indian English."
+        )
     if config.get("use_rag"):
         instructions += RAG_TOOL_INSTRUCTIONS
     if ivr_navigation_enabled(config, call_context):
@@ -228,7 +241,7 @@ def provider_section(value: str | None):
     if not value or "/" not in value:
         return None
     provider, model = value.split("/", 1)
-    if provider in {"deepgram", "sarvam", "bedrock", "elevenlabs"}:
+    if provider in {"deepgram", "sarvam", "bedrock", "elevenlabs", "openai"}:
         return {"provider": provider, "model": model}
     return None
 
@@ -294,25 +307,24 @@ def attach_resolved_voice_config(config: dict) -> dict:
 def build_session_provider_kwargs(config: dict) -> dict:
     voice_config = config.get("voice_config")
     if isinstance(voice_config, dict):
-        adapters = build_voice_provider_adapters(voice_config)
+        adapter_config = (
+            {**voice_config, "tinkerism_call": True} if is_tinkerism_call(config) else voice_config
+        )
+        adapters = build_voice_provider_adapters(adapter_config)
         logger.info("Voice provider adapters: {}", redact_sensitive(adapters.summary))
         return {"stt": adapters.stt, "llm": adapters.llm, "tts": adapters.tts}
 
     return {
         "stt": inference.STT(
-            model=config.get("stt_model", "deepgram/nova-3"),
+            model=config.get("stt_model", "elevenlabs/scribe_v2_realtime"),
             language=LanguageCode(config.get("agent_language", "en-US")),
         ),
         "llm": inference.LLM(
-            model=config.get(
-                "llm_model",
-                "bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0",
-            ),
-            provider=config.get("llm_provider", "bedrock"),
+            model=config.get("llm_model", "openai/gpt-4.1-mini"),
         ),
         "tts": inference.TTS(
-            model=config.get("tts_model", "deepgram/aura-2"),
-            voice=config.get("voice", "aura-2-asteria-en"),
+            model=config.get("tts_model", "elevenlabs/eleven_flash_v2_5"),
+            voice=config.get("voice", "EXAVITQu4vr4xnSDxMaL"),
             language=LanguageCode(config.get("agent_language", "en-US")),
         ),
     }
@@ -613,8 +625,51 @@ async def entrypoint(ctx: JobContext):
         raise
 
 
+async def prepare_tinkerism_phone_call(room_name: str, metadata: dict) -> dict:
+    """Load the agent, webhook, and VAD while the phone is still ringing."""
+    call_context = build_call_context(room_name, metadata)
+    vad_task = asyncio.create_task(
+        asyncio.to_thread(
+            silero.VAD.load,
+            min_silence_duration=0.15,
+            prefix_padding_duration=0.2,
+            min_speech_duration=0.05,
+        )
+    )
+    try:
+        config = await get_config(
+            call_context.get("agent_id"),
+            agent_number=call_context.get("agent_number"),
+        )
+        metadata = await apply_initiation_webhook_metadata(config, metadata, call_context)
+        config = apply_metadata_overrides(config, metadata)
+        config = attach_resolved_voice_config(config)
+        vad = await vad_task
+    except BaseException:
+        vad_task.cancel()
+        raise
+    return {"config": config, "metadata": metadata, "call_context": call_context, "vad": vad}
+
+
+async def _cancel_tinkerism_prepare(task: asyncio.Task | None) -> None:
+    if task is None:
+        return
+    task.cancel()
+    try:
+        await task
+    except (asyncio.CancelledError, Exception):
+        return
+
+
+def _prewarm_tinkerism_tts(provider_kwargs: dict) -> None:
+    tts = provider_kwargs.get("tts")
+    if tts is not None and hasattr(tts, "prewarm"):
+        tts.prewarm()
+
+
 async def _run_entrypoint(ctx: JobContext):
     logger.info("Entrypoint called with room: {}", redact_sensitive(ctx.room.name))
+    prepared_vad = None
 
     await ctx.connect()
     raw_metadata = ctx.job.metadata or ""
@@ -659,6 +714,11 @@ async def _run_entrypoint(ctx: JobContext):
     else:
         metadata = parse_metadata(raw_metadata)
         preview_mode = False
+        tinkerism_prepare = None
+        if is_tinkerism_call({"dynamic_variables": metadata.get("dynamic_variables")}):
+            tinkerism_prepare = asyncio.create_task(
+                prepare_tinkerism_phone_call(ctx.room.name, dict(metadata))
+            )
         try:
             (
                 participant,
@@ -675,31 +735,51 @@ async def _run_entrypoint(ctx: JobContext):
             participant_attributes = getattr(participant, "attributes", {}) or {}
             metadata = merge_participant_metadata(metadata, participant_attributes)
         except asyncio.TimeoutError:
+            await _cancel_tinkerism_prepare(tinkerism_prepare)
             logger.warning("Timed out waiting for the billed room participant to connect")
             await end_call_without_billing(ctx, "participant_connection_timeout")
             return
         except RuntimeError as error:
+            await _cancel_tinkerism_prepare(tinkerism_prepare)
             logger.warning(
                 "Could not wait for billed room participant: {}",
                 redact_sensitive(str(error)),
             )
             await end_call_without_billing(ctx, "participant_connection_failed")
             return
-        call_context = build_call_context(ctx.room.name, metadata)
-        logger.info("Call context: {}", redact_sensitive(call_context))
+        if tinkerism_prepare is not None:
+            try:
+                prepared = await tinkerism_prepare
+                metadata = merge_participant_metadata(prepared["metadata"], participant_attributes)
+                config = apply_metadata_overrides(prepared["config"], metadata)
+                call_context = build_call_context(ctx.room.name, metadata)
+                prepared_vad = prepared["vad"]
+            except VoiceConfigValidationError as error:
+                logger.error("Invalid saved voice configuration: {}", redact_sensitive(str(error)))
+                await end_call_without_billing(ctx, "invalid_voice_configuration")
+                return
+            except Exception as error:
+                logger.warning(
+                    "Tinkerism setup during ringing failed, loading the agent after answer: {}",
+                    redact_sensitive(str(error)),
+                )
+                tinkerism_prepare = None
+        if tinkerism_prepare is None:
+            call_context = build_call_context(ctx.room.name, metadata)
+            logger.info("Call context: {}", redact_sensitive(call_context))
 
-        config = await get_config(
-            call_context.get("agent_id"),
-            agent_number=call_context.get("agent_number"),
-        )
-        metadata = await apply_initiation_webhook_metadata(config, metadata, call_context)
-        config = apply_metadata_overrides(config, metadata)
-        try:
-            config = attach_resolved_voice_config(config)
-        except VoiceConfigValidationError as error:
-            logger.error("Invalid saved voice configuration: {}", redact_sensitive(str(error)))
-            await end_call_without_billing(ctx, "invalid_voice_configuration")
-            return
+            config = await get_config(
+                call_context.get("agent_id"),
+                agent_number=call_context.get("agent_number"),
+            )
+            metadata = await apply_initiation_webhook_metadata(config, metadata, call_context)
+            config = apply_metadata_overrides(config, metadata)
+            try:
+                config = attach_resolved_voice_config(config)
+            except VoiceConfigValidationError as error:
+                logger.error("Invalid saved voice configuration: {}", redact_sensitive(str(error)))
+                await end_call_without_billing(ctx, "invalid_voice_configuration")
+                return
 
     # The caller may leave while configuration/webhooks are being fetched.
     if participant.identity not in ctx.room.remote_participants:
@@ -715,12 +795,18 @@ async def _run_entrypoint(ctx: JobContext):
 
     try:
         provider_kwargs = build_session_provider_kwargs(config)
+        if is_tinkerism_call(config):
+            _prewarm_tinkerism_tts(provider_kwargs)
     except ProviderAdapterError as error:
         logger.error("Voice provider adapter error: {}", redact_sensitive(str(error)))
         await end_call_without_billing(ctx, f"provider adapter error: {error}")
         return
 
-    config["ivr_navigation_enabled"] = ivr_navigation_enabled(config, call_context)
+    # Tinkerism sales calls do not navigate phone menus. Skipping that model
+    # keeps the prompt short and removes the extra audio pass.
+    config["ivr_navigation_enabled"] = (
+        False if is_tinkerism_call(config) else ivr_navigation_enabled(config, call_context)
+    )
     logger.info(
         "[IVR] navigation state: {}",
         redact_sensitive(
@@ -734,13 +820,13 @@ async def _run_entrypoint(ctx: JobContext):
     session = AgentSession(
         **provider_kwargs,
         user_away_timeout=None,
-        vad=silero.VAD.load(),
+        vad=prepared_vad if prepared_vad is not None else silero.VAD.load(),
         # Browser capture already enables AEC. A blanket warmup drops the first
         # caller words and blocks greeting interruptions (including inbound SIP).
         # https://docs.livekit.io/agents/logic/turns/
         aec_warmup_duration=None,
         turn_handling=TurnHandlingOptions(
-            turn_detection=inference.TurnDetector(),
+            turn_detection="stt" if is_tinkerism_call(config) else inference.TurnDetector(),
             interruption={
                 "enabled": True,
                 "mode": "vad",
@@ -751,6 +837,7 @@ async def _run_entrypoint(ctx: JobContext):
         ),
         ivr_detection=config["ivr_navigation_enabled"],
     )
+    configure_tinkerism_conversation(session, config)
     shutdown_reason = "session_shutdown"
     call_ended_at: datetime | None = None
     billed_participant_identity = getattr(participant, "identity", None)
@@ -1035,7 +1122,9 @@ async def _run_entrypoint(ctx: JobContext):
 
     # Warm the recorder while preparing the session, then gate all speech on
     # actual capture readiness rather than losing the opening greeting.
-    if recording_task is not None:
+    # Egress startup is several seconds. Tinkerism speaks as soon as the session
+    # is up; the recording task still finishes in the background.
+    if recording_task is not None and not is_tinkerism_call(config):
         try:
             await asyncio.shield(recording_task)
         except Exception as error:

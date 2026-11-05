@@ -1,4 +1,4 @@
-import { TelephonyProvider } from "../../../prisma/generated/prisma/client.js";
+import { Prisma, TelephonyProvider } from "../../../prisma/generated/prisma/client.js";
 import CustomApiError from "../../common/errors/customApiError.js";
 import { BadRequestError } from "../../common/errors/badRequest.js";
 import { NotFoundError } from "../../common/errors/notFound.js";
@@ -9,6 +9,7 @@ import * as agentRepository from "../agent/agent.repository.js";
 import type {
   BuyNumberArgs,
   SearchNumbersInput,
+  ImportTwilioNumberArgs,
   UpdateNumberArgs,
 } from "./phone.schema.js";
 import formatPhoneNumber from "../../common/utils/formatPhoneNumber.js";
@@ -209,6 +210,120 @@ export const searchAvailableNumbers = async (
 
 export const listOrgNumbers = async (organizationId: string) => {
   return phoneRepository.listByOrg(organizationId);
+};
+
+export type OwnedTwilioNumber = {
+  sid: string;
+  phoneNumber: string;
+  friendlyName: string;
+  alreadyAdded: boolean;
+};
+
+type TwilioIncomingNumber = {
+  sid?: string | null;
+  phoneNumber?: string | null;
+  friendlyName?: string | null;
+  capabilities?: { voice?: boolean | null } | null;
+};
+
+export function matchOwnedTwilioNumber(
+  incoming: TwilioIncomingNumber[],
+  phoneNumber: string,
+) {
+  const owned = incoming.find((row) => row.phoneNumber === phoneNumber && row.sid);
+  if (!owned?.sid || !owned.phoneNumber) return { error: "not-owned" as const };
+  if (owned.capabilities?.voice === false) return { error: "no-voice" as const };
+  return {
+    number: {
+      sid: owned.sid,
+      phoneNumber: owned.phoneNumber,
+      friendlyName: owned.friendlyName?.trim() || formatPhoneNumber(owned.phoneNumber),
+    },
+  };
+}
+
+export const listOwnedTwilioNumbers = async (
+  organizationId: string,
+): Promise<OwnedTwilioNumber[]> => {
+  let incoming: TwilioIncomingNumber[];
+  try {
+    incoming = await twilioClient.incomingPhoneNumbers.list({ limit: 200 });
+  } catch {
+    throw new CustomApiError(
+      "Twilio could not list the numbers on this account. Check the Twilio credentials and try again.",
+      503,
+      { code: "TWILIO_NUMBERS_UNAVAILABLE" },
+    );
+  }
+
+  const saved = await phoneRepository.listByOrg(organizationId);
+  const savedNumbers = new Set(saved.map((row) => row.number));
+  const savedSids = new Set(saved.map((row) => row.sid));
+  return incoming.flatMap((row) => {
+    if (!row.sid || !row.phoneNumber || row.capabilities?.voice === false) return [];
+    return [{
+      sid: row.sid,
+      phoneNumber: row.phoneNumber,
+      friendlyName: row.friendlyName?.trim() || formatPhoneNumber(row.phoneNumber),
+      alreadyAdded: savedNumbers.has(row.phoneNumber) || savedSids.has(row.sid),
+    }];
+  });
+};
+
+export const importOwnedTwilioNumber = async (args: ImportTwilioNumberArgs) => {
+  const existing = await phoneRepository.getByNumberForOrg(
+    args.phoneNumber,
+    args.organizationId,
+  );
+  if (existing) {
+    if (existing.provider !== TelephonyProvider.TWILIO) {
+      throw new BadRequestError("That number is already saved for another provider");
+    }
+    return existing;
+  }
+
+  let incoming: TwilioIncomingNumber[];
+  try {
+    incoming = await twilioClient.incomingPhoneNumbers.list({
+      phoneNumber: args.phoneNumber,
+      limit: 20,
+    });
+  } catch {
+    throw new CustomApiError(
+      "Twilio could not confirm that number. Check the Twilio credentials and try again.",
+      503,
+      { code: "TWILIO_NUMBERS_UNAVAILABLE" },
+    );
+  }
+
+  const matched = matchOwnedTwilioNumber(incoming, args.phoneNumber);
+  if ("error" in matched) {
+    throw new BadRequestError(
+      matched.error === "no-voice"
+        ? "That Twilio number cannot place voice calls"
+        : "That number is not on the connected Twilio account",
+    );
+  }
+
+  try {
+    return await phoneRepository.createPhoneNumber({
+      organizationId: args.organizationId,
+      userId: args.userId,
+      number: matched.number.phoneNumber,
+      sid: matched.number.sid,
+      friendlyName: matched.number.friendlyName,
+      provider: TelephonyProvider.TWILIO,
+      externallyOwned: true,
+    });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      throw new BadRequestError("That number is already in use");
+    }
+    throw error;
+  }
 };
 
 // export const getNumber = async (organizationId: string, phId: string) => {
