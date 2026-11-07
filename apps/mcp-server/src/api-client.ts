@@ -3,8 +3,8 @@ import { currentAuthContext } from "./auth-context.js";
 
 const trim = (value: string) => value.replace(/\/+$/, "");
 
-export const quickvoiceApiBaseUrl = trim(
-  process.env.QUICKVOICE_API_BASE_URL ?? "http://localhost:5000/api/v1",
+export const tinkervoiceApiBaseUrl = trim(
+  process.env.TINKERVOICE_API_BASE_URL ?? "http://localhost:5000/api/v1",
 );
 
 export type ApiCall = {
@@ -17,14 +17,14 @@ export type ApiCall = {
 
 export class UpstreamApiError extends Error {
   constructor(readonly status: number) {
-    super(`QuickVoice API request failed with HTTP ${status}`);
+    super(`TinkerVoice API request failed with HTTP ${status}`);
   }
 }
 
 // Fingerprints only; bounded cache does not retain credentials. Tool requests still
 // authorize against the API on every call, including revoked keys.
 const keyChecks = new Map<string, { valid: boolean; expires: number }>();
-export async function validateQuickVoiceApiKey(apiKey: string) {
+export async function validateTinkerVoiceApiKey(apiKey: string) {
   const fingerprint = createHash("sha256").update(apiKey).digest("hex");
   const cached = keyChecks.get(fingerprint);
   if (cached && cached.expires > Date.now()) return cached.valid;
@@ -33,7 +33,7 @@ export async function validateQuickVoiceApiKey(apiKey: string) {
     keyChecks.set(fingerprint, { valid, expires: Date.now() + (valid ? 15_000 : 60_000) });
     return valid;
   };
-  const response = await fetch(`${quickvoiceApiBaseUrl}/agents`, {
+  const response = await fetch(`${tinkervoiceApiBaseUrl}/agents`, {
     headers: {
       Accept: "application/json",
       "x-api-key": apiKey,
@@ -52,13 +52,13 @@ export async function validateQuickVoiceApiKey(apiKey: string) {
   return remember(true);
 }
 
-export async function callQuickVoiceApi<T = unknown>({ method, path, query, body, signal }: ApiCall): Promise<T> {
+export async function callTinkerVoiceApi<T = unknown>({ method, path, query, body, signal }: ApiCall): Promise<T> {
   const deadline = AbortSignal.timeout(30_000);
   const requestSignal = signal ? AbortSignal.any([signal, deadline]) : deadline;
   try {
     requestSignal.throwIfAborted();
     const { upstreamApiKey } = currentAuthContext();
-    const url = new URL(`${quickvoiceApiBaseUrl}${path}`);
+    const url = new URL(`${tinkervoiceApiBaseUrl}${path}`);
     for (const [key, value] of Object.entries(query ?? {})) {
       if (value === undefined || value === null || value === "") continue;
       url.searchParams.set(key, String(value));
@@ -93,10 +93,10 @@ export async function callQuickVoiceApi<T = unknown>({ method, path, query, body
     // Both tool and resource handlers expose thrown messages through the MCP SDK.
     if (requestSignal.aborted) {
       throw new Error(deadline.aborted
-        ? "QuickVoice API request timed out. Check the operation status before retrying."
-        : "QuickVoice API request cancelled.");
+        ? "TinkerVoice API request timed out. Check the operation status before retrying."
+        : "TinkerVoice API request cancelled.");
     }
     if (error instanceof UpstreamApiError) throw error;
-    throw new Error("QuickVoice API request failed. Please try again.");
+    throw new Error("TinkerVoice API request failed. Please try again.");
   }
 }

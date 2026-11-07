@@ -41,7 +41,7 @@ async def _lifespan(_app: FastAPI):
         await kb_handler.close_kb_job_store()
 
 
-app = FastAPI(title="QuickVoice AI", lifespan=_lifespan)
+app = FastAPI(title="TinkerVoice AI", lifespan=_lifespan)
 
 
 PUBLIC_PATHS = {"/health"}

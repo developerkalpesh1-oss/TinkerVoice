@@ -16,7 +16,7 @@ export function SaasFeaturesSection() {
     {
       icon: MessageCircle,
       title: "Revolutionize Customer Support and Sales",
-      description: "Our AI voice agents are designed to empower your teams to be more productive. With QuickVoice, your agents can type less and write more, focusing on high-value tasks that drive conversions.",
+      description: "Our AI voice agents are designed to empower your teams to be more productive. With TinkerVoice, your agents can type less and write more, focusing on high-value tasks that drive conversions.",
       image: saasImages.customerSupport.url,
       imageAlt: saasImages.customerSupport.alt,
       benefits: [
@@ -28,7 +28,7 @@ export function SaasFeaturesSection() {
     {
       icon: Users,
       title: "Tailored for Every SaaS, Across Every Industry",
-      description: "No matter what SaaS product you build or the industry you serve, QuickVoice adapts to your unique workflows. Our generative AI voice agents are built to deliver industry-specific solutions that drive efficiency, engagement, and growth.",
+      description: "No matter what SaaS product you build or the industry you serve, TinkerVoice adapts to your unique workflows. Our generative AI voice agents are built to deliver industry-specific solutions that drive efficiency, engagement, and growth.",
       image: saasImages.industrySolutions.url,
       imageAlt: saasImages.industrySolutions.alt,
       benefits: [
@@ -134,7 +134,7 @@ export function SaasFeaturesSection() {
           className="mt-20"
         >
           <h3 className="font-geist text-2xl font-normal tracking-tighter text-center text-foreground mb-12">
-            Discover the Benefits of QuickVoice
+            Discover the Benefits of TinkerVoice
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

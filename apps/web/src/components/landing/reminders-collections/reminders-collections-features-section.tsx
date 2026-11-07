@@ -90,7 +90,7 @@ export function RemindersCollectionsFeaturesSection() {
         >
           <div className="relative z-10">
             <h2 className="font-geist text-3xl font-normal tracking-tight text-foreground sm:text-4xl md:text-5xl mb-4">
-              Industry-Specific Solutions with QuickVoice
+              Industry-Specific Solutions with TinkerVoice
             </h2>
             <p className="text-lg text-foreground/70 max-w-3xl mx-auto">
               Automate reminders and collections across multiple industries with personalized,
@@ -163,7 +163,7 @@ export function RemindersCollectionsFeaturesSection() {
               Industries We Serve
             </h2>
             <p className="text-lg text-foreground/70 max-w-3xl mx-auto">
-              Discover more about how QuickVoice can help your industry with AI-powered reminders and collections solutions.
+              Discover more about how TinkerVoice can help your industry with AI-powered reminders and collections solutions.
             </p>
           </div>
           <div

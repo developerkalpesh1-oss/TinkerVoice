@@ -84,7 +84,7 @@ export function UseCasesGridSection() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-lg leading-8 text-muted-foreground max-w-3xl mx-auto"
           >
-            Each use case addresses specific business challenges. Discover how QuickVoice delivers
+            Each use case addresses specific business challenges. Discover how TinkerVoice delivers
             tailored AI voice agent solutions for your needs.
           </motion.p>
         </div>

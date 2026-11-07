@@ -8,28 +8,28 @@ import { cn } from "@/lib/utils";
 
   const faqs = [
     {
-      question: "How does QuickVoice ensure PCI DSS compliance for financial services?",
-      answer: "QuickVoice is fully PCI DSS Level 1 compliant with comprehensive security controls, encrypted data transmission, secure payment processing, and complete audit trails. We maintain SOC 2 Type II certification and follow strict data handling protocols to protect sensitive financial information and customer data."
+      question: "How does TinkerVoice ensure PCI DSS compliance for financial services?",
+      answer: "TinkerVoice is fully PCI DSS Level 1 compliant with comprehensive security controls, encrypted data transmission, secure payment processing, and complete audit trails. We maintain SOC 2 Type II certification and follow strict data handling protocols to protect sensitive financial information and customer data."
     },
     {
-      question: "Can QuickVoice integrate with our existing core banking systems and CRM?",
-      answer: "Yes, QuickVoice offers native integrations with leading core banking systems, LOS/LMS platforms, and CRM systems. Our API-first approach allows seamless data synchronization for customer profiles, transaction history, account information, and real-time updates across all your existing financial technology stack."
+      question: "Can TinkerVoice integrate with our existing core banking systems and CRM?",
+      answer: "Yes, TinkerVoice offers native integrations with leading core banking systems, LOS/LMS platforms, and CRM systems. Our API-first approach allows seamless data synchronization for customer profiles, transaction history, account information, and real-time updates across all your existing financial technology stack."
     },
     {
       question: "How does the AI handle complex financial queries and regulatory compliance?",
-      answer: "QuickVoice uses advanced AI with financial domain expertise to handle complex queries about accounts, transactions, loans, and investments. The system is trained on regulatory requirements and can provide compliant responses while maintaining audit trails for all customer interactions and ensuring adherence to financial regulations."
+      answer: "TinkerVoice uses advanced AI with financial domain expertise to handle complex queries about accounts, transactions, loans, and investments. The system is trained on regulatory requirements and can provide compliant responses while maintaining audit trails for all customer interactions and ensuring adherence to financial regulations."
     },
     {
       question: "What security measures are in place for handling sensitive financial data?",
       answer: "We implement enterprise-grade security including end-to-end encryption, secure authentication, fraud detection, real-time monitoring, and comprehensive audit logs. All data is stored in PCI DSS compliant data centers with regular security assessments, penetration testing, and compliance monitoring to protect sensitive financial information."
     },
     {
-      question: "How quickly can we implement QuickVoice in our financial institution?",
-      answer: "QuickVoice offers rapid deployment with our no-code configuration platform. Most financial institutions can be up and running within 2-4 weeks, including core system integration, compliance setup, staff training, and workflow optimization. Our dedicated financial services implementation team ensures smooth transition with minimal disruption to operations."
+      question: "How quickly can we implement TinkerVoice in our financial institution?",
+      answer: "TinkerVoice offers rapid deployment with our no-code configuration platform. Most financial institutions can be up and running within 2-4 weeks, including core system integration, compliance setup, staff training, and workflow optimization. Our dedicated financial services implementation team ensures smooth transition with minimal disruption to operations."
     },
     {
-      question: "Does QuickVoice support multilingual customer service for diverse banking customers?",
-      answer: "Yes, QuickVoice supports over 100 languages and dialects, making it ideal for diverse customer bases. The AI can automatically detect customer language preferences, provide culturally appropriate financial guidance, and ensure accurate translation of complex banking terminology for better customer understanding and service delivery."
+      question: "Does TinkerVoice support multilingual customer service for diverse banking customers?",
+      answer: "Yes, TinkerVoice supports over 100 languages and dialects, making it ideal for diverse customer bases. The AI can automatically detect customer language preferences, provide culturally appropriate financial guidance, and ensure accurate translation of complex banking terminology for better customer understanding and service delivery."
     }
   ];
 

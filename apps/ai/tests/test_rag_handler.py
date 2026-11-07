@@ -175,7 +175,7 @@ class RagHandlerTests(unittest.TestCase):
         original_index_name = os.environ.get("PINECONE_INDEX")
         try:
             rag_handler._pinecone = lambda: FakePinecone()
-            os.environ["PINECONE_HOST"] = "https://quickvoice-index.svc.pinecone.io"
+            os.environ["PINECONE_HOST"] = "https://tinkervoice-index.svc.pinecone.io"
             os.environ["PINECONE_INDEX"] = "legacy-index-name"
 
             rag_handler._index()
@@ -190,7 +190,7 @@ class RagHandlerTests(unittest.TestCase):
             else:
                 os.environ["PINECONE_INDEX"] = original_index_name
 
-        self.assertEqual(calls, [{"host": "https://quickvoice-index.svc.pinecone.io"}])
+        self.assertEqual(calls, [{"host": "https://tinkervoice-index.svc.pinecone.io"}])
 
 if __name__ == "__main__":
     unittest.main()

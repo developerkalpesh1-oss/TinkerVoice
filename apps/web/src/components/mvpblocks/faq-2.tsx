@@ -16,28 +16,28 @@ interface FaqItem {
 const faqItems: FaqItem[] = [
   {
     id: "1",
-    question: "What is QuickVoice?",
+    question: "What is TinkerVoice?",
     answer:
-      "QuickVoice is open-source, self-hostable infrastructure for AI phone agents. The repo includes the web app, console, API, LiveKit worker, telephony integration points, knowledge bases, call logs, campaigns, billing paths, and local development tooling.",
+      "TinkerVoice is open-source, self-hostable infrastructure for AI phone agents. The repo includes the web app, console, API, LiveKit worker, telephony integration points, knowledge bases, call logs, campaigns, billing paths, and local development tooling.",
     category: "general",
   },
   {
     id: "2",
-    question: "Is QuickVoice a Retell alternative?",
+    question: "Is TinkerVoice a Retell alternative?",
     answer:
-      "Yes. QuickVoice is positioned as an open-source Retell alternative for teams that want source-level control, self-hosting, privacy review, provider choice, cost visibility, and extensibility instead of only using a closed hosted API.",
+      "Yes. TinkerVoice is positioned as an open-source Retell alternative for teams that want source-level control, self-hosting, privacy review, provider choice, cost visibility, and extensibility instead of only using a closed hosted API.",
     category: "general",
   },
   {
     id: "3",
     question: "How is this different from a hosted voice-agent API?",
     answer:
-      "Hosted APIs optimize for managed convenience. QuickVoice exposes the app, API, worker, storage, logs, and telephony boundaries so teams can inspect, self-host, and adapt the stack.",
+      "Hosted APIs optimize for managed convenience. TinkerVoice exposes the app, API, worker, storage, logs, and telephony boundaries so teams can inspect, self-host, and adapt the stack.",
     category: "technical",
   },
   {
     id: "4",
-    question: "Can I run QuickVoice locally?",
+    question: "Can I run TinkerVoice locally?",
     answer:
       "Yes. The README local path is `task up:dev`, which starts the local product surface and services for inspection and development.",
     category: "technical",
@@ -51,7 +51,7 @@ const faqItems: FaqItem[] = [
   },
   {
     id: "6",
-    question: "How does QuickVoice help with privacy review?",
+    question: "How does TinkerVoice help with privacy review?",
     answer:
       "Because the stack is inspectable, teams can review how call logs, transcripts, recordings, knowledge bases, credentials, and runtime configuration move through the system before production use.",
     category: "security",
@@ -67,12 +67,12 @@ const faqItems: FaqItem[] = [
     id: "8",
     question: "How should I think about cost?",
     answer:
-      "QuickVoice keeps provider boundaries visible. You can evaluate the costs of LiveKit, telephony, database, object storage, and deployment choices instead of treating the voice-agent stack as one opaque bundle.",
+      "TinkerVoice keeps provider boundaries visible. You can evaluate the costs of LiveKit, telephony, database, object storage, and deployment choices instead of treating the voice-agent stack as one opaque bundle.",
     category: "pricing",
   },
   {
     id: "9",
-    question: "Can I customize QuickVoice?",
+    question: "Can I customize TinkerVoice?",
     answer:
       "Yes. The MIT-licensed repo is designed to be inspected and extended, including agents, knowledge sources, campaigns, permissions, billing paths, provider integrations, and deployment choices.",
     category: "integration",
@@ -117,7 +117,7 @@ export default function Faq2() {
           </h2>
 
           <p className="text-muted-foreground max-w-2xl text-center">
-            Find answers to common questions about QuickVoice — from deployment
+            Find answers to common questions about TinkerVoice — from deployment
             and pricing to integrations, security, and compliance.
           </p>
         </div>

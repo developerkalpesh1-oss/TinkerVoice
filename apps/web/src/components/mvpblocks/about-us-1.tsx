@@ -69,7 +69,7 @@ export default function AboutUs1() {
   const aboutData = {
     title: "Own The Voice-Agent Path",
     subtitle:
-      "QuickVoice is built for teams that need more than a managed endpoint: source access, self-hosting, provider boundaries, and workflows they can extend.",
+      "TinkerVoice is built for teams that need more than a managed endpoint: source access, self-hosting, provider boundaries, and workflows they can extend.",
     mission:
       "Our mission is to make AI phone-agent infrastructure inspectable, self-hostable, and practical for teams that need control over privacy-sensitive voice operations.",
     vision:

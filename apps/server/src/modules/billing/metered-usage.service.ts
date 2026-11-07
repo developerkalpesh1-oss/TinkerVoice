@@ -26,7 +26,7 @@ export function buildCallMeterEvent(
       },
     },
     requestOptions: {
-      idempotencyKey: `quickvoice-call:${args.callId}`,
+      idempotencyKey: `tinkervoice-call:${args.callId}`,
     },
     billableMinutes,
   };

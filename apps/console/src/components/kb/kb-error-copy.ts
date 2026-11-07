@@ -43,7 +43,7 @@ export function getKbErrorCopy(
     KB_TOO_MANY_REDIRECTS:
       "Open the URL in a browser, copy the final destination URL, and add that URL instead.",
     KB_FILE_URL_REQUIRED:
-      "Delete this failed entry and upload the file again so QuickVoice can read it.",
+      "Delete this failed entry and upload the file again so TinkerVoice can read it.",
     KB_FILE_UNAVAILABLE:
       "Delete this failed entry and upload the file again. Keep the browser open until the upload finishes.",
     KB_PROCESSING_TIMEOUT:

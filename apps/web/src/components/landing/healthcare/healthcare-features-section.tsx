@@ -58,7 +58,7 @@ export function HealthcareFeaturesSection() {
               viewport={{ once: true }}
               className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto"
             >
-              QuickVoice delivers enterprise-grade Voice AI Agents designed to automate call routing,
+              TinkerVoice delivers enterprise-grade Voice AI Agents designed to automate call routing,
               scheduling, and patient interactions with advanced healthcare-specific features.
             </motion.p>
           </div>

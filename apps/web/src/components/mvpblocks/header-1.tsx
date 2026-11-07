@@ -35,7 +35,7 @@ export default function Header1() {
   const brand = (
     <>
       <Logo className="size-8 text-primary" />
-      <span className="text-xl font-bold tracking-tight">QuickVoice</span>
+      <span className="text-xl font-bold tracking-tight">TinkerVoice</span>
     </>
   );
 
@@ -47,7 +47,7 @@ export default function Header1() {
       <div className="site-container flex h-[76px] items-center justify-between gap-6">
         <Link
           href="/"
-          aria-label="QuickVoice home"
+          aria-label="TinkerVoice home"
           className="flex min-h-11 shrink-0 items-center gap-2.5"
         >
           {brand}

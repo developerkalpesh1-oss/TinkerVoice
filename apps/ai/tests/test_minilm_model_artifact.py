@@ -68,7 +68,7 @@ class MiniLmModelArtifactTests(unittest.TestCase):
             configured = json.loads(config_path.read_text(encoding="utf-8"))
             self.assertEqual(configured, {"max_seq_length": 256, "do_lower_case": True})
             provenance = json.loads(
-                (model_dir / "quickvoice-model-manifest.json").read_text(encoding="utf-8")
+                (model_dir / "tinkervoice-model-manifest.json").read_text(encoding="utf-8")
             )
             self.assertEqual(provenance["model_id"], "sentence-transformers/all-MiniLM-L12-v2")
             self.assertEqual(provenance["revision"], model_artifact.MODEL_REVISION)

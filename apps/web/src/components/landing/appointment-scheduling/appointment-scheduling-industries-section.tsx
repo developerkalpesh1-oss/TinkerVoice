@@ -45,7 +45,7 @@ export function AppointmentSchedulingIndustriesSection() {
               Industries We Serve
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-foreground/70">
-              Discover more about how QuickVoice can help your industry with
+              Discover more about how TinkerVoice can help your industry with
               AI-powered appointment scheduling solutions.
             </p>
           </div>

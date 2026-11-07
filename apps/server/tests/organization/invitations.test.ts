@@ -51,8 +51,8 @@ function invitationConfig() {
 }
 
 function emailEnv() {
-  process.env.CONSOLE_URL = "https://console.quickvoice.co/,https://preview.quickvoice.co";
-  process.env.FROM_EMAIL = "no-reply@mail.quickvoice.co";
+  process.env.CONSOLE_URL = "https://console.tinkervoice.co/,https://preview.tinkervoice.co";
+  process.env.FROM_EMAIL = "no-reply@mail.tinkervoice.co";
   process.env.ZEPTOMAIL_URL = "https://api.zeptomail.in";
   process.env.ZEPTOMAIL_TOKEN = "test-only-token";
 }
@@ -75,7 +75,7 @@ test("workspace emails use the frontend URL and escape workspace content", async
   }) as typeof fetch;
   await mailer.sendWorkspaceInvitation(inviteEmail);
   assert.equal(payload.to[0].email_address.address, inviteEmail.email);
-  assert.match(payload.textbody, /https:\/\/console.quickvoice.co\/accept-invitation\?invitationId=invite%26role%3Downer/);
+  assert.match(payload.textbody, /https:\/\/console.tinkervoice.co\/accept-invitation\?invitationId=invite%26role%3Downer/);
   assert.match(payload.htmlbody, /&lt;img src=x onerror=&quot;alert\(1\)&quot;&gt;/);
   assert.doesNotMatch(payload.htmlbody, /<img/);
   assert.match(payload.textbody, /member/);

@@ -44,7 +44,7 @@ export function CustomerSupportIndustriesSection() {
             Industries We Serve
           </h2>
           <p className="text-lg text-foreground/70 max-w-3xl mx-auto">
-            Discover more about how QuickVoice can help your industry with AI-powered customer
+            Discover more about how TinkerVoice can help your industry with AI-powered customer
             service solutions.
           </p>
           </div>

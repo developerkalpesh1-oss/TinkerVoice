@@ -36,6 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select";
+import { CampaignEditor } from "@/src/components/tinkerism/CampaignEditor";
 import { UseTwilioNumberButton } from "@/src/components/numbers/UseTwilioNumberButton";
 import { useAgents } from "@/src/hooks/queries/agents";
 import { useNumbers } from "@/src/hooks/queries/numbers";
@@ -48,6 +49,18 @@ import {
   callerIdsForAgent,
   tinkerismCallBlock,
 } from "@/src/lib/tinkerism/call-readiness";
+import {
+  campaignForCalls,
+  DEFAULT_TINKERISM_CAMPAIGN,
+  parseStoredCampaignSelection,
+  parseStoredCampaigns,
+  removeCampaign,
+  TINKERISM_CAMPAIGNS_STORAGE_KEY,
+  TINKERISM_SELECTED_CAMPAIGN_STORAGE_KEY,
+  tinkerismCampaignPrompt,
+  upsertCampaign,
+  type TinkerismCampaign,
+} from "@/src/lib/tinkerism/campaigns";
 import {
   addContact,
   contactsToCall,
@@ -66,11 +79,14 @@ import {
   tinkerismAttemptStatus,
   tinkerismCallCanStop,
   tinkerismCallsToStop,
-  tinkerismSystemPrompt,
   updateContact,
   type TinkerismCallLog,
   type TinkerismContact,
 } from "@/src/lib/tinkerism/contacts";
+import {
+  notifyTinkerismCallDataChanged,
+  TINKERISM_CALL_DATA_CHANGED_EVENT,
+} from "@/src/lib/tinkerism/storage-sync";
 
 function readStorage(key: string): string | null {
   try {
@@ -136,6 +152,8 @@ export function TinkerismCallPanel() {
   const [requestedAgentId, setRequestedAgentId] = useState("");
   const [requestedFromNumber, setRequestedFromNumber] = useState("");
   const [contacts, setContacts] = useState<TinkerismContact[]>(DEFAULT_TINKERISM_CONTACTS);
+  const [campaigns, setCampaigns] = useState<TinkerismCampaign[]>([{ ...DEFAULT_TINKERISM_CAMPAIGN, sources: [] }]);
+  const [selectedCampaignId, setSelectedCampaignId] = useState(DEFAULT_TINKERISM_CAMPAIGN.id);
   const [logs, setLogs] = useState<TinkerismCallLog[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [name, setName] = useState("");
@@ -153,20 +171,53 @@ export function TinkerismCallPanel() {
   const [pendingDeleteIds, setPendingDeleteIds] = useState<string[] | null>(null);
 
   useEffect(() => {
-    setContacts(parseStoredContacts(readStorage(TINKERISM_CONTACTS_STORAGE_KEY)));
-    setLogs(parseStoredLogs(readStorage(TINKERISM_LOGS_STORAGE_KEY)));
+    function loadSharedState() {
+      setContacts(parseStoredContacts(readStorage(TINKERISM_CONTACTS_STORAGE_KEY)));
+      const storedCampaigns = parseStoredCampaigns(readStorage(TINKERISM_CAMPAIGNS_STORAGE_KEY));
+      setCampaigns(storedCampaigns);
+      setSelectedCampaignId(parseStoredCampaignSelection(
+        readStorage(TINKERISM_SELECTED_CAMPAIGN_STORAGE_KEY),
+        storedCampaigns,
+      ));
+      setLogs(parseStoredLogs(readStorage(TINKERISM_LOGS_STORAGE_KEY)));
+    }
+    loadSharedState();
     setHydrated(true);
+    window.addEventListener("storage", loadSharedState);
+    window.addEventListener(TINKERISM_CALL_DATA_CHANGED_EVENT, loadSharedState);
+    return () => {
+      window.removeEventListener("storage", loadSharedState);
+      window.removeEventListener(TINKERISM_CALL_DATA_CHANGED_EVENT, loadSharedState);
+    };
   }, []);
 
   useEffect(() => {
     if (!hydrated) return;
-    writeStorage(TINKERISM_CONTACTS_STORAGE_KEY, JSON.stringify(contacts));
+    const serialized = JSON.stringify(contacts);
+    if (readStorage(TINKERISM_CONTACTS_STORAGE_KEY) === serialized) return;
+    writeStorage(TINKERISM_CONTACTS_STORAGE_KEY, serialized);
+    notifyTinkerismCallDataChanged();
   }, [contacts, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
     writeStorage(TINKERISM_LOGS_STORAGE_KEY, JSON.stringify(logs.slice(0, 40)));
   }, [hydrated, logs]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    const campaignsSerialized = JSON.stringify(campaigns);
+    const selectedStored = readStorage(TINKERISM_SELECTED_CAMPAIGN_STORAGE_KEY);
+    if (
+      readStorage(TINKERISM_CAMPAIGNS_STORAGE_KEY) === campaignsSerialized
+      && selectedStored === selectedCampaignId
+    ) {
+      return;
+    }
+    writeStorage(TINKERISM_CAMPAIGNS_STORAGE_KEY, campaignsSerialized);
+    writeStorage(TINKERISM_SELECTED_CAMPAIGN_STORAGE_KEY, selectedCampaignId);
+    notifyTinkerismCallDataChanged();
+  }, [campaigns, hydrated, selectedCampaignId]);
 
   const agentId = readyAgents.some((agent) => agent.agentId === requestedAgentId)
     ? requestedAgentId
@@ -324,8 +375,12 @@ export function TinkerismCallPanel() {
             fromNumber,
             phoneNumber: contact.phoneNumber,
             username: contact.name,
-            firstMessage: TINKERISM_FIRST_MESSAGE,
-            systemPrompt: tinkerismSystemPrompt(contact.name, contact.phoneNumber),
+          firstMessage: TINKERISM_FIRST_MESSAGE,
+          systemPrompt: tinkerismCampaignPrompt(
+            campaignForCalls(campaigns, selectedCampaignId),
+            contact.name,
+            contact.phoneNumber,
+          ),
             dynamicVariables: { tinkerism_call: "1" },
           });
           const outboundId = response.outbound.outboundId;
@@ -596,6 +651,19 @@ export function TinkerismCallPanel() {
       <CallNowReason
         block={callBlock}
         agentName={selectedAgent?.name ?? readyAgents[0]?.name ?? "This agent"}
+      />
+      <CampaignEditor
+        campaigns={campaigns}
+        selectedId={selectedCampaignId}
+        onSelect={setSelectedCampaignId}
+        onSave={(campaign) => setCampaigns((current) => upsertCampaign(current, campaign))}
+        onDelete={(id) => {
+          const remaining = removeCampaign(campaigns, id);
+          setCampaigns(remaining);
+          setSelectedCampaignId((selected) => (
+            selected === id ? remaining[0]?.id ?? DEFAULT_TINKERISM_CAMPAIGN.id : selected
+          ));
+        }}
       />
       {batchProgress ? (
         <div className="space-y-2">

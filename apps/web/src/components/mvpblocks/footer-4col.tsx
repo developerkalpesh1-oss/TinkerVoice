@@ -47,7 +47,7 @@ const groups = [
       ["About", "/company/about-us"],
       ["Contact the team", "/company/contact"],
       ["Careers", "/company/careers"],
-      ["LinkedIn", "https://www.linkedin.com/company/quickvoiceai"],
+      ["LinkedIn", "https://www.linkedin.com/company/tinkervoiceai"],
     ],
   },
 ];
@@ -60,12 +60,12 @@ export default function Footer4Col() {
           <div>
             <Link
               href="/"
-              aria-label="QuickVoice home"
+              aria-label="TinkerVoice home"
               className="inline-flex min-h-11 items-center gap-2.5"
             >
               <Logo className="size-8 text-primary" />
               <span className="text-xl font-bold tracking-tight">
-                QuickVoice
+                TinkerVoice
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-base leading-7 text-muted-foreground">
@@ -75,9 +75,9 @@ export default function Footer4Col() {
             <address className="mt-5 flex flex-col items-start text-sm not-italic text-muted-foreground">
               <a
                 className="py-2 hover:underline"
-                href="mailto:info@quickvoice.co"
+                href="mailto:info@tinkervoice.co"
               >
-                info@quickvoice.co
+                info@tinkervoice.co
               </a>
               <a className="py-2 hover:underline" href="tel:+12184525998">
                 +1 218 452 5998
@@ -108,7 +108,7 @@ export default function Footer4Col() {
         </div>
         <div className="mt-10 flex flex-col gap-4 border-t border-border pt-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} QuickVoice contributors.{" "}
+            © {new Date().getFullYear()} TinkerVoice contributors.{" "}
             <a
               href={GITHUB_LICENSE_URL}
               className="underline underline-offset-4"

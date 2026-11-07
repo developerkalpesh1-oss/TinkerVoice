@@ -40,7 +40,7 @@ export function HrRecruitingTestimonialsSection() {
               viewport={{ once: true }}
               className="font-geist text-foreground/60 mt-3 max-w-3xl mx-auto"
             >
-              Discover how leading organizations are transforming their recruitment processes with QuickVoice
+              Discover how leading organizations are transforming their recruitment processes with TinkerVoice
             </motion.p>
           </div>
           <div

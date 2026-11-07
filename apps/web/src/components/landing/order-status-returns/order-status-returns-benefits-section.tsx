@@ -96,10 +96,10 @@ export function OrderStatusReturnsBenefitsSection() {
         >
           <div className="relative z-10">
             <h2 className="mb-4 font-geist text-3xl font-normal tracking-tight text-foreground sm:text-4xl md:text-5xl">
-              Why QuickVoice?
+              Why TinkerVoice?
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-foreground/70">
-              By leveraging QuickVoice&apos;s AI voice agents, businesses can
+              By leveraging TinkerVoice&apos;s AI voice agents, businesses can
               streamline order status updates and returns, enhancing customer
               satisfaction and operational efficiency across industries.
             </p>

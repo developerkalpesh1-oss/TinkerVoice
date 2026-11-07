@@ -20,10 +20,10 @@ export function CareersSocialSection() {
 
           />
           <h2 className="relative z-10 font-geist text-3xl font-light tracking-tighter text-foreground sm:text-4xl lg:text-5xl mb-6">
-            Follow Life at QuickVoice
+            Follow Life at TinkerVoice
           </h2>
           <p className="text-lg leading-8 text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Stay connected with our team and see what it&apos;s like to work at QuickVoice.
+            Stay connected with our team and see what it&apos;s like to work at TinkerVoice.
           </p>
         </motion.div>
 
@@ -35,10 +35,10 @@ export function CareersSocialSection() {
           className="flex justify-center space-x-6"
         >
           {[
-            { icon: Linkedin, href: "https://www.linkedin.com/company/quickvoiceai" },
-            { icon: Twitter, href: "https://x.com/QuickVoice_co" },
+            { icon: Linkedin, href: "https://www.linkedin.com/company/tinkervoiceai" },
+            { icon: Twitter, href: "https://x.com/TinkerVoice_co" },
             { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61578373598223" },
-            { icon: Instagram, href: "https://www.instagram.com/quickvoice_co/" },
+            { icon: Instagram, href: "https://www.instagram.com/tinkervoice_co/" },
           ].map((social, index) => (
             <motion.div
               key={index}

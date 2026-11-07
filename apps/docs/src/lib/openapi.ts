@@ -34,16 +34,16 @@ type OpenApiOperation = {
   };
   security?: Array<Record<string, string[]>>;
   responses: Record<string, { description: string }>;
-  "x-quickvoice-source": string;
-  "x-quickvoice-permission"?: string;
-  "x-quickvoice-ai-context": string;
-  "x-quickvoice-use-case": string;
-  "x-quickvoice-side-effects": string;
+  "x-tinkervoice-source": string;
+  "x-tinkervoice-permission"?: string;
+  "x-tinkervoice-ai-context": string;
+  "x-tinkervoice-use-case": string;
+  "x-tinkervoice-side-effects": string;
 };
 
 type OpenApiPathItem = Partial<Record<Lowercase<ApiMethod>, OpenApiOperation>>;
 
-export type QuickVoiceOpenApiDocument = {
+export type TinkerVoiceOpenApiDocument = {
   openapi: "3.1.0";
   info: {
     title: string;
@@ -71,18 +71,18 @@ export type QuickVoiceOpenApiDocument = {
   };
 };
 
-export function buildQuickVoiceOpenApi(): QuickVoiceOpenApiDocument {
+export function buildTinkerVoiceOpenApi(): TinkerVoiceOpenApiDocument {
   return {
     openapi: "3.1.0",
     info: {
-      title: "QuickVoice REST API",
+      title: "TinkerVoice REST API",
       version: "2026-07",
-      description: "Interactive OpenAPI reference for QuickVoice REST operations. In Ask AI flows, answer questions using the selected operation description first instead of giving a broad overview of the full API catalog.",
+      description: "Interactive OpenAPI reference for TinkerVoice REST operations. In Ask AI flows, answer questions using the selected operation description first instead of giving a broad overview of the full API catalog.",
     },
     servers: [
       {
         url: apiBaseUrl,
-        description: "QuickVoice production API",
+        description: "TinkerVoice production API",
       },
     ],
     tags: apiGroups.map((group) => ({ name: group.title, description: group.description })),
@@ -100,7 +100,7 @@ export function buildQuickVoiceOpenApi(): QuickVoiceOpenApiDocument {
           type: "apiKey",
           in: "header",
           name: "x-api-key",
-          description: "Organization-scoped QuickVoice API key. Send the raw key in the x-api-key header.",
+          description: "Organization-scoped TinkerVoice API key. Send the raw key in the x-api-key header.",
         },
       },
     },
@@ -132,11 +132,11 @@ function buildPathItem(endpoint: ApiEndpoint, tag: string): OpenApiPathItem {
       requestBody: buildRequestBody(endpoint),
       security: buildSecurity(endpoint),
       responses: buildResponses(endpoint),
-      "x-quickvoice-source": endpoint.source,
-      ...(endpoint.permission ? { "x-quickvoice-permission": endpoint.permission } : {}),
-      "x-quickvoice-ai-context": buildAiContext(endpoint),
-      "x-quickvoice-use-case": buildUseCase(endpoint),
-      "x-quickvoice-side-effects": buildSideEffects(endpoint),
+      "x-tinkervoice-source": endpoint.source,
+      ...(endpoint.permission ? { "x-tinkervoice-permission": endpoint.permission } : {}),
+      "x-tinkervoice-ai-context": buildAiContext(endpoint),
+      "x-tinkervoice-use-case": buildUseCase(endpoint),
+      "x-tinkervoice-side-effects": buildSideEffects(endpoint),
     },
   };
 }
@@ -156,7 +156,7 @@ function buildDescription(endpoint: ApiEndpoint) {
   if (endpoint.body?.length) parts.push(`Request body: ${endpoint.body.join("; ")}.`);
   parts.push(`Response: ${endpoint.response}.`);
   parts.push(
-    `Ask AI guidance: If the user asks "what this API does" while this operation is selected, answer only about ${endpoint.method} ${endpoint.path}. Do not summarize the whole QuickVoice API catalog unless the user explicitly asks for the whole catalog.`,
+    `Ask AI guidance: If the user asks "what this API does" while this operation is selected, answer only about ${endpoint.method} ${endpoint.path}. Do not summarize the whole TinkerVoice API catalog unless the user explicitly asks for the whole catalog.`,
   );
   parts.push(`AI context: ${aiContext}`);
   parts.push(`Source: ${endpoint.source}.`);
@@ -214,7 +214,7 @@ function buildUseCase(endpoint: ApiEndpoint) {
     "GET /secrets": "Use this to list stored secret metadata while keeping secret values redacted.",
     "POST /secrets": "Use this to store a secret value for tools, headers, webhooks, or integrations.",
     "DELETE /secrets/{secretId}": "Use this to remove a rotated or unused secret.",
-    "GET /mcp/catalog": "Use this to browse MCP servers that can be connected to QuickVoice.",
+    "GET /mcp/catalog": "Use this to browse MCP servers that can be connected to TinkerVoice.",
     "GET /mcp/connections": "Use this to list remote MCP servers already connected to the organization.",
     "POST /mcp/connections": "Use this to connect a catalog MCP server or a custom MCP server URL.",
     "POST /mcp/connections/{mcpConnectionId}/refresh": "Use this to refresh metadata and tool definitions from a connected MCP server.",
@@ -236,7 +236,7 @@ function buildUseCase(endpoint: ApiEndpoint) {
 }
 
 function buildSideEffects(endpoint: ApiEndpoint) {
-  if (endpoint.method === "GET") return "Read-only; it should not change QuickVoice data.";
+  if (endpoint.method === "GET") return "Read-only; it should not change TinkerVoice data.";
   if (endpoint.method === "DELETE") return "Destructive; it removes or detaches data and should require user confirmation.";
   if (endpoint.path.includes("/cancel") || endpoint.path.includes("/end")) {
     return "Stops active or scheduled work; confirm before use.";
@@ -253,7 +253,7 @@ function buildSideEffects(endpoint: ApiEndpoint) {
   if (endpoint.path.includes("/quick") || endpoint.path.includes("/sessions")) {
     return "Creates a real-time call/session; it can consume minutes or contact a person, so confirm intent before using it.";
   }
-  return "Writes or updates QuickVoice data; require appropriate authorization and user intent.";
+  return "Writes or updates TinkerVoice data; require appropriate authorization and user intent.";
 }
 
 function buildParameters(endpoint: ApiEndpoint): OpenApiParameter[] | undefined {

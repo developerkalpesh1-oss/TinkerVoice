@@ -36,5 +36,5 @@ def test_production_image_is_reproducible_and_keeps_queues_out_of_tmp():
     assert "gcc" not in runtime
     assert "g++" not in runtime
     assert "python3-dev" not in runtime
-    assert "AI_BILLING_USAGE_QUEUE_DIR=/var/lib/quickvoice/billing-usage" in runtime
-    assert "AI_CALL_LOG_QUEUE_DIR=/var/lib/quickvoice/call-logs" in runtime
+    assert "AI_BILLING_USAGE_QUEUE_DIR=/var/lib/tinkervoice/billing-usage" in runtime
+    assert "AI_CALL_LOG_QUEUE_DIR=/var/lib/tinkervoice/call-logs" in runtime

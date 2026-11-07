@@ -77,7 +77,7 @@ export function HrRecruitingFeaturesSection() {
               viewport={{ once: true }}
               className="font-geist text-foreground/60 mt-3 max-w-3xl mx-auto"
             >
-              Olivia, QuickVoice&apos;s AI-powered recruiting assistant, is designed to handle the tasks that take up most of your time. With Olivia, you can:
+              Olivia, TinkerVoice&apos;s AI-powered recruiting assistant, is designed to handle the tasks that take up most of your time. With Olivia, you can:
             </motion.p>
           </div>
           <div

@@ -1,7 +1,7 @@
 {
   "name": "docs",
   "version": "0.1.0",
-  "description": "QuickVoice product and MCP documentation site.",
+  "description": "TinkerVoice product and MCP documentation site.",
   "private": true,
   "license": "AGPL-3.0-only",
   "scripts": {

@@ -119,7 +119,7 @@ export function IndustriesGridSection() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-lg leading-8 text-muted-foreground max-w-3xl mx-auto"
           >
-            Each industry has unique challenges. Discover how QuickVoice addresses them with
+            Each industry has unique challenges. Discover how TinkerVoice addresses them with
             tailored AI voice agent solutions.
           </motion.p>
         </div>

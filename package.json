@@ -1,12 +1,12 @@
 {
-  "name": "QuickVoice",
+  "name": "TinkerVoice",
   "description": "Open-source, self-hostable Retell alternative for AI phone agents.",
   "private": true,
   "license": "MIT",
-  "homepage": "https://quickvoice.co",
+  "homepage": "https://tinkervoice.co",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/allgpt-co/QuickVoice.git"
+    "url": "git+https://github.com/allgpt-co/TinkerVoice.git"
   },
   "scripts": {
     "build": "turbo run build",

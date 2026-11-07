@@ -13,8 +13,8 @@ export const docsNav: DocsNavGroup[] = [
   {
     title: "Start",
     items: [
-      { title: "Docs home", href: "/", description: "QuickVoice documentation entry point." },
-      { title: "MCP overview", href: "/mcp", description: "What QuickVoice MCP connects and enables." },
+      { title: "Docs home", href: "/", description: "TinkerVoice documentation entry point." },
+      { title: "MCP overview", href: "/mcp", description: "What TinkerVoice MCP connects and enables." },
       { title: "API reference", href: "/api-reference", description: "REST routes, auth, schemas, and responses." },
       { title: "Guides", href: "/guides", description: "Implementation and operations guides." },
       { title: "Changelog", href: "/changelog", description: "Documentation, API, and MCP updates." },

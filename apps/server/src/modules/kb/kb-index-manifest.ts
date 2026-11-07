@@ -18,7 +18,7 @@ return 1
 
 function keys(agentId: string): [string, string] {
   const hash = createHash("sha256").update(agentId).digest("hex");
-  return [`quickvoice:kb:index:${hash}`, `quickvoice:kb:processing:${hash}`];
+  return [`tinkervoice:kb:index:${hash}`, `tinkervoice:kb:processing:${hash}`];
 }
 
 export async function trackKbJob(agentId: string, kbIds: string[], jobId: string) {

@@ -34,9 +34,9 @@ export const buyerFaqs = [
       "Plan an explicit escalation path for each workflow. Depending on your configured telephony and business systems, that may involve a transfer or a request for staff follow-up. Test availability, failed transfers, and after-hours calls before a pilot.",
   },
   {
-    question: "Can we host QuickVoice ourselves?",
+    question: "Can we host TinkerVoice ourselves?",
     answer:
-      "Yes. QuickVoice is MIT-licensed, self-hostable software. Your technical team operates the deployment and connects provider accounts. Real phone calls require LiveKit and a configured telephony provider such as Twilio or Telnyx.",
+      "Yes. TinkerVoice is MIT-licensed, self-hostable software. Your technical team operates the deployment and connects provider accounts. Real phone calls require LiveKit and a configured telephony provider such as Twilio or Telnyx.",
   },
   {
     question: "What should we include in the budget?",
@@ -278,7 +278,7 @@ export function BusinessHome() {
               [
                 MessageSquareText,
                 "The caller experience",
-                "Use QuickVoice’s agent configuration and knowledge sources to shape the conversation around approved information.",
+                "Use TinkerVoice’s agent configuration and knowledge sources to shape the conversation around approved information.",
               ],
               [
                 Code2,

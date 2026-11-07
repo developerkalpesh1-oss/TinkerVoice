@@ -9,35 +9,35 @@ import { cn } from "@/lib/utils";
 const faqs = [
   {
     question: "How can AI Agents help EdTech companies improve student engagement?",
-    answer: "QuickVoice's AI Agents provide instant responses to student queries, share relevant course details, and send reminders for live classes, assignments, or exams—keeping learners consistently engaged and informed."
+    answer: "TinkerVoice's AI Agents provide instant responses to student queries, share relevant course details, and send reminders for live classes, assignments, or exams—keeping learners consistently engaged and informed."
   },
   {
-    question: "Can QuickVoice assist with admission and onboarding processes?",
-    answer: "Yes. QuickVoice automates the entire admissions journey—from answering FAQs, collecting documents, scheduling counselling calls, to sharing personalised course recommendations based on student goals."
+    question: "Can TinkerVoice assist with admission and onboarding processes?",
+    answer: "Yes. TinkerVoice automates the entire admissions journey—from answering FAQs, collecting documents, scheduling counselling calls, to sharing personalised course recommendations based on student goals."
   },
   {
-    question: "Is QuickVoice suitable for both live and recorded learning platforms?",
-    answer: "Absolutely. Whether it's a MOOC, hybrid model, or coaching institute, QuickVoice supports automated chat and voice interactions that cater to enrolment queries, course access issues, or technical troubleshooting."
+    question: "Is TinkerVoice suitable for both live and recorded learning platforms?",
+    answer: "Absolutely. Whether it's a MOOC, hybrid model, or coaching institute, TinkerVoice supports automated chat and voice interactions that cater to enrolment queries, course access issues, or technical troubleshooting."
   },
   {
     question: "How does AI support parent communication in K-12 EdTech?",
-    answer: "With QuickVoice, schools and learning platforms can send updates on student performance, fee reminders, or schedule changes via WhatsApp and chat, offering parents real-time, convenient support."
+    answer: "With TinkerVoice, schools and learning platforms can send updates on student performance, fee reminders, or schedule changes via WhatsApp and chat, offering parents real-time, convenient support."
   },
   {
     question: "What integrations are supported for learning platforms?",
-    answer: "QuickVoice integrates with CRMs, LMS tools, payment gateways, and video conferencing platforms, allowing seamless data exchange to personalise and automate support journeys."
+    answer: "TinkerVoice integrates with CRMs, LMS tools, payment gateways, and video conferencing platforms, allowing seamless data exchange to personalise and automate support journeys."
   },
   {
     question: "How do AI Agents reduce load on academic counsellors and support teams?",
-    answer: "By automating repetitive queries and triaging complex cases to human agents, QuickVoice helps EdTech companies scale without compromising on support quality—especially during admission cycles or batch launches."
+    answer: "By automating repetitive queries and triaging complex cases to human agents, TinkerVoice helps EdTech companies scale without compromising on support quality—especially during admission cycles or batch launches."
   },
   {
-    question: "Can QuickVoice handle exam scheduling and academic calendar management?",
-    answer: "Yes. QuickVoice can automatically inform students about upcoming exams, class schedules, assignment deadlines, and academic events through multiple channels, ensuring no important information is missed."
+    question: "Can TinkerVoice handle exam scheduling and academic calendar management?",
+    answer: "Yes. TinkerVoice can automatically inform students about upcoming exams, class schedules, assignment deadlines, and academic events through multiple channels, ensuring no important information is missed."
   },
   {
-    question: "How does QuickVoice support multilingual education platforms?",
-    answer: "QuickVoice supports multiple languages, making it ideal for international education platforms and institutions serving diverse student populations. It can provide localized support in students' preferred languages."
+    question: "How does TinkerVoice support multilingual education platforms?",
+    answer: "TinkerVoice supports multiple languages, making it ideal for international education platforms and institutions serving diverse student populations. It can provide localized support in students' preferred languages."
   }
 ];
 

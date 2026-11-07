@@ -164,7 +164,7 @@ export function PaymentMethodSetupDialog({
         <DialogHeader>
           <DialogTitle>Save a payment method</DialogTitle>
           <DialogDescription>
-            Stripe stores your card securely. QuickVoice uses it only for
+            Stripe stores your card securely. TinkerVoice uses it only for
             top-ups you start and automatic recharges you enable.
           </DialogDescription>
         </DialogHeader>

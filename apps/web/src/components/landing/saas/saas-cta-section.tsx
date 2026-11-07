@@ -47,7 +47,7 @@ export function SaasCtaSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-6 max-w-md text-base text-white sm:text-lg md:mb-8"
           >
-            Experience the future of customer engagement with QuickVoice&apos;s AI call software solutions.
+            Experience the future of customer engagement with TinkerVoice&apos;s AI call software solutions.
             Discover how our Conversational AI can transform your business today.
           </motion.p>
 

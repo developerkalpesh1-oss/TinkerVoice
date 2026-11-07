@@ -94,7 +94,7 @@ const DEFAULT_THEME: WidgetTheme = {
   avatarImageUrl: null,
   avatarOrbColor1: "#002FA7",
   avatarOrbColor2: "#00F0FF",
-  brandName: "QuickVoice",
+  brandName: "TinkerVoice",
   actionText: "Talk to us",
   welcomeText: "Talk with our voice agent.",
   startButtonText: "Start call",
@@ -106,7 +106,7 @@ const DEFAULT_THEME: WidgetTheme = {
   whiteLabel: false,
 };
 
-class QuickVoiceWidgetElement extends HTMLElement {
+class TinkerVoiceWidgetElement extends HTMLElement {
   private readonly root: ShadowRoot;
   private readonly uiContainer: HTMLDivElement;
   private readonly audioContainer: HTMLDivElement;
@@ -320,7 +320,7 @@ class QuickVoiceWidgetElement extends HTMLElement {
   }
 
   private visitorId() {
-    const key = "quickvoice_widget_visitor_id";
+    const key = "tinkervoice_widget_visitor_id";
     try {
       const existing = window.localStorage.getItem(key);
       if (existing) return existing;
@@ -634,7 +634,7 @@ class QuickVoiceWidgetElement extends HTMLElement {
               }
               ${this.audioPlaybackBlocked ? '<button class="qv-secondary" type="button" data-action="enable-audio">Enable sound</button>' : ""}
             </div>
-            ${theme.whiteLabel ? "" : `<p class="qv-powered">Powered by QuickVoice</p>`}
+            ${theme.whiteLabel ? "" : `<p class="qv-powered">Powered by TinkerVoice</p>`}
           </div>
         </section>
         <button class="qv-bubble" type="button" data-action="toggle" aria-controls="qv-panel" aria-expanded="${this.expanded ? "true" : "false"}">
@@ -908,6 +908,6 @@ function errorMessage(error: unknown, fallback: string) {
   return error instanceof Error && error.message ? error.message : fallback;
 }
 
-if (!customElements.get("quickvoice-widget")) {
-  customElements.define("quickvoice-widget", QuickVoiceWidgetElement);
+if (!customElements.get("tinkervoice-widget")) {
+  customElements.define("tinkervoice-widget", TinkerVoiceWidgetElement);
 }

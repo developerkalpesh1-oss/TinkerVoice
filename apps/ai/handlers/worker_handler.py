@@ -14,7 +14,7 @@ from handlers.webhook_fields import webhook_body_values, webhook_header_values
 from utils.logger import logger, redact_sensitive
 from utils.safe_http import safe_https_request
 
-PREVIEW_TRANSCRIPT_TOPIC = "quickvoice.preview.transcript"
+PREVIEW_TRANSCRIPT_TOPIC = "tinkervoice.preview.transcript"
 PREVIEW_TRANSCRIPT_TYPE = "preview_user_transcript"
 TINKERISM_CALL_VARIABLE = "tinkerism_call"
 MAX_INITIATION_WEBHOOK_RESPONSE_BYTES = 256_000

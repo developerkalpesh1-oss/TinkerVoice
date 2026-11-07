@@ -18,10 +18,10 @@ export type InformationPageContent = {
 };
 
 export function informationMetadata(page: InformationPageContent): Metadata {
-  const title = page.label.includes("QuickVoice")
+  const title = page.label.includes("TinkerVoice")
     ? page.label
-    : `${page.label} | QuickVoice`;
-  const url = `https://quickvoice.co${page.path}`;
+    : `${page.label} | TinkerVoice`;
+  const url = `https://tinkervoice.co${page.path}`;
   return {
     title: { absolute: title },
     description: page.description,
@@ -145,7 +145,7 @@ export function InformationPage({ page }: { page: InformationPageContent }) {
             <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
               {isCareers
                 ? "Share your area of interest and relevant work to ask about current opportunities."
-                : "Share your workflow, technical context or project question with the QuickVoice team."}
+                : "Share your workflow, technical context or project question with the TinkerVoice team."}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -168,7 +168,7 @@ export function InformationPage({ page }: { page: InformationPageContent }) {
                 href={CONTACT_URL}
                 data-analytics-location={`${location}_footer`}
               >
-                {isCareers ? "Send an enquiry" : "Contact QuickVoice"}
+                {isCareers ? "Send an enquiry" : "Contact TinkerVoice"}
               </Link>
             </Button>
           </div>

@@ -63,7 +63,7 @@ export function blogListingMetadata(params = {}) {
     ? blogListingHref({ page: filters.requestedPage })
     : "/blog";
   return {
-    canonical: `https://quickvoice.co${canonicalPath}`,
+    canonical: `https://tinkervoice.co${canonicalPath}`,
     index: !filters.isFiltered && !filters.invalidPage,
   };
 }

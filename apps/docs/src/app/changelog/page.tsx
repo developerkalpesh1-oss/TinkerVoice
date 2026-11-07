@@ -6,7 +6,7 @@ import { mcpReferenceStats } from "@/generated/mcp-reference";
 
 export const metadata: Metadata = {
   title: "Changelog",
-  description: "QuickVoice documentation, API reference, and MCP server changelog.",
+  description: "TinkerVoice documentation, API reference, and MCP server changelog.",
 };
 
 const entries = [
@@ -14,7 +14,7 @@ const entries = [
     date: "July 2026",
     title: "MCP and API documentation launch",
     changes: [
-      "Published the QuickVoice MCP setup experience at /mcp.",
+      "Published the TinkerVoice MCP setup experience at /mcp.",
       `Documented ${mcpReferenceStats.toolCount} MCP tools and ${mcpReferenceStats.resourceCount} MCP resources from the generated MCP registry.`,
       `Listed ${mcpReferenceStats.excludedCount} excluded APIs for review before MCP exposure.`,
       "Added the REST API reference at /api-reference.",
@@ -27,10 +27,10 @@ export default function ChangelogPage() {
   return (
     <DocsShell>
       <section className="mx-auto max-w-4xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--qv-blue)]">QuickVoice Changelog</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--qv-blue)]">TinkerVoice Changelog</p>
         <h1 className="mt-5 text-5xl font-semibold tracking-[-0.045em] text-slate-950 md:text-7xl">Product docs changes.</h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--qv-muted)]">
-          Updates to QuickVoice documentation, API reference pages, MCP guides, and exposed MCP capabilities.
+          Updates to TinkerVoice documentation, API reference pages, MCP guides, and exposed MCP capabilities.
         </p>
 
         <div className="mt-12 space-y-5">

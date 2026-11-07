@@ -74,7 +74,7 @@ export function HealthcareHeroSection() {
               className="font-geist text-4xl font-light tracking-tighter text-foreground sm:text-5xl lg:text-6xl mb-6 relative z-10"
             >
               Transforming Healthcare Communication with{" "}
-              <span className="text-primary">QuickVoice</span>
+              <span className="text-primary">TinkerVoice</span>
             </motion.h1>
 
             <motion.p
@@ -83,7 +83,7 @@ export function HealthcareHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
-              Revolutionize patient engagement with QuickVoice&apos;s cutting-edge
+              Revolutionize patient engagement with TinkerVoice&apos;s cutting-edge
               Voice AI Agents. Our innovative solution ensures every patient call is
               answered, routed automatically, and reduces no-shows. Simplify transfers
               across multiple clinics and departments, enhancing care access without

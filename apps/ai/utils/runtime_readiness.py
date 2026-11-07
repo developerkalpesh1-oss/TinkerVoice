@@ -117,7 +117,7 @@ def _queue_check(
 
 
 def _probe_writable_queue(directory: Path) -> str | None:
-    probe_path = directory / f".quickvoice-readiness-{uuid.uuid4().hex}"
+    probe_path = directory / f".tinkervoice-readiness-{uuid.uuid4().hex}"
     file_descriptor: int | None = None
     try:
         directory.mkdir(parents=True, exist_ok=True)

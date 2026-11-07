@@ -1,8 +1,8 @@
 # Changelog
 
-This file records user-visible and contributor-visible changes to QuickVoice. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and released versions will use semantic version numbers where practical.
+This file records user-visible and contributor-visible changes to TinkerVoice. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and released versions will use semantic version numbers where practical.
 
-QuickVoice has not published a stable release. Everything under `Unreleased` may change before the first tag.
+TinkerVoice has not published a stable release. Everything under `Unreleased` may change before the first tag.
 
 ## Unreleased
 
@@ -18,7 +18,7 @@ QuickVoice has not published a stable release. Everything under `Unreleased` may
 
 - Raised the documented and enforced minimum Node.js version from 18 to 20.9.
 - Clarified Linux, macOS, and Windows/WSL2 setup paths.
-- Replaced the generated Next.js console README with QuickVoice-specific setup and verification guidance.
+- Replaced the generated Next.js console README with TinkerVoice-specific setup and verification guidance.
 
 ### Security
 

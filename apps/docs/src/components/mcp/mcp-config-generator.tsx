@@ -22,10 +22,10 @@ export function McpConfigGenerator() {
             MCP client setup guide
           </p>
           <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-slate-950 sm:text-4xl">
-            Generate your QuickVoice MCP config
+            Generate your TinkerVoice MCP config
           </h2>
           <p className="mt-4 text-base leading-7 text-[var(--qv-muted)]">
-            Enter your QuickVoice API key and MCP endpoint to produce a config
+            Enter your TinkerVoice API key and MCP endpoint to produce a config
             block. Values stay in this browser tab and are not sent anywhere.
           </p>
         </div>
@@ -50,7 +50,7 @@ export function McpConfigGenerator() {
             <div className="mt-6 space-y-5">
               <label className="block">
                 <span className="text-sm font-semibold text-slate-800">
-                  QuickVoice API key
+                  TinkerVoice API key
                 </span>
                 <div className="mt-2 flex overflow-hidden rounded-2xl border border-[var(--qv-border)] bg-white focus-within:ring-2 focus-within:ring-[var(--qv-blue)]/20">
                   <input
@@ -68,8 +68,8 @@ export function McpConfigGenerator() {
                     onClick={() => setShowKey((current) => !current)}
                     aria-label={
                       showKey
-                        ? "Hide QuickVoice API key"
-                        : "Show QuickVoice API key"
+                        ? "Hide TinkerVoice API key"
+                        : "Show TinkerVoice API key"
                     }
                   >
                     {showKey ? (

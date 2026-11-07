@@ -11,25 +11,25 @@ const faqs = [
     question:
       "How do AI voice agents handle real-time order status updates across different industries?",
     answer:
-      "QuickVoice's AI voice agents integrate seamlessly with existing logistics and order management systems to provide real-time status updates. The system automatically pulls data from your current systems and delivers personalized updates to customers via voice calls, ensuring they stay informed about their orders without manual intervention. This works across retail, healthcare, financial services, and all other industries we serve.",
+      "TinkerVoice's AI voice agents integrate seamlessly with existing logistics and order management systems to provide real-time status updates. The system automatically pulls data from your current systems and delivers personalized updates to customers via voice calls, ensuring they stay informed about their orders without manual intervention. This works across retail, healthcare, financial services, and all other industries we serve.",
   },
   {
     question:
       "Can the AI voice agents handle complex returns processing and resolution workflows?",
     answer:
-      "Yes, QuickVoice's AI voice agents are equipped with sophisticated conversation flows that can handle complex returns processing, including return authorization, refund processing, and resolution workflows. The system can automatically initiate return requests, process refunds, provide step-by-step guidance to customers throughout the returns process, and escalate to human agents when needed for complex cases.",
+      "Yes, TinkerVoice's AI voice agents are equipped with sophisticated conversation flows that can handle complex returns processing, including return authorization, refund processing, and resolution workflows. The system can automatically initiate return requests, process refunds, provide step-by-step guidance to customers throughout the returns process, and escalate to human agents when needed for complex cases.",
   },
   {
     question:
       "What security measures are in place for handling sensitive order and customer data?",
     answer:
-      "QuickVoice implements enterprise-grade security measures including SOC2, HIPAA, and PCI compliance for data protection. All customer data is encrypted in transit and at rest, with strict access controls and audit trails. The system maintains 99.9% uptime and sub-500ms latency while ensuring complete data privacy and security. We also provide comprehensive audit trails for compliance reporting.",
+      "TinkerVoice implements enterprise-grade security measures including SOC2, HIPAA, and PCI compliance for data protection. All customer data is encrypted in transit and at rest, with strict access controls and audit trails. The system maintains 99.9% uptime and sub-500ms latency while ensuring complete data privacy and security. We also provide comprehensive audit trails for compliance reporting.",
   },
   {
     question:
       "How does the system integrate with existing logistics and order management systems?",
     answer:
-      "QuickVoice offers easy integration with current logistics systems through APIs, webhooks, and direct database connections. Our forward-deployed team ensures seamless integration into your existing order systems, providing instant access to updates and maintaining data consistency across all platforms. The system supports popular e-commerce platforms, ERP systems, and custom logistics solutions.",
+      "TinkerVoice offers easy integration with current logistics systems through APIs, webhooks, and direct database connections. Our forward-deployed team ensures seamless integration into your existing order systems, providing instant access to updates and maintaining data consistency across all platforms. The system supports popular e-commerce platforms, ERP systems, and custom logistics solutions.",
   },
   {
     question:
@@ -41,7 +41,7 @@ const faqs = [
     question:
       "How can businesses customize the AI voice agent for their specific industry needs?",
     answer:
-      "QuickVoice offers extensive customization options including custom system prompts, industry-specific conversation flows, branded voice selection, and integration with your existing CRM and order management systems. You can bring your own AI models, customize the voice personality, set specific business rules, and configure the system to match your brand's tone and customer service standards. Our team works with you to ensure the solution perfectly fits your business requirements.",
+      "TinkerVoice offers extensive customization options including custom system prompts, industry-specific conversation flows, branded voice selection, and integration with your existing CRM and order management systems. You can bring your own AI models, customize the voice personality, set specific business rules, and configure the system to match your brand's tone and customer service standards. Our team works with you to ensure the solution perfectly fits your business requirements.",
   },
 ];
 

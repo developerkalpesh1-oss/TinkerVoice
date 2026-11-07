@@ -56,7 +56,7 @@ export function observeEnquiryContext(href, referrer = "") {
   try {
     const referral = new URL(referrer);
     const host = referral.hostname.toLowerCase().replace(/^www\./, "");
-    if (referral.origin === location.origin || ["quickvoice.co", "app.quickvoice.co", "console.quickvoice.co", "docs.quickvoice.co"].includes(host)) {
+    if (referral.origin === location.origin || ["tinkervoice.co", "app.tinkervoice.co", "console.tinkervoice.co", "docs.tinkervoice.co"].includes(host)) {
       // A new document reached internally has no trustworthy original source.
       source = medium = "unknown";
     } else if (/^(google\.(com|co\.uk|co\.in|ca|com\.au)|bing\.com|duckduckgo\.com)$/.test(host)) {
@@ -87,7 +87,7 @@ let documentContext;
 /** Capture only after analytics consent; declining clears the in-memory context. */
 export function captureEnquiryContext() {
   if (typeof window === "undefined") return undefined;
-  if (window.quickvoiceAnalyticsConsent !== "granted") {
+  if (window.tinkervoiceAnalyticsConsent !== "granted") {
     documentContext = undefined;
     return undefined;
   }

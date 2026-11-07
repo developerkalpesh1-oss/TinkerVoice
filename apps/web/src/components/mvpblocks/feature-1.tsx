@@ -233,7 +233,7 @@ function ControlSection() {
             Built For Teams That Need Control
           </h2>
           <p className="text-muted-foreground mx-auto mt-3 max-w-2xl">
-            Hosted APIs are convenient. QuickVoice is for teams that need to
+            Hosted APIs are convenient. TinkerVoice is for teams that need to
             inspect, self-host, extend, and reason about privacy-sensitive voice
             infrastructure.
           </p>
@@ -290,7 +290,7 @@ function PartnersSection() {
               Provider And Runtime Building Blocks
             </h2>
             <p className="text-foreground/60 mt-3">
-              QuickVoice keeps provider boundaries visible so teams can evaluate
+              TinkerVoice keeps provider boundaries visible so teams can evaluate
               voice, telephony, model, and data services deliberately.
             </p>
           </div>
@@ -335,7 +335,7 @@ export default function Feature1() {
           <div className="relative mx-auto max-w-2xl sm:text-center">
             <div className="relative z-10">
               <h2 className="mt-4 text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl">
-                Why Teams Choose QuickVoice
+                Why Teams Choose TinkerVoice
               </h2>
               <p className="text-foreground/60 mt-3">
                 The tradeoff is control over convenience: source code, provider

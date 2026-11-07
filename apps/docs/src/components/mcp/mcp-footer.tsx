@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { QuickVoiceLogo } from "@/components/quickvoice-logo";
+import { TinkerVoiceLogo } from "@/components/tinkervoice-logo";
 
 const groups = [
   {
@@ -31,9 +31,9 @@ export function McpFooter() {
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.2fr_1.8fr]">
         <div>
           <Link className="flex items-center gap-3 font-semibold" href="/">
-            <QuickVoiceLogo />
+            <TinkerVoiceLogo />
           </Link>
-          <p className="mt-4 max-w-md text-sm leading-6 text-slate-400">QuickVoice helps teams build, operate, and connect AI voice agents for calls, widgets, and support workflows.</p>
+          <p className="mt-4 max-w-md text-sm leading-6 text-slate-400">TinkerVoice helps teams build, operate, and connect AI voice agents for calls, widgets, and support workflows.</p>
         </div>
         <div className="grid gap-8 sm:grid-cols-3">
           {groups.map((group) => (
@@ -50,7 +50,7 @@ export function McpFooter() {
           ))}
         </div>
       </div>
-      <div className="mx-auto mt-12 max-w-7xl border-t border-white/10 pt-6 text-center text-xs text-slate-500">© 2026 QuickVoice. All rights reserved.</div>
+      <div className="mx-auto mt-12 max-w-7xl border-t border-white/10 pt-6 text-center text-xs text-slate-500">© 2026 TinkerVoice. All rights reserved.</div>
     </footer>
   );
 }

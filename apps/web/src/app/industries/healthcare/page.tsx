@@ -16,23 +16,23 @@ export const metadata: Metadata = {
   title: "Open-Source AI Phone-Agent Infrastructure for Healthcare",
   description:
     "Evaluate self-hostable AI phone-agent workflows for healthcare scheduling, reminders, routing, and follow-up with explicit provider and compliance boundaries.",
-  alternates: { canonical: "https://quickvoice.co/industries/healthcare" },
+  alternates: { canonical: "https://tinkervoice.co/industries/healthcare" },
   twitter: {
     card: "summary_large_image",
-    title: "QuickVoice for Healthcare Workflows",
+    title: "TinkerVoice for Healthcare Workflows",
     description:
       "Evaluate healthcare administrative phone workflows with explicit data, provider, action and compliance review boundaries.",
     images: ["/og-image.png"],
   },
   openGraph: {
-    title: "QuickVoice for Healthcare Workflows",
+    title: "TinkerVoice for Healthcare Workflows",
     description:
       "Inspect and adapt open-source phone-agent infrastructure for healthcare workflows. Compliance depends on deployment, controls, contracts, providers, and operations.",
-    url: "https://quickvoice.co/industries/healthcare",
-    siteName: "QuickVoice",
+    url: "https://tinkervoice.co/industries/healthcare",
+    siteName: "TinkerVoice",
     type: "website",
     images: [
-      { url: "https://quickvoice.co/og-image.png", width: 1200, height: 630 },
+      { url: "https://tinkervoice.co/og-image.png", width: 1200, height: 630 },
     ],
   },
 };
@@ -79,8 +79,8 @@ export default function HealthcarePage() {
     "@type": "WebPage",
     name: "Open-Source AI Phone-Agent Infrastructure for Healthcare",
     description:
-      "A factual overview of healthcare workflow patterns and deployment review boundaries for QuickVoice.",
-    url: "https://quickvoice.co/industries/healthcare",
+      "A factual overview of healthcare workflow patterns and deployment review boundaries for TinkerVoice.",
+    url: "https://tinkervoice.co/industries/healthcare",
   };
 
   return (
@@ -100,7 +100,7 @@ export default function HealthcarePage() {
             Build healthcare phone workflows on a stack you can inspect
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground">
-            QuickVoice exposes the console, API, agent worker, call data paths,
+            TinkerVoice exposes the console, API, agent worker, call data paths,
             and provider boundaries so a healthcare team can evaluate and adapt
             them before considering production use.
           </p>
@@ -108,7 +108,7 @@ export default function HealthcarePage() {
           <div className="mt-10">
             <EvidenceStatusNotice title="Healthcare use requires a full deployment review">
               <p>
-                QuickVoice does not claim that a fresh clone, repository, or
+                TinkerVoice does not claim that a fresh clone, repository, or
                 generic deployment is HIPAA compliant. Do not process protected
                 health information until your security, privacy, legal, and
                 operational owners approve the exact deployment and all required

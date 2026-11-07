@@ -29,7 +29,7 @@ import {
 import type { ConnectMcpInput, ExecuteMcpToolInput } from "./mcp.schema.js";
 
 const INTERNAL_TOOLKIT_MESSAGE =
-  "Composio management tools cannot be attached to QuickVoice agents. Choose the app you want to use, such as Gmail, Notion, or Calendar.";
+  "Composio management tools cannot be attached to TinkerVoice agents. Choose the app you want to use, such as Gmail, Notion, or Calendar.";
 
 const LEGACY_MESSAGE =
   "Reconnect this integration through Composio in the marketplace, then attach the new connection to your agents.";
@@ -267,7 +267,7 @@ async function createSetup(connection: Connection): Promise<Connection | null> {
     callbackUrl.searchParams.set("mcpConnectionId", connection.mcpConnectionId);
   } catch {
     throw new BadRequestError(
-      "Set CONSOLE_URL to the QuickVoice console URL before connecting integrations.",
+      "Set CONSOLE_URL to the TinkerVoice console URL before connecting integrations.",
     );
   }
   // Recover a grant when the provider succeeded but saving its ID failed. The

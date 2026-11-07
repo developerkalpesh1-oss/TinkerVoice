@@ -82,7 +82,7 @@ export const pollMcpSetup = (
     }
     if (!stopped && attempts >= maxAttempts)
       finish(
-        "Authorization is still pending. Complete setup, then return to QuickVoice.",
+        "Authorization is still pending. Complete setup, then return to TinkerVoice.",
       );
   }
   window.addEventListener("focus", refresh);
@@ -94,7 +94,7 @@ export const pollMcpSetup = (
 // the external authorization page access to window.opener.
 const setupChannel = (id: string): BroadcastChannel | null => {
   try {
-    return new BroadcastChannel(`quickvoice-mcp-setup:${id}`);
+    return new BroadcastChannel(`tinkervoice-mcp-setup:${id}`);
   } catch {
     return null;
   }
@@ -130,7 +130,7 @@ export function useMcpSetupReturn(selectTab: (tab: string) => void) {
         window.close();
         // Shown only if the browser refuses to close this tab.
         toast.info(
-          "Connected. You can close this tab and return to your original QuickVoice tab.",
+          "Connected. You can close this tab and return to your original TinkerVoice tab.",
         );
       };
       acknowledgementTimeout = window.setTimeout(() => channel.close(), 2000);
@@ -212,7 +212,7 @@ export function useOpenMcpSetup() {
       };
     window.open(setupUrl, "_blank", "noopener,noreferrer");
     toast.info(
-      "Complete setup in the new tab. You will return to QuickVoice automatically.",
+      "Complete setup in the new tab. You will return to TinkerVoice automatically.",
     );
     const stopPolling = pollMcpSetup(mcpConnectionId, qc);
     cleanup.current = () => {

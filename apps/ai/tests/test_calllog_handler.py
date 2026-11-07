@@ -262,13 +262,13 @@ class CallLogHandlerTests(unittest.TestCase):
         asyncio.run(
             post_call_log(
                 {"callId": "room-123", "organizationId": "org_123", "userId": "user_123"},
-                server_api_url="https://api.quickvoice.co",
+                server_api_url="https://api.tinkervoice.co",
                 internal_api_key="internal-secret",
                 post_json=fake_post_json,
             )
         )
 
-        self.assertEqual(calls[0][0], "https://api.quickvoice.co/api/v1/calls")
+        self.assertEqual(calls[0][0], "https://api.tinkervoice.co/api/v1/calls")
 
     def test_enqueue_and_flush_call_log_queue_retries_durable_payloads(self):
         with tempfile.TemporaryDirectory() as tmp:

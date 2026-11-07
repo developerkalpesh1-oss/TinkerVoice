@@ -44,10 +44,10 @@ type TelnyxOrder = {
 };
 
 const customerReference = (nonce: string) =>
-  `quickvoice-number-purchase:${nonce}`;
+  `tinkervoice-number-purchase:${nonce}`;
 
 const twilioFriendlyReference = (nonce: string) =>
-  `QuickVoice purchase ${nonce}`;
+  `TinkerVoice purchase ${nonce}`;
 
 function telnyxOrderResult(
   order: TelnyxOrder,

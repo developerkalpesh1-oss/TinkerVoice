@@ -197,12 +197,12 @@ body {
 }
 
 
-.api-reference-surface #quickvoice-scalar-api-reference,
-.api-reference-surface #quickvoice-scalar-api-reference > * {
+.api-reference-surface #tinkervoice-scalar-api-reference,
+.api-reference-surface #tinkervoice-scalar-api-reference > * {
   background: var(--qv-bg) !important;
   color: var(--qv-ink) !important;
 }
-.api-reference-surface #quickvoice-scalar-api-reference {
+.api-reference-surface #tinkervoice-scalar-api-reference {
   --scalar-background-1: var(--qv-bg) !important;
   --scalar-background-2: var(--qv-card) !important;
   --scalar-background-3: var(--qv-card-soft) !important;
@@ -220,23 +220,23 @@ body {
   --scalar-button-1: var(--qv-blue) !important;
   --scalar-button-1-color: #ffffff !important;
 }
-.api-reference-surface #quickvoice-scalar-api-reference [class*="sidebar"],
-.api-reference-surface #quickvoice-scalar-api-reference aside,
-.api-reference-surface #quickvoice-scalar-api-reference nav {
+.api-reference-surface #tinkervoice-scalar-api-reference [class*="sidebar"],
+.api-reference-surface #tinkervoice-scalar-api-reference aside,
+.api-reference-surface #tinkervoice-scalar-api-reference nav {
   background-color: var(--qv-card) !important;
   border-color: var(--qv-border) !important;
 }
-.api-reference-surface #quickvoice-scalar-api-reference input,
-.api-reference-surface #quickvoice-scalar-api-reference button,
-.api-reference-surface #quickvoice-scalar-api-reference select {
+.api-reference-surface #tinkervoice-scalar-api-reference input,
+.api-reference-surface #tinkervoice-scalar-api-reference button,
+.api-reference-surface #tinkervoice-scalar-api-reference select {
   border-color: var(--qv-border) !important;
 }
-.api-reference-surface #quickvoice-scalar-api-reference a,
-.api-reference-surface #quickvoice-scalar-api-reference button {
+.api-reference-surface #tinkervoice-scalar-api-reference a,
+.api-reference-surface #tinkervoice-scalar-api-reference button {
   color: inherit;
 }
-.api-reference-surface #quickvoice-scalar-api-reference code,
-.api-reference-surface #quickvoice-scalar-api-reference pre {
+.api-reference-surface #tinkervoice-scalar-api-reference code,
+.api-reference-surface #tinkervoice-scalar-api-reference pre {
   background-color: var(--qv-code) !important;
   color: #e5edff !important;
 }

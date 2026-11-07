@@ -6,7 +6,7 @@ import { ArrowRight, FileText, Play, BookOpen, Mic } from "lucide-react";
 const resources = [
   {
     type: "Case Study",
-    title: "Streamlining Customer Interaction: Jar's Success Story with QuickVoice on WhatsApp Business",
+    title: "Streamlining Customer Interaction: Jar's Success Story with TinkerVoice on WhatsApp Business",
     description: "Discover how Jar transformed their customer interaction process and achieved remarkable results using AI-powered educational assistants.",
     icon: FileText,
     link: "#",
@@ -51,7 +51,7 @@ export function EducationResourcesSection() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl mb-4">
-            What is cooking in QuickVoice?
+            What is cooking in TinkerVoice?
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Gain insights on how we are helping educational institutions improve their efficiency and productivity.

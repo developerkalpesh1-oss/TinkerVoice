@@ -115,7 +115,7 @@ export const navigation: NavigationItem[] = [
       {
         label: "MCP Server",
         href: MCP_DOCS_URL,
-        description: "Connect an MCP client to QuickVoice",
+        description: "Connect an MCP client to TinkerVoice",
       },
     ],
   },

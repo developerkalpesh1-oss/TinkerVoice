@@ -16,29 +16,29 @@ test("enquiry context strips queries, fragments and non-public paths", () => {
 });
 
 test("classifies only coarse observed sources, never raw referral/query values", () => {
-  const context = observeEnquiryContext("https://quickvoice.co/blog/vapi-alternatives?email=secret@example.com", "https://www.google.com/search?q=private+search");
+  const context = observeEnquiryContext("https://tinkervoice.co/blog/vapi-alternatives?email=secret@example.com", "https://www.google.com/search?q=private+search");
   assert.deepEqual(context, { landingPage: "/blog/vapi-alternatives", source: "google", medium: "organic", method: "browser_observed" });
   assert.equal(JSON.stringify(context).includes("secret"), false);
-  assert.equal(observeEnquiryContext("https://quickvoice.co/pricing", "https://github.com/allgpt-co/QuickVoice").source, "github");
-  assert.equal(observeEnquiryContext("https://quickvoice.co/", "https://chatgpt.com/c/private").medium, "ai_assistant");
-  assert.equal(observeEnquiryContext("https://quickvoice.co/").medium, "direct");
-  assert.equal(observeEnquiryContext("https://quickvoice.co/", "https://google.com.attacker.test/path").medium, "referral");
+  assert.equal(observeEnquiryContext("https://tinkervoice.co/pricing", "https://github.com/allgpt-co/TinkerVoice").source, "github");
+  assert.equal(observeEnquiryContext("https://tinkervoice.co/", "https://chatgpt.com/c/private").medium, "ai_assistant");
+  assert.equal(observeEnquiryContext("https://tinkervoice.co/").medium, "direct");
+  assert.equal(observeEnquiryContext("https://tinkervoice.co/", "https://google.com.attacker.test/path").medium, "referral");
 });
 
 test("paid identifiers and campaign-tagged visits cannot silently become organic", () => {
   for (const query of ["gclid=private", "gbraid=private", "wbraid=private", "msclkid=private"]) {
-    assert.equal(observeEnquiryContext(`https://quickvoice.co/?${query}`, "https://www.google.com/").medium, "paid");
+    assert.equal(observeEnquiryContext(`https://tinkervoice.co/?${query}`, "https://www.google.com/").medium, "paid");
   }
   for (const query of ["utm_source=private", "UTM_campaign=private", "utm_medium=cpc", "utm_medium=email"]) {
-    const context = observeEnquiryContext(`https://quickvoice.co/?${query}`, "https://www.google.com/");
+    const context = observeEnquiryContext(`https://tinkervoice.co/?${query}`, "https://www.google.com/");
     assert.equal(context.medium, "unknown");
     assert.equal(JSON.stringify(context).includes("private"), false);
   }
 });
 
 test("full internal document navigation without original context is unknown", () => {
-  for (const referrer of ["https://quickvoice.co/blog/vapi-alternatives", "https://www.quickvoice.co/", "https://app.quickvoice.co/", "https://console.quickvoice.co/", "https://docs.quickvoice.co/"]) {
-    assert.equal(observeEnquiryContext("https://quickvoice.co/company/contact", referrer).source, "unknown");
+  for (const referrer of ["https://tinkervoice.co/blog/vapi-alternatives", "https://www.tinkervoice.co/", "https://app.tinkervoice.co/", "https://console.tinkervoice.co/", "https://docs.tinkervoice.co/"]) {
+    assert.equal(observeEnquiryContext("https://tinkervoice.co/company/contact", referrer).source, "unknown");
   }
 });
 

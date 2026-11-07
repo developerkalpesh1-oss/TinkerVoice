@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { QuickVoiceLogo } from "@/components/quickvoice-logo";
+import { TinkerVoiceLogo } from "@/components/tinkervoice-logo";
 
 const links = [
   { href: "#overview", label: "Overview" },
@@ -15,7 +15,7 @@ export function McpPageNav() {
     <header className="sticky top-0 z-40 border-b border-[var(--qv-border)] bg-white/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link className="flex items-center gap-3 font-semibold tracking-tight text-slate-950" href="/">
-          <QuickVoiceLogo compact />
+          <TinkerVoiceLogo compact />
         </Link>
         <nav aria-label="MCP page sections" className="hidden items-center gap-1 rounded-full border border-[var(--qv-border)] bg-white p-1 text-sm shadow-sm md:flex">
           {links.map((link) => (

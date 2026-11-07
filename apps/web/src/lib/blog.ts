@@ -68,7 +68,7 @@ function parseFile(filename: string): BlogPost | null {
       tags: (data.tags as string[]) || [],
       metaTitle: (data.metaTitle as string) || (data.title as string),
       metaDescription: data.metaDescription as string,
-      canonical: `https://quickvoice.co/blog/${data.slug}`,
+      canonical: `https://tinkervoice.co/blog/${data.slug}`,
       ogImage: resolveOgImage(data.ogImage),
       readTime: (data.readTime as string) || "5 min",
       authorBio: (data.authorBio as string) || "",

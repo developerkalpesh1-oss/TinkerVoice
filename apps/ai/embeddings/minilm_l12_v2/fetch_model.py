@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a checksum-pinned all-MiniLM-L12-v2 artifact for QuickVoice TEI."""
+"""Build a checksum-pinned all-MiniLM-L12-v2 artifact for TinkerVoice TEI."""
 
 from __future__ import annotations
 
@@ -60,7 +60,7 @@ def download_file(relative_path: str, expected_sha256: str, output_dir: Path) ->
         try:
             request = urllib.request.Request(
                 url,
-                headers={"User-Agent": "QuickVoice-MiniLM-artifact-builder/1.0"},
+                headers={"User-Agent": "TinkerVoice-MiniLM-artifact-builder/1.0"},
             )
             with urllib.request.urlopen(request, timeout=180) as response, temporary.open("wb") as handle:
                 while chunk := response.read(1024 * 1024):
@@ -109,7 +109,7 @@ def configure_runtime(model_dir: Path) -> None:
         "runtime_max_seq_length": RUNTIME_MAX_SEQ_LENGTH,
         "derived_sentence_bert_config_sha256": sha256(sentence_config_path),
     }
-    (model_dir / "quickvoice-model-manifest.json").write_text(
+    (model_dir / "tinkervoice-model-manifest.json").write_text(
         json.dumps(provenance, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )

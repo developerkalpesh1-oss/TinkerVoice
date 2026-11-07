@@ -91,7 +91,7 @@ export function HealthcareSecuritySection() {
               viewport={{ once: true }}
               className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto"
             >
-              QuickVoice provides enterprise-level security and compliance features specifically designed
+              TinkerVoice provides enterprise-level security and compliance features specifically designed
               for healthcare organizations handling sensitive patient data.
             </motion.p>
           </div>
@@ -121,7 +121,7 @@ export function HealthcareSecuritySection() {
               Security Certifications &amp; Standards
             </h3>
             <p className="text-lg text-foreground/70">
-              QuickVoice meets the highest industry standards for healthcare data security.
+              TinkerVoice meets the highest industry standards for healthcare data security.
             </p>
           </div>
 

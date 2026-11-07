@@ -13,7 +13,7 @@ from utils.logger import logger, redact_sensitive
 from utils.metrics import emit_metric
 
 QUEUE_DIR_ENV = "AI_CALL_LOG_QUEUE_DIR"
-DEFAULT_QUEUE_DIR = "/var/lib/quickvoice/call-logs"
+DEFAULT_QUEUE_DIR = "/var/lib/tinkervoice/call-logs"
 DEAD_LETTER_DIR_NAME = "dead-letter"
 DEFAULT_QUEUE_POLL_SECONDS = 5.0
 MAX_QUEUE_RETRY_BACKOFF_SECONDS = 300.0
@@ -337,7 +337,7 @@ def _safe_filename(value: str) -> str:
 
 def _call_log_idempotency_key(payload: dict[str, Any]) -> str:
     digest = hashlib.sha256(_required(payload, "callId").encode("utf-8")).hexdigest()
-    return f"quickvoice-calllog-{digest}"
+    return f"tinkervoice-calllog-{digest}"
 
 
 def _reclaim_stale_queue_claims(directory: Path) -> None:

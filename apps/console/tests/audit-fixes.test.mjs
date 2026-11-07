@@ -231,21 +231,21 @@ test("server API key plugin grants organization-scoped default permissions", () 
   );
 });
 
-test("MCP setup UI asks for QuickVoice API keys and renders x-api-key config", () => {
+test("MCP setup UI asks for TinkerVoice API keys and renders x-api-key config", () => {
   const generator = read("../docs/src/components/mcp/mcp-config-generator.tsx");
   const config = read("../docs/src/lib/mcp-config.ts");
 
-  assert.match(generator, /QuickVoice API key/);
+  assert.match(generator, /TinkerVoice API key/);
   assert.match(
     generator,
     /The API key is only used to render the config below/,
   );
   assert.match(
     config,
-    /"x-api-key": apiKey\.trim\(\) \|\| "YOUR_QUICKVOICE_API_KEY"/,
+    /"x-api-key": apiKey\.trim\(\) \|\| "YOUR_TINKERVOICE_API_KEY"/,
   );
   assert.doesNotMatch(generator, /MCP token|The token is only used/);
-  assert.doesNotMatch(config, /Authorization|Bearer|YOUR_QUICKVOICE_MCP_TOKEN/);
+  assert.doesNotMatch(config, /Authorization|Bearer|YOUR_TINKERVOICE_MCP_TOKEN/);
 });
 
 test("agent creation, limits, and deletion are wired", () => {

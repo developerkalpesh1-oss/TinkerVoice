@@ -48,7 +48,7 @@ export function ManufacturingCtaSection() {
             className="mb-6 max-w-md text-base text-white sm:text-lg md:mb-8"
           >
             Discover how our innovative AI voice agents can transform your manufacturing operations.
-            Join leading manufacturers who have already revolutionized their processes with QuickVoice.
+            Join leading manufacturers who have already revolutionized their processes with TinkerVoice.
           </motion.p>
 
           <motion.div

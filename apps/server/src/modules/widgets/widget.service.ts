@@ -396,7 +396,7 @@ function toWidgetResponse(widget: {
     agent: widget.agent,
     embed: {
       scriptUrl,
-      snippet: `<quickvoice-widget widget-id="${widget.widgetId}"></quickvoice-widget>\n<script async src="${scriptUrl}"></script>`,
+      snippet: `<tinkervoice-widget widget-id="${widget.widgetId}"></tinkervoice-widget>\n<script async src="${scriptUrl}"></script>`,
     },
   };
 }
@@ -493,7 +493,7 @@ async function enforceWidgetRateLimit(input: {
 }) {
   const { windowSeconds, maxSessions } = widgetRateLimitPolicy();
   const key = [
-    "quickvoice",
+    "tinkervoice",
     "widget",
     "rate",
     input.widgetId,
@@ -576,7 +576,7 @@ function positiveIntEnv(name: string, fallback: number) {
 }
 
 function widgetScriptUrl() {
-  return `${serverBaseUrl}/widget/v1/quickvoice-widget.js`;
+  return `${serverBaseUrl}/widget/v1/tinkervoice-widget.js`;
 }
 
 function defaultConsentText() {

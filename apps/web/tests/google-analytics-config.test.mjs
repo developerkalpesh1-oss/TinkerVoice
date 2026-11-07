@@ -11,7 +11,7 @@ function browser(hostname, consent = "granted") {
   const scripts = [];
   const context = {
     URL,
-    window: { location: { hostname, pathname: "/" }, quickvoiceAnalyticsConsent: consent },
+    window: { location: { hostname, pathname: "/" }, tinkervoiceAnalyticsConsent: consent },
     document: {
       getElementById: (id) => scripts.find((script) => script.id === id),
       createElement: () => ({}),
@@ -21,8 +21,8 @@ function browser(hostname, consent = "granted") {
   return { scripts, context };
 }
 
-test("missing build configuration initializes QuickVoice's verified tag once on its own hosts", () => {
-  for (const host of ["quickvoice.co", "www.quickvoice.co"]) {
+test("missing build configuration initializes TinkerVoice's verified tag once on its own hosts", () => {
+  for (const host of ["tinkervoice.co", "www.tinkervoice.co"]) {
     const { scripts, context } = browser(host);
     const bootstrap = createGoogleAnalyticsScript();
     runInNewContext(bootstrap, context);
@@ -47,7 +47,7 @@ test("default tracking does not run on development, preview, or other self-hoste
   for (const host of [
     "localhost",
     "127.0.0.1",
-    "preview.quickvoice.co",
+    "preview.tinkervoice.co",
     "example.com",
   ]) {
     const { scripts, context } = browser(host);
@@ -74,11 +74,11 @@ test("explicit configuration supports a different property and an off switch", (
 test("manual pageviews require an explicit opt-in and suppress the automatic initial view only then", () => {
   for (const setting of [undefined, "", "false", "1", "yes"]) {
     assert.equal(manualPageviewsEnabled(setting), false);
-    const { context } = browser("quickvoice.co");
+    const { context } = browser("tinkervoice.co");
     runInNewContext(createGoogleAnalyticsScript("", manualPageviewsEnabled(setting)), context);
     assert.equal(context.window.dataLayer[4].length, 2);
   }
-  const { context } = browser("quickvoice.co");
+  const { context } = browser("tinkervoice.co");
   assert.equal(manualPageviewsEnabled(" true "), true);
   runInNewContext(createGoogleAnalyticsScript("", true), context);
   assert.equal(context.window.dataLayer[4][2].send_page_view, false);
@@ -86,24 +86,24 @@ test("manual pageviews require an explicit opt-in and suppress the automatic ini
 });
 
 test("the pageview coordinator uses the same destination and host guards as the bootstrap", () => {
-  assert.equal(resolveGoogleAnalyticsId("", "quickvoice.co"), "G-SZFBG11VRP");
-  assert.equal(resolveGoogleAnalyticsId("", "www.quickvoice.co"), "G-SZFBG11VRP");
-  for (const host of ["localhost", "preview.quickvoice.co", "quickvoice.co.example.com"]) {
+  assert.equal(resolveGoogleAnalyticsId("", "tinkervoice.co"), "G-SZFBG11VRP");
+  assert.equal(resolveGoogleAnalyticsId("", "www.tinkervoice.co"), "G-SZFBG11VRP");
+  for (const host of ["localhost", "preview.tinkervoice.co", "tinkervoice.co.example.com"]) {
     assert.equal(resolveGoogleAnalyticsId("", host), null);
     const { context, scripts } = browser(host);
     runInNewContext(createGoogleAnalyticsScript("", true), context);
     assert.equal(scripts.length, 0);
   }
   assert.equal(resolveGoogleAnalyticsId("G-TEST123", "localhost"), "G-TEST123");
-  assert.equal(resolveGoogleAnalyticsId("off", "quickvoice.co"), null);
+  assert.equal(resolveGoogleAnalyticsId("off", "tinkervoice.co"), null);
   assert.equal(createGoogleAnalyticsScript("off", true), null);
 });
 
 
 test("unknown or declined consent never loads a tag or queues measurement", () => {
   for (const choice of [undefined, null, "unknown", "denied", "true"]) {
-    const { scripts, context } = browser("quickvoice.co", choice);
-    context.window.quickvoiceAnalyticsConsent = choice;
+    const { scripts, context } = browser("tinkervoice.co", choice);
+    context.window.tinkervoiceAnalyticsConsent = choice;
     runInNewContext(createGoogleAnalyticsScript(), context);
     assert.equal(scripts.length, 0);
     assert.equal(context.window.gtag, undefined);
@@ -115,7 +115,7 @@ test("a consented direct private or unknown visit does not load or configure Ana
   for (const pathname of ["/login", "/app/customer-123", "/api/contact", "/unknown-marker",
     "/blog/unknown-post", "/solutions/unknown-solution", "/case-studies/unknown-customer", "/pricing/private-marker"]) {
     for (const manual of [false, true]) {
-      const { context, scripts } = browser("quickvoice.co");
+      const { context, scripts } = browser("tinkervoice.co");
       context.window.location.pathname = pathname;
       runInNewContext(createGoogleAnalyticsScript("", manual), context);
       assert.equal(scripts.length, 0, pathname);
@@ -126,18 +126,18 @@ test("a consented direct private or unknown visit does not load or configure Ana
 });
 
 test("a blocked initial visit can start once on a known public page while still respecting consent", () => {
-  const { context, scripts } = browser("quickvoice.co");
+  const { context, scripts } = browser("tinkervoice.co");
   context.window.location.pathname = "/unknown-marker";
   runInNewContext(createGoogleAnalyticsScript(), context);
-  context.window.quickvoiceStartAnalytics();
+  context.window.tinkervoiceStartAnalytics();
   assert.equal(scripts.length, 0);
   context.window.location.pathname = "/pricing/";
-  context.window.quickvoiceAnalyticsConsent = "denied";
-  context.window.quickvoiceStartAnalytics();
+  context.window.tinkervoiceAnalyticsConsent = "denied";
+  context.window.tinkervoiceStartAnalytics();
   assert.equal(scripts.length, 0);
-  context.window.quickvoiceAnalyticsConsent = "granted";
-  context.window.quickvoiceStartAnalytics();
-  context.window.quickvoiceStartAnalytics();
+  context.window.tinkervoiceAnalyticsConsent = "granted";
+  context.window.tinkervoiceStartAnalytics();
+  context.window.tinkervoiceStartAnalytics();
   assert.equal(scripts.length, 1);
   assert.equal(context.window.dataLayer.filter(args => args[0] === "config").length, 1);
 });
@@ -145,12 +145,12 @@ test("a blocked initial visit can start once on a known public page while still 
 test("only content slugs explicitly provided by the server may initialize the tag", () => {
   const paths = ["/", "/blog/published-example", "/case-studies/public-scenario"];
   for (const pathname of paths.slice(1)) {
-    const { context, scripts } = browser("quickvoice.co");
+    const { context, scripts } = browser("tinkervoice.co");
     context.window.location.pathname = pathname;
     runInNewContext(createGoogleAnalyticsScript("", false, paths), context);
     assert.equal(scripts.length, 1, pathname);
   }
-  const { context, scripts } = browser("quickvoice.co");
+  const { context, scripts } = browser("tinkervoice.co");
   context.window.location.pathname = "/blog/unpublished-example";
   runInNewContext(createGoogleAnalyticsScript("", false, paths), context);
   assert.equal(scripts.length, 0);
@@ -165,7 +165,7 @@ test("bootstrap keeps only the HTTP referral origin before automatic measurement
     ["javascript:alert(1)", ""], ["data:text/plain,synthetic", ""],
     ["file:///private/report", ""],
   ]) {
-    const { context } = browser("quickvoice.co");
+    const { context } = browser("tinkervoice.co");
     context.document.referrer = referrer;
     runInNewContext(createGoogleAnalyticsScript(), context);
     const commands = context.window.dataLayer.map((args) => Array.from(args));

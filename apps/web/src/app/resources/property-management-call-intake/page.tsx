@@ -18,11 +18,11 @@ const description = "Plan a request-only leasing pilot with a fictional call scr
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: `https://quickvoice.co${PROPERTY_RESOURCE_PATH}` },
+  alternates: { canonical: `https://tinkervoice.co${PROPERTY_RESOURCE_PATH}` },
   openGraph: {
     title,
     description,
-    url: `https://quickvoice.co${PROPERTY_RESOURCE_PATH}`,
+    url: `https://tinkervoice.co${PROPERTY_RESOURCE_PATH}`,
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image", title, description, images: ["/og-image.png"] },

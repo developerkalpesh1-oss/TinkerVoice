@@ -74,7 +74,7 @@ export function SaasHeroSection() {
               className="font-geist text-4xl font-light tracking-tighter text-foreground sm:text-5xl lg:text-6xl mb-6 relative z-10"
             >
               Turn Every Call into a Conversion with{" "}
-              <span className="text-primary">QuickVoice AI</span>
+              <span className="text-primary">TinkerVoice AI</span>
             </motion.h1>
 
             <motion.p
@@ -84,7 +84,7 @@ export function SaasHeroSection() {
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
               Unlock the power of conversational AI. Transform your customer
-              engagement with QuickVoice&apos;s cutting-edge AI call software
+              engagement with TinkerVoice&apos;s cutting-edge AI call software
               solutions. Our innovative technology enables seamless inbound and
               outbound AI voice interactions that feel like human conversations.
             </motion.p>

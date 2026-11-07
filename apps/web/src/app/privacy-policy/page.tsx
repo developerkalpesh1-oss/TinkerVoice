@@ -5,24 +5,24 @@ import { DEMO_BOOKING_URL } from "@/lib/links";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "QuickVoice Privacy Policy: information collection, use, sharing, retention, privacy requests and contact details.",
+    "TinkerVoice Privacy Policy: information collection, use, sharing, retention, privacy requests and contact details.",
   alternates: {
-    canonical: "https://quickvoice.co/privacy-policy",
+    canonical: "https://tinkervoice.co/privacy-policy",
   },
   openGraph: {
     title: "Privacy Policy",
     description:
-      "QuickVoice Privacy Policy — how we collect, use, and protect your data.",
+      "TinkerVoice Privacy Policy — how we collect, use, and protect your data.",
     type: "website",
-    url: "https://quickvoice.co/privacy-policy",
-    siteName: "QuickVoice",
+    url: "https://tinkervoice.co/privacy-policy",
+    siteName: "TinkerVoice",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "QuickVoice Privacy Policy",
+    title: "TinkerVoice Privacy Policy",
     description:
-      "QuickVoice Privacy Policy — how we collect, use, and protect your data.",
+      "TinkerVoice Privacy Policy — how we collect, use, and protect your data.",
   },
 };
 
@@ -74,15 +74,15 @@ export default function PrivacyPolicyPage() {
             {/* Introduction */}
             <div>
               <p className="text-lg leading-relaxed text-muted-foreground">
-                QuickVoice (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;)
+                TinkerVoice (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;)
                 is committed to protecting your privacy. This Privacy Policy
                 explains how we collect, use, disclose, and safeguard your
                 information when you visit our website at{" "}
                 <a
-                  href="https://quickvoice.co"
+                  href="https://tinkervoice.co"
                   className="text-primary underline underline-offset-4"
                 >
-                  quickvoice.co
+                  tinkervoice.co
                 </a>{" "}
                 and use our AI voice agent platform and related services
                 (collectively, the &quot;Services&quot;). Please read this
@@ -431,10 +431,10 @@ export default function PrivacyPolicyPage() {
               <p className="mt-3 leading-relaxed text-muted-foreground">
                 To exercise any of the above rights, please contact us at{" "}
                 <a
-                  href="mailto:support@quickvoice.co"
+                  href="mailto:support@tinkervoice.co"
                   className="text-primary underline underline-offset-4"
                 >
-                  support@quickvoice.co
+                  support@tinkervoice.co
                 </a>
                 . We will respond to your request within the timeframe required
                 by applicable law (typically 30 days for GDPR and 45 days for
@@ -506,10 +506,10 @@ export default function PrivacyPolicyPage() {
                 believe that a child under 16 has provided us with personal
                 information, please contact us at{" "}
                 <a
-                  href="mailto:support@quickvoice.co"
+                  href="mailto:support@tinkervoice.co"
                   className="text-primary underline underline-offset-4"
                 >
-                  support@quickvoice.co
+                  support@tinkervoice.co
                 </a>
                 .
               </p>
@@ -557,14 +557,14 @@ export default function PrivacyPolicyPage() {
                 Privacy Policy or our data practices, please contact us:
               </p>
               <div className="mt-6 rounded-xl border border-border bg-muted/30 p-6 sm:p-8">
-                <p className="font-semibold text-foreground">QuickVoice</p>
+                <p className="font-semibold text-foreground">TinkerVoice</p>
                 <p className="mt-1 text-muted-foreground">
                   Email:{" "}
                   <a
-                    href="mailto:support@quickvoice.co"
+                    href="mailto:support@tinkervoice.co"
                     className="text-primary underline underline-offset-4"
                   >
-                    support@quickvoice.co
+                    support@tinkervoice.co
                   </a>
                 </p>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -605,7 +605,7 @@ export default function PrivacyPolicyPage() {
             Have privacy or security questions before you deploy?
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-            Book time with a QuickVoice specialist to review data handling,
+            Book time with a TinkerVoice specialist to review data handling,
             voice records, and compliance requirements for your use case.
           </p>
           <Link

@@ -22,15 +22,15 @@ test("revocation disables collection before consent update and clears only analy
   const expired = [];
   const commands = [];
   const browser = {
-    quickvoiceAnalyticsMeasurementId: "G-TEST123",
-    location: { hostname: "www.quickvoice.co" },
+    tinkervoiceAnalyticsMeasurementId: "G-TEST123",
+    location: { hostname: "www.tinkervoice.co" },
     document: {
       get cookie() { return "_ga=visitor; _ga_TEST123=session; essential=keep"; },
       set cookie(value) { expired.push(value); },
     },
     gtag: (...args) => {
       assert.equal(browser["ga-disable-G-TEST123"], true);
-      assert.equal(browser.quickvoiceAnalyticsConsent, "denied");
+      assert.equal(browser.tinkervoiceAnalyticsConsent, "denied");
       commands.push(args);
     },
   };
@@ -38,7 +38,7 @@ test("revocation disables collection before consent update and clears only analy
   assert.equal(commands[0][2].analytics_storage, "denied");
   assert.equal(commands[0][2].ad_storage, "denied");
   assert.ok(expired.every((value) => value.startsWith("_ga") && value.includes("Max-Age=0")));
-  assert.ok(expired.some((value) => value.includes("Domain=.quickvoice.co")));
+  assert.ok(expired.some((value) => value.includes("Domain=.tinkervoice.co")));
   browser.gtag = (...args) => commands.push(args);
   applyConsent(browser, "granted");
   assert.equal(browser["ga-disable-G-TEST123"], false);
@@ -54,29 +54,29 @@ test("enquiry context is omitted without consent and discarded on revocation", (
     if (oldWindow === undefined) delete globalThis.window; else globalThis.window = oldWindow;
     if (oldDocument === undefined) delete globalThis.document; else globalThis.document = oldDocument;
   });
-  globalThis.window = { location: { href: "https://quickvoice.co/pricing?email=secret@example.com" } };
+  globalThis.window = { location: { href: "https://tinkervoice.co/pricing?email=secret@example.com" } };
   globalThis.document = { referrer: "https://www.google.com/?q=secret" };
   assert.equal(captureEnquiryContext(), undefined);
-  window.quickvoiceAnalyticsConsent = "granted";
+  window.tinkervoiceAnalyticsConsent = "granted";
   assert.deepEqual(captureEnquiryContext(), {
     landingPage: "/pricing", source: "google", medium: "organic", method: "browser_observed",
   });
-  window.quickvoiceAnalyticsConsent = "denied";
+  window.tinkervoiceAnalyticsConsent = "denied";
   assert.equal(captureEnquiryContext(), undefined);
-  window.location.href = "https://quickvoice.co/company/contact";
-  window.quickvoiceAnalyticsConsent = "granted";
+  window.location.href = "https://tinkervoice.co/company/contact";
+  window.tinkervoiceAnalyticsConsent = "granted";
   assert.equal(captureEnquiryContext().landingPage, "/company/contact");
 });
 
 
 test("unanswered consent keeps shared GA cookies while collection remains disabled", () => {
-  for (const hostname of ["quickvoice.co", "www.quickvoice.co", "docs.quickvoice.co"]) {
+  for (const hostname of ["tinkervoice.co", "www.tinkervoice.co", "docs.tinkervoice.co"]) {
     for (const choice of [undefined, "unknown", "corrupt"]) {
       const deleted = [];
       const commands = [];
       const browser = {
         location: { hostname },
-        quickvoiceAnalyticsMeasurementId: "G-TEST123",
+        tinkervoiceAnalyticsMeasurementId: "G-TEST123",
         document: {
           get cookie() { return "_ga=marketing-visitor; _ga_TEST123=marketing-session; essential=keep"; },
           set cookie(value) { deleted.push(value); },

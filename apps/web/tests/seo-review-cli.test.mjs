@@ -12,7 +12,7 @@ const matter = require("gray-matter");
 const repositoryRoot = new URL("../../../", import.meta.url);
 
 test("article review CLI issues current content-bound records only after a passing audit", (t) => {
-  const root = mkdtempSync(join(tmpdir(), "quickvoice-seo-review-"));
+  const root = mkdtempSync(join(tmpdir(), "tinkervoice-seo-review-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   for (const directory of ["scripts", "apps/web/src/lib", "apps/web/content/blog"]) mkdirSync(join(root, directory), { recursive: true });
   for (const file of ["scripts/review-seo-article.mjs", "scripts/audit-public-claims.mjs", "apps/web/src/lib/blog-review.mjs"]) copyFileSync(new URL(file, repositoryRoot), join(root, file));
@@ -22,7 +22,7 @@ test("article review CLI issues current content-bound records only after a passi
   const article = "apps/web/content/blog/fixture.md";
   const original = '---\ntitle: "Voice agent evaluation"\nslug: "fixture"\ndate: "2026-01-01"\n---\n\nRead the repository to evaluate the setup requirements.\n';
   const execute = (...args) => spawnSync(process.execPath, ["scripts/review-seo-article.mjs", article, ...args], { cwd: root, encoding: "utf8" });
-  const reviewArgs = ["--reviewer", "Test reviewer", "--source", "https://github.com/allgpt-co/QuickVoice"];
+  const reviewArgs = ["--reviewer", "Test reviewer", "--source", "https://github.com/allgpt-co/TinkerVoice"];
   writeFileSync(join(root, article), original);
   let result = execute(...reviewArgs);
   assert.equal(result.status, 0, result.stderr);
@@ -31,7 +31,7 @@ test("article review CLI issues current content-bound records only after a passi
   assert.equal(approved.content, matter(original).content);
   assert.equal(isValidEvidenceReview(approved.data.evidenceReview, computeContentHash(approved.data, approved.content)), true);
 
-  for (const suffix of ["\nQuickVoice is HIPAA compliant.\n", "\n<!-- claims-audit: allow MADE-UP -->\n"]) {
+  for (const suffix of ["\nTinkerVoice is HIPAA compliant.\n", "\n<!-- claims-audit: allow MADE-UP -->\n"]) {
     const rejected = `${original}${suffix}`;
     writeFileSync(join(root, article), rejected);
     result = execute(...reviewArgs);

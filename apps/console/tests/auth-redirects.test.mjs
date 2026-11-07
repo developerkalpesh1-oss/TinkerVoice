@@ -21,18 +21,18 @@ const registerSource = compile(
 test("signup rejects duplicate emails and new-account verification returns to the console", async () => {
   for (const [configuredOrigin, browserOrigin, expectedCallback, invitationId = "", responseKind = "new"] of [
     [
-      "https://app.quickvoice.co",
-      "https://preview.quickvoice.co",
-      "https://app.quickvoice.co/login",
+      "https://app.tinkervoice.co",
+      "https://preview.tinkervoice.co",
+      "https://app.tinkervoice.co/login",
     ],
     [
-      "https://app.quickvoice.co/",
-      "https://app.quickvoice.co",
-      "https://app.quickvoice.co/login",
+      "https://app.tinkervoice.co/",
+      "https://app.tinkervoice.co",
+      "https://app.tinkervoice.co/login",
     ],
     [undefined, "http://localhost:3000", "http://localhost:3000/login"],
     [undefined, "http://localhost:3000", "http://localhost:3000/login", "", "duplicate"],
-    ["https://app.quickvoice.co/", "https://preview.quickvoice.co", "https://app.quickvoice.co/accept-invitation?invitationId=invite%26role%3Downer", "invite&role=owner"],
+    ["https://app.tinkervoice.co/", "https://preview.tinkervoice.co", "https://app.tinkervoice.co/accept-invitation?invitationId=invite%26role%3Downer", "invite&role=owner"],
   ]) {
     const links = { exports: {} };
     vm.runInNewContext(linksSource, {
@@ -102,7 +102,7 @@ test("signup rejects duplicate emails and new-account verification returns to th
 
     assert.equal(signupBody.callbackURL, expectedCallback);
     const verificationUrl = new URL(
-      "https://api.quickvoice.co/api/v1/auth/verify-email",
+      "https://api.tinkervoice.co/api/v1/auth/verify-email",
     );
     verificationUrl.searchParams.set("callbackURL", signupBody.callbackURL);
     assert.equal(
@@ -127,7 +127,7 @@ test("invited email and Google sign-in preserve the invitation and use fixed int
   const links = { exports: {} };
   vm.runInNewContext(linksSource, {
     exports: links.exports,
-    process: { env: { NEXT_PUBLIC_CONSOLE_URL: "https://app.quickvoice.co/" } },
+    process: { env: { NEXT_PUBLIC_CONSOLE_URL: "https://app.tinkervoice.co/" } },
   });
   for (const invitationId of ["", "invite&role=owner", "https://untrusted.example/path"]) {
     let submit;
@@ -172,7 +172,7 @@ test("invited email and Google sign-in preserve the invitation and use fixed int
       vm.runInNewContext(compile(path), {
         exports: component.exports,
         require: (name) => mocks[name] ?? {},
-        window: { location: { origin: "https://preview.quickvoice.co" } },
+        window: { location: { origin: "https://preview.tinkervoice.co" } },
       });
       return component.exports;
     }
@@ -190,9 +190,9 @@ test("invited email and Google sign-in preserve the invitation and use fixed int
     elements.length = 0;
     loadComponent("../src/components/oauth-buttons.tsx").default({ invitationId });
     await elements.find(({ props }) => props?.onClick).props.onClick();
-    assert.equal(socialBody.callbackURL, `https://app.quickvoice.co${destination}`);
-    assert.equal(socialBody.newUserCallbackURL, `https://app.quickvoice.co${invitationId ? destination : "/orgs"}`);
-    assert.equal(socialBody.errorCallbackURL, `https://app.quickvoice.co${links.exports.invitationPath(invitationId, "/login")}`);
+    assert.equal(socialBody.callbackURL, `https://app.tinkervoice.co${destination}`);
+    assert.equal(socialBody.newUserCallbackURL, `https://app.tinkervoice.co${invitationId ? destination : "/orgs"}`);
+    assert.equal(socialBody.errorCallbackURL, `https://app.tinkervoice.co${links.exports.invitationPath(invitationId, "/login")}`);
   }
 });
 
@@ -227,7 +227,7 @@ test("password recovery preserves invitation IDs through canonical reset links, 
   const links = { exports: {} };
   vm.runInNewContext(linksSource, {
     exports: links.exports,
-    process: { env: { NEXT_PUBLIC_CONSOLE_URL: "https://app.quickvoice.co/" } },
+    process: { env: { NEXT_PUBLIC_CONSOLE_URL: "https://app.tinkervoice.co/" } },
   });
   for (const invitationId of ["", "invite&role=owner", "https://untrusted.example/path"]) {
     let submit, resetRequest, nextPage;
@@ -256,14 +256,14 @@ test("password recovery preserves invitation IDs through canonical reset links, 
       vm.runInNewContext(compile(path), {
         exports: component.exports,
         require: (name) => mocks[name] ?? {},
-        window: { location: { origin: "https://preview.quickvoice.co" } },
+        window: { location: { origin: "https://preview.tinkervoice.co" } },
       });
       component.exports.default();
       elements.find(({ type }) => typeof type === "function").type();
     }
     render("../src/app/(auth)/forgot-password/page.tsx");
     await submit({ email: "qa@example.com" });
-    assert.equal(resetRequest.redirectTo, `https://app.quickvoice.co${links.exports.invitationPath(invitationId, "/reset-password")}`);
+    assert.equal(resetRequest.redirectTo, `https://app.tinkervoice.co${links.exports.invitationPath(invitationId, "/reset-password")}`);
     assert.equal(notices.length, 1);
     assert.doesNotMatch(notices[0], /sent|successfully/i);
     assert.ok(elements.some(({ props }) => props?.href === links.exports.invitationPath(invitationId, "/login")));

@@ -34,7 +34,7 @@ export function LogisticsTestimonialsSection() {
               Trusted by Logistics Companies to Resolve Queries and Delight Customers
             </h2>
             <p className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto">
-              QuickVoice&apos;s human-like AI Voice Agents help logistics companies to reduce turnaround time by 90%, cost per interaction by 50%, and achieve an 80% containment rate by AI.
+              TinkerVoice&apos;s human-like AI Voice Agents help logistics companies to reduce turnaround time by 90%, cost per interaction by 50%, and achieve an 80% containment rate by AI.
             </p>
           </div>
           <div
@@ -88,7 +88,7 @@ export function LogisticsTestimonialsSection() {
             </div>
 
             <blockquote className="text-xl text-foreground mb-8 leading-relaxed">
-              &ldquo;QuickVoice&apos;s AI voice agents have revolutionized our customer support operations. We&apos;ve seen dramatic improvements in response times and customer satisfaction while significantly reducing our operational costs. The seamless integration with our existing systems made the transition smooth and effortless.&rdquo;
+              &ldquo;TinkerVoice&apos;s AI voice agents have revolutionized our customer support operations. We&apos;ve seen dramatic improvements in response times and customer satisfaction while significantly reducing our operational costs. The seamless integration with our existing systems made the transition smooth and effortless.&rdquo;
             </blockquote>
 
             <div className="flex items-center">

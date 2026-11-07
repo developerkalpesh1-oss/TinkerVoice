@@ -18,7 +18,7 @@ class VoiceWorkerMetadataTests(unittest.TestCase):
         metadata = parse_voice_session_metadata(
             json.dumps(
                 {
-                    "schema_version": "quickvoice.voice-session.v1",
+                    "schema_version": "tinkervoice.voice-session.v1",
                     "catalog_version": "2026-06-30",
                     "room": {"name": "voice-room-1"},
                     "participant": {"identity": "caller-1", "name": "Caller One"},
@@ -40,13 +40,13 @@ class VoiceWorkerMetadataTests(unittest.TestCase):
 
         self.assertEqual(metadata.room_name, "voice-room-1")
         self.assertEqual(metadata.config["stt"]["provider"], "deepgram")
-        self.assertTrue(is_voice_session_metadata(json.dumps({"schema_version": "quickvoice.voice-session.v1"})))
+        self.assertTrue(is_voice_session_metadata(json.dumps({"schema_version": "tinkervoice.voice-session.v1"})))
 
     def test_parse_voice_session_metadata_exposes_preview_mode(self):
         metadata = parse_voice_session_metadata(
             json.dumps(
                 {
-                    "schema_version": "quickvoice.voice-session.v1",
+                    "schema_version": "tinkervoice.voice-session.v1",
                     "catalog_version": "2026-06-30",
                     "room": {"name": "preview-room-1"},
                     "participant": {"identity": "preview-user-1", "name": "Preview user"},

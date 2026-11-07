@@ -55,7 +55,7 @@ test("existing property URL owns the focused pilot, canonical, accessible conten
   const html = renderToStaticMarkup(React.createElement(Page));
   assert.equal(
     metadata.alternates.canonical,
-    "https://quickvoice.co/industries/real-estate",
+    "https://tinkervoice.co/industries/real-estate",
   );
   assert.equal(metadata.openGraph.url, metadata.alternates.canonical);
   assert.match(metadata.title, /Property Management/);
@@ -130,7 +130,7 @@ test("property guides, hub and sitemap create one internally linked canonical cl
     ...expected.map((slug) => `/blog/${slug}`),
   ]) {
     assert.equal(
-      urls.filter((url) => url === `https://quickvoice.co${path}`).length,
+      urls.filter((url) => url === `https://tinkervoice.co${path}`).length,
       1,
       path,
     );

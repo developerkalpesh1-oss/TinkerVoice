@@ -40,7 +40,7 @@ class ApiTests(unittest.TestCase):
             os.environ,
             {
                 "INTERNAL_API_KEY": "internal-secret",
-                "QUICKVOICE_BILLING_MODE": "self_hosted",
+                "TINKERVOICE_BILLING_MODE": "self_hosted",
             },
             clear=True,
         ):
@@ -53,7 +53,7 @@ class ApiTests(unittest.TestCase):
 
         with patch.dict(
             os.environ,
-            {"QUICKVOICE_BILLING_MODE": "hosted"},
+            {"TINKERVOICE_BILLING_MODE": "hosted"},
             clear=True,
         ), patch.object(
             api,
@@ -73,7 +73,7 @@ class ApiTests(unittest.TestCase):
             os.environ,
             {
                 "INTERNAL_API_KEY": "internal-secret",
-                "QUICKVOICE_BILLING_MODE": "hosted",
+                "TINKERVOICE_BILLING_MODE": "hosted",
             },
             clear=True,
         ):

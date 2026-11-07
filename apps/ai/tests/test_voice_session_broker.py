@@ -19,7 +19,7 @@ class VoiceSessionBrokerTests(unittest.IsolatedAsyncioTestCase):
                 "LIVEKIT_URL": "wss://livekit.example.com",
                 "LIVEKIT_API_KEY": "key",
                 "LIVEKIT_API_SECRET": "test-livekit-secret-at-least-32-bytes",
-                "LIVEKIT_AGENT_NAME": "QuickVoice",
+                "LIVEKIT_AGENT_NAME": "TinkerVoice",
             },
             clear=True,
         ):
@@ -35,7 +35,7 @@ class VoiceSessionBrokerTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(session["participant"]["token"])
         self.assertEqual(session["agent"]["dispatch_id"], "dispatch-123")
         metadata = json.loads(dispatch.calls[0]["metadata"])
-        self.assertEqual(metadata["schema_version"], "quickvoice.voice-session.v1")
+        self.assertEqual(metadata["schema_version"], "tinkervoice.voice-session.v1")
         self.assertEqual(metadata["participant"]["identity"], "caller-1")
         self.assertEqual(metadata["client_metadata"]["account_id"], "acct_1")
 
@@ -46,7 +46,7 @@ class VoiceSessionBrokerTests(unittest.IsolatedAsyncioTestCase):
                 "LIVEKIT_URL": "wss://livekit.example.com",
                 "LIVEKIT_API_KEY": "key",
                 "LIVEKIT_API_SECRET": "test-livekit-secret-at-least-32-bytes",
-                "LIVEKIT_AGENT_NAME": "QuickVoice",
+                "LIVEKIT_AGENT_NAME": "TinkerVoice",
                 "SESSION_TOKEN_TTL_SECONDS": "900",
             },
             clear=True,

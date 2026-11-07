@@ -256,7 +256,7 @@ test("bot-specific robots groups retain all private-route restrictions", () => {
       : ["allow: /", ...privatePaths.map((path) => `disallow: ${path}`)].sort();
     assert.deepEqual(rules, expected, `${agent} must retain its crawl policy`);
   }
-  assert.match(read("public/robots.txt"), /^Sitemap: https:\/\/quickvoice\.co\/sitemap\.xml$/m);
+  assert.match(read("public/robots.txt"), /^Sitemap: https:\/\/tinkervoice\.co\/sitemap\.xml$/m);
 });
 
 test("legacy /register conversion paths resolve to the external console signup", () => {
@@ -269,7 +269,7 @@ test("legacy /register conversion paths resolve to the external console signup",
 
   assert.match(nextConfig, /async\s+redirects\(\)/);
   assert.match(nextConfig, /source:\s*["']\/register["']/);
-  assert.match(nextConfig, /https:\/\/console\.quickvoice\.co/);
+  assert.match(nextConfig, /https:\/\/console\.tinkervoice\.co/);
   assert.match(nextConfig, /destination:\s*`\$\{consoleUrl\}\/register`/);
   assert.doesNotMatch(robots, /Disallow:\s*\/register\b/);
   assert.match(markdownRenderer, /REGISTER_URL/);
@@ -310,7 +310,7 @@ test("contact page offers direct booking and usable email and phone alternatives
     "src/components/landing/contact-us/contact-us-hero-section.tsx",
   );
   assert.match(hero, /href=\{DEMO_BOOKING_URL\}/);
-  assert.match(contactPage, /href="mailto:info@quickvoice\.co"/);
+  assert.match(contactPage, /href="mailto:info@tinkervoice\.co"/);
   assert.match(contactPage, /href="tel:\+12184525998"/);
 });
 

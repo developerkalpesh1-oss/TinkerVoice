@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     question: "How do AI voice agents integrate with existing e-commerce platforms like Shopify or WooCommerce?",
-    answer: "QuickVoice offers seamless integration with major e-commerce platforms through APIs and webhooks. The AI agents can access real-time inventory data, customer order history, product catalogs, and CRM information. This allows them to provide accurate, personalized assistance while maintaining data consistency across all your systems."
+    answer: "TinkerVoice offers seamless integration with major e-commerce platforms through APIs and webhooks. The AI agents can access real-time inventory data, customer order history, product catalogs, and CRM information. This allows them to provide accurate, personalized assistance while maintaining data consistency across all your systems."
   },
   {
     question: "Can AI voice agents help with upselling and cross-selling in retail?",
@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     question: "How do AI voice agents handle multilingual customer support for global e-commerce?",
-    answer: "QuickVoice's AI agents support over 100 languages and can automatically detect the customer's preferred language. They can seamlessly switch between languages during a conversation and provide culturally appropriate responses. This enables 24/7 multilingual support without the need for multilingual staff, expanding your global reach."
+    answer: "TinkerVoice's AI agents support over 100 languages and can automatically detect the customer's preferred language. They can seamlessly switch between languages during a conversation and provide culturally appropriate responses. This enables 24/7 multilingual support without the need for multilingual staff, expanding your global reach."
   },
   {
     question: "What analytics and insights do AI voice agents provide for e-commerce optimization?",

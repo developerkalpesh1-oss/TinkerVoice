@@ -21,7 +21,7 @@ export function LogisticsInsightsSection() {
     {
       icon: Zap,
       title: "Effortless Integration into Your Stack",
-      description: "Get up and running in days, not months: choose from our pre-built connectors for Salesforce, Zendesk, Shopify, and more; embed our Web & Mobile SDKs with a few lines of code; or leverage flexible REST APIs and webhooks to wire QuickVoice into any custom workflow.",
+      description: "Get up and running in days, not months: choose from our pre-built connectors for Salesforce, Zendesk, Shopify, and more; embed our Web & Mobile SDKs with a few lines of code; or leverage flexible REST APIs and webhooks to wire TinkerVoice into any custom workflow.",
       image: "/images/logistics/integration-stack.png"
     }
   ];

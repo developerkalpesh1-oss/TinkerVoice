@@ -12,39 +12,39 @@ export function OperationsAutomationFaqSection() {
   const faqs = [
     {
       question:
-        "How does QuickVoice's AI handle complex operational workflows across different industries?",
+        "How does TinkerVoice's AI handle complex operational workflows across different industries?",
       answer:
-        "QuickVoice's AI voice agents are designed to handle complex operational workflows by integrating with existing systems and databases. They can automate inventory management, coordinate supplier communications, manage patient intake processes, handle KYC verification, track property listings, schedule service appointments, confirm bookings, manage enrollment processes, assign technicians, and automate subscription workflows across retail, healthcare, financial services, real estate, automotive, travel, education, home services, SaaS, logistics, HR, and manufacturing industries.",
+        "TinkerVoice's AI voice agents are designed to handle complex operational workflows by integrating with existing systems and databases. They can automate inventory management, coordinate supplier communications, manage patient intake processes, handle KYC verification, track property listings, schedule service appointments, confirm bookings, manage enrollment processes, assign technicians, and automate subscription workflows across retail, healthcare, financial services, real estate, automotive, travel, education, home services, SaaS, logistics, HR, and manufacturing industries.",
     },
     {
       question:
         "What security measures are in place for handling sensitive operational data?",
       answer:
-        "QuickVoice implements enterprise-grade security measures including SOC2, HIPAA, and PCI compliance for data protection. All sensitive operational data is encrypted in transit and at rest, with strict access controls, audit trails, and compliance with industry regulations. The system maintains 99.9% uptime and sub-500ms latency while ensuring complete data privacy and security for all operational automation activities.",
+        "TinkerVoice implements enterprise-grade security measures including SOC2, HIPAA, and PCI compliance for data protection. All sensitive operational data is encrypted in transit and at rest, with strict access controls, audit trails, and compliance with industry regulations. The system maintains 99.9% uptime and sub-500ms latency while ensuring complete data privacy and security for all operational automation activities.",
     },
     {
       question:
         "Can the AI voice agents integrate with existing operational systems and workflows?",
       answer:
-        "Yes, QuickVoice's AI voice agents can seamlessly integrate with existing operational systems, ERP platforms, CRM systems, and databases through APIs and webhooks. Our forward-deployed team ensures smooth integration with your current workflow, maintaining data consistency and providing real-time access to operational information. The system supports popular business platforms, inventory management systems, and custom operational solutions.",
+        "Yes, TinkerVoice's AI voice agents can seamlessly integrate with existing operational systems, ERP platforms, CRM systems, and databases through APIs and webhooks. Our forward-deployed team ensures smooth integration with your current workflow, maintaining data consistency and providing real-time access to operational information. The system supports popular business platforms, inventory management systems, and custom operational solutions.",
     },
     {
       question:
         "How does the system handle multi-language support for global operations?",
       answer:
-        "QuickVoice supports over 50 languages and can automatically detect the customer's preferred language, ensuring seamless communication for global operations. The AI can handle complex multilingual conversations, maintain context across language switches, and provide culturally appropriate responses for international business operations.",
+        "TinkerVoice supports over 50 languages and can automatically detect the customer's preferred language, ensuring seamless communication for global operations. The AI can handle complex multilingual conversations, maintain context across language switches, and provide culturally appropriate responses for international business operations.",
     },
     {
       question:
         "What kind of analytics and reporting are available for operational automation?",
       answer:
-        "QuickVoice provides comprehensive analytics including operational efficiency metrics, automation rates, cost savings, response times, and customer satisfaction scores. The platform offers real-time dashboards, detailed reporting on operational workflows, and insights into process optimization opportunities. All interactions are logged and analyzed to continuously improve operational automation performance.",
+        "TinkerVoice provides comprehensive analytics including operational efficiency metrics, automation rates, cost savings, response times, and customer satisfaction scores. The platform offers real-time dashboards, detailed reporting on operational workflows, and insights into process optimization opportunities. All interactions are logged and analyzed to continuously improve operational automation performance.",
     },
     {
       question:
         "How quickly can operational automation be deployed across different departments?",
       answer:
-        "QuickVoice can be deployed in days, not months. Our platform includes pre-built templates for common operational scenarios, easy-to-use configuration tools, and rapid integration capabilities. The forward-deployed team ensures quick setup and customization for your specific operational needs, with most deployments going live within 1-2 weeks.",
+        "TinkerVoice can be deployed in days, not months. Our platform includes pre-built templates for common operational scenarios, easy-to-use configuration tools, and rapid integration capabilities. The forward-deployed team ensures quick setup and customization for your specific operational needs, with most deployments going live within 1-2 weeks.",
     },
   ];
 

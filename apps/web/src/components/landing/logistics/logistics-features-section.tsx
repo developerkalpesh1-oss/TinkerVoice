@@ -67,7 +67,7 @@ export function LogisticsFeaturesSection() {
               Streamline Your Support Workflow with AI Voice Agents
             </h2>
             <p className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto">
-              From inbound queries to proactive engagement, QuickVoice&apos;s conversational AI agents optimize every step of your support workflow, across voice and chat.
+              From inbound queries to proactive engagement, TinkerVoice&apos;s conversational AI agents optimize every step of your support workflow, across voice and chat.
             </p>
           </div>
           <div

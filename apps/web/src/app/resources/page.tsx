@@ -10,12 +10,12 @@ export const metadata: Metadata = {
   title: "AI phone-agent buyer resources",
   description:
     "Define a phone workflow, test its handoffs, and estimate its costs with an implementation checklist and editable cost worksheet.",
-  alternates: { canonical: "https://quickvoice.co/resources" },
+  alternates: { canonical: "https://tinkervoice.co/resources" },
   openGraph: {
     title: "AI phone-agent buyer resources",
     description:
       "Practical worksheets for evaluating one phone-agent workflow.",
-    url: "https://quickvoice.co/resources",
+    url: "https://tinkervoice.co/resources",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {

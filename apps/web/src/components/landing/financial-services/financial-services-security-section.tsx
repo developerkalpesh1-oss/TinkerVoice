@@ -59,7 +59,7 @@ export function FinancialServicesSecuritySection() {
               viewport={{ once: true }}
               className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto"
             >
-              QuickVoice provides enterprise-grade security and compliance features specifically designed
+              TinkerVoice provides enterprise-grade security and compliance features specifically designed
               for financial services organizations handling sensitive customer data and transactions.
             </motion.p>
           </div>
@@ -88,7 +88,7 @@ export function FinancialServicesSecuritySection() {
               Compliance Certifications &amp; Standards
             </h3>
             <p className="text-lg text-foreground/70">
-              QuickVoice meets the highest industry standards for financial services data security and regulatory compliance.
+              TinkerVoice meets the highest industry standards for financial services data security and regulatory compliance.
             </p>
           </div>
 

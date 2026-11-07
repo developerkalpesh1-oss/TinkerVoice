@@ -29,7 +29,7 @@ class VoiceE2ESmokeTests(unittest.TestCase):
         self.assertEqual(request.payload["metadata"]["run_id"], "run-1")
         self.assertEqual(request.payload["metadata"]["source"], "phase2d-voice-smoke")
 
-    def test_create_voice_session_posts_to_quickvoice_ai(self):
+    def test_create_voice_session_posts_to_tinkervoice_ai(self):
         from handlers.voice_e2e_smoke import SmokeSettings, create_voice_session
 
         async def handler(request):
@@ -49,7 +49,7 @@ class VoiceE2ESmokeTests(unittest.TestCase):
                         "ttl_seconds": 900,
                     },
                     "agent": {
-                        "name": "quickvoice-voice-agent",
+                        "name": "tinkervoice-voice-agent",
                         "dispatch_id": "AD_123",
                         "dispatch_created": True,
                     },

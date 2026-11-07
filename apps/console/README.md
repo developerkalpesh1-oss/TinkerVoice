@@ -1,6 +1,6 @@
-# QuickVoice Console
+# TinkerVoice Console
 
-`apps/console` is the Next.js customer console for configuring organizations, agents, phone numbers, calls, knowledge bases, tools, API keys, billing, and settings. It is one part of the QuickVoice monorepo; it is not a standalone hosted product.
+`apps/console` is the Next.js customer console for configuring organizations, agents, phone numbers, calls, knowledge bases, tools, API keys, billing, and settings. It is one part of the TinkerVoice monorepo; it is not a standalone hosted product.
 
 ## Getting Started
 

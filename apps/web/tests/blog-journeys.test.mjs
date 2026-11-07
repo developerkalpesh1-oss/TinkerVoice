@@ -167,7 +167,7 @@ test("related-post integration cannot promote pending, future, or stale-review c
   };
   const files = {
     "current.md": makeArticle("vapi-alternatives"),
-    "pending.md": makeArticle("quickvoice-vs-vapi", { pending: true }),
+    "pending.md": makeArticle("tinkervoice-vs-vapi", { pending: true }),
     "future.md": makeArticle("retell-ai-alternatives", { future: true }),
     "stale.md": makeArticle("best-ai-voice-agent-platforms-2026", {
       stale: true,
@@ -219,7 +219,7 @@ test("priority article edits keep exact reviews and contextual workflow/pricing 
         "2026-09-27",
         "the substantive AI IVR explanation uses its actual revision date",
       );
-    else if (slug !== "quickvoice-vs-vapi" && slug !== "quickvoice-vs-synthflow")
+    else if (slug !== "tinkervoice-vs-vapi" && slug !== "tinkervoice-vs-synthflow")
       assert.equal(
         post.updatedAt,
         "2026-09-06",

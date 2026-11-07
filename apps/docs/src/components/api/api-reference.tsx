@@ -10,7 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { McpCopyButton } from "@/components/mcp/mcp-copy-button";
-import { QuickVoiceLogo } from "@/components/quickvoice-logo";
+import { TinkerVoiceLogo } from "@/components/tinkervoice-logo";
 import {
   apiAuthNotes,
   apiBaseUrl,
@@ -38,7 +38,7 @@ export function ApiReference() {
         <aside className="hidden min-h-dvh border-r border-[var(--qv-border)] bg-[var(--qv-card)]/80 px-5 py-6 backdrop-blur-xl lg:block">
           <div className="sticky top-6">
             <Link className="flex items-center gap-3" href="/">
-              <QuickVoiceLogo />
+              <TinkerVoiceLogo />
               <span>
                 <span className="text-xs text-slate-400">API Reference</span>
               </span>
@@ -82,7 +82,7 @@ export function ApiReference() {
             <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
               <div>
                 <h1 className="max-w-4xl text-4xl font-semibold tracking-[-0.04em] text-white sm:text-6xl">
-                  QuickVoice REST API reference
+                  TinkerVoice REST API reference
                 </h1>
                 <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
                   Production endpoint documentation generated from the Express
@@ -114,7 +114,7 @@ export function ApiReference() {
               icon={ShieldCheck}
               eyebrow="Authentication"
               title="Access model"
-              description="QuickVoice validates each request before applying route-level permissions."
+              description="TinkerVoice validates each request before applying route-level permissions."
             />
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
               <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-5">
@@ -131,7 +131,7 @@ export function ApiReference() {
                 </ul>
               </div>
               <CopyPanel
-                value="x-api-key: YOUR_QUICKVOICE_API_KEY"
+                value="x-api-key: YOUR_TINKERVOICE_API_KEY"
                 language="http"
                 compact
               />

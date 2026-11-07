@@ -21,34 +21,34 @@ const manualPageviews = manualPageviewsEnabled(
 );
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://quickvoice.co"),
+  metadataBase: new URL("https://tinkervoice.co"),
   title: {
-    default: "QuickVoice - Open-Source AI Phone Agent Stack",
-    template: "%s | QuickVoice",
+    default: "TinkerVoice - Open-Source AI Phone Agent Stack",
+    template: "%s | TinkerVoice",
   },
   description:
-    "Run, inspect, and extend the QuickVoice stack for AI phone agents, including the console, API, LiveKit worker, telephony integrations, knowledge bases, campaigns, and call logs.",
+    "Run, inspect, and extend the TinkerVoice stack for AI phone agents, including the console, API, LiveKit worker, telephony integrations, knowledge bases, campaigns, and call logs.",
   robots: { index: true, follow: true },
   openGraph: {
     type: "website",
-    siteName: "QuickVoice",
-    title: "QuickVoice - Open-Source AI Phone Agent Stack",
+    siteName: "TinkerVoice",
+    title: "TinkerVoice - Open-Source AI Phone Agent Stack",
     description:
-      "Run, inspect, and extend the QuickVoice stack for AI phone agents, including the console, API, LiveKit worker, telephony integrations, knowledge bases, campaigns, and call logs.",
+      "Run, inspect, and extend the TinkerVoice stack for AI phone agents, including the console, API, LiveKit worker, telephony integrations, knowledge bases, campaigns, and call logs.",
     images: [
       {
         url: "/logo.svg",
         width: 512,
         height: 512,
-        alt: "QuickVoice Logo",
+        alt: "TinkerVoice Logo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "QuickVoice - Open-Source AI Phone Agent Stack",
+    title: "TinkerVoice - Open-Source AI Phone Agent Stack",
     description:
-      "Run, inspect, and extend the QuickVoice stack for AI phone agents.",
+      "Run, inspect, and extend the TinkerVoice stack for AI phone agents.",
   },
 };
 

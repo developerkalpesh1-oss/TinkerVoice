@@ -9,7 +9,7 @@ export const authContext = new AsyncLocalStorage<McpAuthContext>();
 export function currentAuthContext() {
   const context = authContext.getStore();
   if (!context?.upstreamApiKey) {
-    throw new Error("MCP request is missing QuickVoice API authentication context");
+    throw new Error("MCP request is missing TinkerVoice API authentication context");
   }
   return context;
 }

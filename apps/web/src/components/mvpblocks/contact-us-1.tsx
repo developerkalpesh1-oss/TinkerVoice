@@ -29,10 +29,10 @@ export default function ContactUs1() {
           <p className="mt-8 text-sm leading-6 text-muted-foreground">
             Prefer email?{" "}
             <a
-              href="mailto:info@quickvoice.co"
+              href="mailto:info@tinkervoice.co"
               className="text-primary underline underline-offset-4"
             >
-              info@quickvoice.co
+              info@tinkervoice.co
             </a>
           </p>
         </div>

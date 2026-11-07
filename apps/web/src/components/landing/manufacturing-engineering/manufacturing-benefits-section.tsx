@@ -43,7 +43,7 @@ export function ManufacturingBenefitsSection() {
         >
           <div className="relative z-10">
             <h2 className="font-geist text-3xl font-normal tracking-tighter text-foreground sm:text-4xl md:text-5xl mb-4">
-              The Benefits of QuickVoice
+              The Benefits of TinkerVoice
             </h2>
             <p className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto">
               By leveraging our AI-powered voice agents, manufacturing companies can achieve

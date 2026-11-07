@@ -192,7 +192,7 @@ export function CareersHeroSection() {
             <div className="relative w-full overflow-hidden rounded-2xl group border border-border/50">
               <Image
                 src="/images/analytics-dashboard.png"
-                alt="QuickVoice AI-powered voice agent careers and team collaboration"
+                alt="TinkerVoice AI-powered voice agent careers and team collaboration"
                 width={1200}
                 height={600}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"

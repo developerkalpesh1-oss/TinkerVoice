@@ -17,7 +17,7 @@ from utils.logger import logger, redact_sensitive
 from utils.safe_http import safe_https_request
 
 QUEUE_DIR_ENV = "AI_POST_CALL_WEBHOOK_QUEUE_DIR"
-DEFAULT_QUEUE_DIR = "/var/lib/quickvoice/post-call-webhooks"
+DEFAULT_QUEUE_DIR = "/var/lib/tinkervoice/post-call-webhooks"
 MAX_ATTEMPTS = 10
 
 
@@ -100,7 +100,7 @@ def _send(payload: dict, webhook: dict) -> None:
         audio_url = signed_recording_url(payload["recordingSid"])
     headers = {key: value for key, value in webhook_header_values(webhook.get("headers")).items()
                if key.lower() not in {"content-type", "idempotency-key"}}
-    headers.update({"Content-Type": "application/json", "Idempotency-Key": f"quickvoice-post-call-{payload['callId']}"})
+    headers.update({"Content-Type": "application/json", "Idempotency-Key": f"tinkervoice-post-call-{payload['callId']}"})
     safe_https_request(
         Request(
             webhook["webhook_url"],

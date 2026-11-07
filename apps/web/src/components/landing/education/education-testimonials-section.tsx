@@ -32,7 +32,7 @@ const testimonials = [
     name: "Anuj Sharma",
     role: "Product Manager",
     company: "Nykaa",
-    content: "More and more customers prefer self-serve over calls to agents. We have been collaborating with QuickVoice to drive this mission and have come a long way.",
+    content: "More and more customers prefer self-serve over calls to agents. We have been collaborating with TinkerVoice to drive this mission and have come a long way.",
     rating: 5,
     metrics: {
       icon: TrendingUp,
@@ -44,7 +44,7 @@ const testimonials = [
     name: "Suryanarayanan N",
     role: "Vice President, Marketing and Growth",
     company: "EduTech Solutions",
-    content: "QuickVoice stood out to us for its user-friendly interface, seamless integrations, and direct WhatsApp business service. We have also utilised their AI future to train the solution with frequently asked questions and relevant answers.",
+    content: "TinkerVoice stood out to us for its user-friendly interface, seamless integrations, and direct WhatsApp business service. We have also utilised their AI future to train the solution with frequently asked questions and relevant answers.",
     rating: 5,
     metrics: {
       icon: GraduationCap,
@@ -68,7 +68,7 @@ const testimonials = [
     name: "Anika Wadhera",
     role: "Head - Marketing",
     company: "Sirona",
-    content: "With the help of team QuickVoice, we were able to create India's first Period Tracker on WhatsApp. It was a challenging ask as the platform had never been used to offer such a service before. However, the team took up the brief openly, worked through the challenges and delivered an efficient service.",
+    content: "With the help of team TinkerVoice, we were able to create India's first Period Tracker on WhatsApp. It was a challenging ask as the platform had never been used to offer such a service before. However, the team took up the brief openly, worked through the challenges and delivered an efficient service.",
     rating: 5,
     metrics: {
       icon: TrendingUp,

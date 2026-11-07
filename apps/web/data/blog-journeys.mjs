@@ -55,12 +55,12 @@ export const BLOG_JOURNEYS = {
   "vapi-alternatives": {
     title: "Is application ownership the reason to change?",
     description:
-      "Review QuickVoice's source, provider prerequisites, and operating responsibilities. Bring the Vapi workflow and integration requirements that your replacement must preserve.",
+      "Review TinkerVoice's source, provider prerequisites, and operating responsibilities. Bring the Vapi workflow and integration requirements that your replacement must preserve.",
     href: "/open-source",
     label: "Evaluate the open-source stack",
     contactLabel: "Discuss your Vapi workflow",
     relatedSlugs: [
-      "quickvoice-vs-vapi",
+      "tinkervoice-vs-vapi",
       "retell-ai-alternatives",
       "best-ai-voice-agent-platforms-2026",
     ],
@@ -68,7 +68,7 @@ export const BLOG_JOURNEYS = {
   "retell-ai-alternatives": {
     title: "Evaluate the workflow you need to change.",
     description:
-      "Inspect QuickVoice's application stack and setup boundaries, then discuss the call behavior, records, and staff processes a migration would need to preserve.",
+      "Inspect TinkerVoice's application stack and setup boundaries, then discuss the call behavior, records, and staff processes a migration would need to preserve.",
     href: "/open-source",
     label: "Review the open-source platform",
     contactLabel: "Discuss your Retell workflow",
@@ -78,13 +78,13 @@ export const BLOG_JOURNEYS = {
       "ai-voice-agent-security-data-privacy",
     ],
   },
-  "quickvoice-vs-vapi": {
+  "tinkervoice-vs-vapi": {
     title: "Turn the comparison into a scoped evaluation.",
     description:
       "Bring one call, the receiving system, and a named implementation owner. Review the stack and agree which outcomes a pilot must demonstrate before changing live traffic.",
     href: "/open-source",
-    label: "Review QuickVoice's implementation scope",
-    contactLabel: "Discuss a QuickVoice evaluation",
+    label: "Review TinkerVoice's implementation scope",
+    contactLabel: "Discuss a TinkerVoice evaluation",
     relatedSlugs: [
       "vapi-alternatives",
       "ai-voice-agent-security-data-privacy",
@@ -120,9 +120,9 @@ export const BLOG_JOURNEYS = {
   "property-management-answering-services": {
     title: "Does a staff-reviewed AI intake workflow fit?",
     description:
-      "Compare the service model with your actual call types. QuickVoice provides software and separately scoped assistance, not a staffed call center or a replacement for your property system.",
+      "Compare the service model with your actual call types. TinkerVoice provides software and separately scoped assistance, not a staffed call center or a replacement for your property system.",
     href: "/industries/real-estate",
-    label: "Review QuickVoice's pilot scope",
+    label: "Review TinkerVoice's pilot scope",
     contactLabel: "Discuss a leasing-intake pilot",
     relatedSlugs: [
       "ai-voice-agents-property-management",
@@ -170,14 +170,14 @@ export const BLOG_JOURNEYS = {
     ],
   },
 
-  "quickvoice-vs-synthflow": {
+  "tinkervoice-vs-synthflow": {
     title: "Turn the comparison into a scoped pilot.",
     description:
       "Pick one call type, the receiving system, and a named implementation owner. Agree which outcomes the pilot must demonstrate before any live traffic moves.",
     href: "/open-source",
-    label: "Review QuickVoice's implementation scope",
-    contactLabel: "Discuss a QuickVoice evaluation",
-    relatedSlugs: ["synthflow-alternatives", "quickvoice-vs-vapi", "ai-voice-agent-security-data-privacy"],
+    label: "Review TinkerVoice's implementation scope",
+    contactLabel: "Discuss a TinkerVoice evaluation",
+    relatedSlugs: ["synthflow-alternatives", "tinkervoice-vs-vapi", "ai-voice-agent-security-data-privacy"],
   },
 };
 

@@ -417,7 +417,7 @@ export function McpMarketplace() {
               onChange={(event) => setDisplayName(event.target.value)}
             />
             <p className="text-xs leading-5 text-muted-foreground">
-              This label is shown only inside QuickVoice so your team can
+              This label is shown only inside TinkerVoice so your team can
               recognize the connection. If left blank, the server hostname is
               used.
             </p>
@@ -452,7 +452,7 @@ export function McpMarketplace() {
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   Continue in a new tab to authorize or configure the server,
-                  then return to QuickVoice.
+                  then return to TinkerVoice.
                 </p>
               </div>
             </div>

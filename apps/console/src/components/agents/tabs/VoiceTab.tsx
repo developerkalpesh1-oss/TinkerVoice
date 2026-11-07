@@ -456,7 +456,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                                 </p>
                             )}
                             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                                This estimate includes configured STT, TTS, and LLM usage plus the $0.01-per-connected-minute QuickVoice platform fee. Telephony is charged separately at the provider rate plus markup; actual spend varies with measured usage.
+                                This estimate includes configured STT, TTS, and LLM usage plus the $0.01-per-connected-minute TinkerVoice platform fee. Telephony is charged separately at the provider rate plus markup; actual spend varies with measured usage.
                             </p>
                         </div>
                     ) : null}

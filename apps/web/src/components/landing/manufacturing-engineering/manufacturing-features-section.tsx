@@ -105,7 +105,7 @@ export function ManufacturingFeaturesSection() {
         >
           <div className="relative z-10">
             <h2 className="font-geist text-3xl font-normal tracking-tighter text-foreground sm:text-4xl md:text-5xl mb-4">
-              How QuickVoice Can Help
+              How TinkerVoice Can Help
             </h2>
             <p className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto">
               Transform your manufacturing operations with AI-powered voice assistants that automate critical processes and enhance productivity.
@@ -141,7 +141,7 @@ export function ManufacturingFeaturesSection() {
             ]
           },
           {
-            image: manufacturingImages.howQuickVoiceCanHelp,
+            image: manufacturingImages.howTinkerVoiceCanHelp,
             imageAlt: "Manufacturing operations and workforce management",
             solutions: [
               {

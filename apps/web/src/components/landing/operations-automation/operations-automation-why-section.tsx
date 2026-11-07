@@ -43,7 +43,7 @@ export function OperationsAutomationWhySection() {
         >
           <div className="relative z-10">
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Why QuickVoice
+              Why TinkerVoice
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Meet your customers wherever they are, with natural, human-like conversations that flow seamlessly across voice and text channels. Our platform preserves conversation history as customers switch channels, ensuring no &quot;starting over.&quot;
@@ -100,7 +100,7 @@ export function OperationsAutomationWhySection() {
             <div className="relative w-full h-[500px]">
               <Image
                 src="/images/ecommerce-ai-dashboard.png"
-                alt="QuickVoice unified dashboard showing voice and chat analytics, customer insights, and performance metrics"
+                alt="TinkerVoice unified dashboard showing voice and chat analytics, customer insights, and performance metrics"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-contain rounded-2xl"

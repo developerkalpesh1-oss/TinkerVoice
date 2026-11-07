@@ -26,7 +26,7 @@ interface TestimonialProps {
 export default function TestimonialsCarousel({
   testimonials = defaultTestimonials,
   title = "Verified customer stories coming soon",
-  subtitle = "QuickVoice only publishes testimonials and outcome metrics after the customer, source, scope, and approval are documented.",
+  subtitle = "TinkerVoice only publishes testimonials and outcome metrics after the customer, source, scope, and approval are documented.",
   autoplaySpeed = 3000,
   className,
 }: TestimonialProps) {

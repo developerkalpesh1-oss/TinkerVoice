@@ -43,7 +43,7 @@ export function AutomotiveBenefitsSection() {
     }
   ];
 
-  const whyQuickVoice = [
+  const whyTinkerVoice = [
     {
       icon: Zap,
       title: "No-code Builder",
@@ -79,7 +79,7 @@ export function AutomotiveBenefitsSection() {
               viewport={{ once: true }}
               className="font-geist mt-4 text-3xl font-normal tracking-tighter text-foreground sm:text-4xl md:text-5xl"
             >
-              Why Choose QuickVoice for Automotive?
+              Why Choose TinkerVoice for Automotive?
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -206,7 +206,7 @@ export function AutomotiveBenefitsSection() {
           </ul>
         </div>
 
-        {/* Why QuickVoice Grid */}
+        {/* Why TinkerVoice Grid */}
         <div className="relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -220,7 +220,7 @@ export function AutomotiveBenefitsSection() {
             </h3>
           </motion.div>
           <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {whyQuickVoice.map((feature, index) => (
+            {whyTinkerVoice.map((feature, index) => (
               <motion.li
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}

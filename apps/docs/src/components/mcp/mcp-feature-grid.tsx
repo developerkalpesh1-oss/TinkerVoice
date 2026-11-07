@@ -7,9 +7,9 @@ export function McpFeatureGrid() {
   return (
     <section id="features" className="border-y border-[var(--qv-border)] bg-[var(--qv-bg-muted)] px-4 py-20 sm:px-6 lg:px-8">
       <McpSectionHeading
-        eyebrow="What is QuickVoice MCP?"
-        title="A controlled bridge between AI clients and QuickVoice operations"
-        description="The MCP server wraps existing verified QuickVoice APIs so assistants can help operate the product without scraping the console UI."
+        eyebrow="What is TinkerVoice MCP?"
+        title="A controlled bridge between AI clients and TinkerVoice operations"
+        description="The MCP server wraps existing verified TinkerVoice APIs so assistants can help operate the product without scraping the console UI."
       />
       <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-2 lg:grid-cols-3">
         {mcpFeatures.map((feature) => {

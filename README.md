@@ -1,17 +1,17 @@
-# QuickVoice
+# TinkerVoice
 
 **Open-source AI phone-agent infrastructure you can run, inspect, and extend.**
 
-QuickVoice is the open-source Retell alternative for engineering-led teams that want control over the voice-agent stack instead of only consuming a closed hosted API. It gives teams the full product surface in one repo: a marketing site, customer console, API server, LiveKit-powered AI worker, telephony integrations, knowledge bases, call logs, outbound campaigns, billing paths, MCP/tool connections, privacy controls, and local development tooling.
+TinkerVoice is the open-source Retell alternative for engineering-led teams that want control over the voice-agent stack instead of only consuming a closed hosted API. It gives teams the full product surface in one repo: a marketing site, customer console, API server, LiveKit-powered AI worker, telephony integrations, knowledge bases, call logs, outbound campaigns, billing paths, MCP/tool connections, privacy controls, and local development tooling.
 
-Website: [quickvoice.co](https://quickvoice.co)
+Website: [tinkervoice.co](https://tinkervoice.co)
 
-[![GitHub stars](https://img.shields.io/github/stars/allgpt-co/QuickVoice?style=social)](https://github.com/allgpt-co/QuickVoice/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/allgpt-co/TinkerVoice?style=social)](https://github.com/allgpt-co/TinkerVoice/stargazers)
 
-> **Project status:** QuickVoice is under active development and has not published a stable release yet. Review the [roadmap](./ROADMAP.md), [draft v0.1.0 notes](./docs/releases/v0.1.0-draft.md), and [known setup boundaries](#setup-boundaries) before evaluating it for production.
+> **Project status:** TinkerVoice is under active development and has not published a stable release yet. Review the [roadmap](./ROADMAP.md), [draft v0.1.0 notes](./docs/releases/v0.1.0-draft.md), and [known setup boundaries](#setup-boundaries) before evaluating it for production.
 
 <p align="center">
-  <img src="./apps/web/public/dashboard.png" alt="QuickVoice console dashboard preview" width="920">
+  <img src="./apps/web/public/dashboard.png" alt="TinkerVoice console dashboard preview" width="920">
 </p>
 
 ## 30-Second Tour
@@ -71,7 +71,7 @@ go install github.com/go-task/task/v3/cmd/task@latest
 export PATH="$PATH:$HOME/go/bin"
 ```
 
-Install Node.js `^22.23.4 || >=24.22.1` separately with a version manager or the official Node.js packages; a distribution package may be older than QuickVoice requires. Reconnect the shell after changing Docker group membership. With Docker Desktop on WSL2, enable integration for the WSL distribution instead of installing a second Docker daemon.
+Install Node.js `^22.23.4 || >=24.22.1` separately with a version manager or the official Node.js packages; a distribution package may be older than TinkerVoice requires. Reconnect the shell after changing Docker group membership. With Docker Desktop on WSL2, enable integration for the WSL distribution instead of installing a second Docker daemon.
 
 On macOS, install Docker Desktop, Go Task, Node.js `^22.23.4 || >=24.22.1`, Python, and Bash `>=4` using your preferred package manager. Ensure the modern Bash appears before `/bin/bash` on `PATH`, because the scripts use `#!/usr/bin/env bash`.
 
@@ -87,7 +87,7 @@ The task creates local env files from `*.env.dev.example`, activates `pnpm@9.0.0
 
 ### Setup Boundaries
 
-The Docker Compose database credentials are dev-only placeholders (`quickvoice` / `quickvoice`) and the Postgres and Redis ports are bound to `127.0.0.1`. Edit the generated env files after the first run if you need real Google, Stripe, LiveKit, Twilio, Telnyx, SMTP, or AWS credentials. Generated env files are ignored by git.
+The Docker Compose database credentials are dev-only placeholders (`tinkervoice` / `tinkervoice`) and the Postgres and Redis ports are bound to `127.0.0.1`. Edit the generated env files after the first run if you need real Google, Stripe, LiveKit, Twilio, Telnyx, SMTP, or AWS credentials. Generated env files are ignored by git.
 
 The placeholder values are enough to inspect local startup paths; they do not make provider-backed actions work. A successful `task up:dev` does not prove that live calls, OAuth, billing, email delivery, object storage, Pinecone retrieval, or production deployment are configured. Real phone calls require LiveKit plus a configured telephony provider and model-provider credentials. Keep production data and credentials out of local issue reproductions.
 
@@ -126,9 +126,9 @@ pnpm ci:local
 pnpm audit:deps -- --audit-level low
 ```
 
-## Why QuickVoice
+## Why TinkerVoice
 
-Voice agents are becoming core business infrastructure. Hosted APIs are useful when speed and convenience matter most. QuickVoice is for teams that also need source-level control, self-hosting options, privacy review, cost visibility, and a path to extend the product for their own workflows.
+Voice agents are becoming core business infrastructure. Hosted APIs are useful when speed and convenience matter most. TinkerVoice is for teams that also need source-level control, self-hosting options, privacy review, cost visibility, and a path to extend the product for their own workflows.
 
 - **Control:** run the console, API, worker, database, and telephony bindings yourself.
 - **Self-hosting:** evaluate the local stack with `task up:dev`, then decide how and where to deploy.
@@ -143,9 +143,9 @@ Voice agents are becoming core business infrastructure. Hosted APIs are useful w
 - **Inspectable privacy boundaries:** call-log PII redaction is enabled by default, zero-PII retention can suppress transcripts and recordings, secrets are encrypted or referenced, remote URLs are screened for private-network targets, and retention jobs clean up old transcripts, recordings, failed KB rows, and MCP logs.
 - **Direct telephony ownership:** Twilio and Telnyx number purchase flows, provider binding, LiveKit trunk binding, rollback behavior, inbound routing, outbound quick calls, and batch campaigns are implemented in the repo.
 
-## What QuickVoice Is Not
+## What TinkerVoice Is Not
 
-QuickVoice is not a zero-setup hosted phone-agent API from a fresh clone. Local development starts with `task up:dev`, but carrier-connected calls need LiveKit plus Twilio or Telnyx credentials, and production deployments need deliberate choices around auth, secrets, storage, retention, provider agreements, and operations.
+TinkerVoice is not a zero-setup hosted phone-agent API from a fresh clone. Local development starts with `task up:dev`, but carrier-connected calls need LiveKit plus Twilio or Telnyx credentials, and production deployments need deliberate choices around auth, secrets, storage, retention, provider agreements, and operations.
 
 The repository makes privacy and compliance-relevant data paths inspectable, but it is not by itself a HIPAA, SOC 2, ISO 27001, PCI, GDPR, or CCPA certification claim. Those claims depend on deployment, controls, provider agreements, audits, and legal review.
 
@@ -169,7 +169,7 @@ The repository makes privacy and compliance-relevant data paths inspectable, but
 
 ## Voice Provider Runtime
 
-QuickVoice keeps the LiveKit voice runtime inside `apps/ai`, so a fork can bring its own provider credentials and run the agent stack without a separate voice-platform service. The AI API exposes the voice catalog and session broker behind the existing internal auth header:
+TinkerVoice keeps the LiveKit voice runtime inside `apps/ai`, so a fork can bring its own provider credentials and run the agent stack without a separate voice-platform service. The AI API exposes the voice catalog and session broker behind the existing internal auth header:
 
 - `GET /voice/catalog`
 - `POST /voice/config/resolve`
@@ -224,25 +224,25 @@ cd apps/ai
 
 ## Open Source And Permissive Use
 
-QuickVoice is licensed under the permissive [MIT License](./LICENSE).
+TinkerVoice is licensed under the permissive [MIT License](./LICENSE).
 
-You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies of QuickVoice, including in proprietary and commercial products. Copies or substantial portions must retain the copyright and permission notice from the license.
+You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies of TinkerVoice, including in proprietary and commercial products. Copies or substantial portions must retain the copyright and permission notice from the license.
 
-For managed hosting, implementation support, or enterprise services, contact QuickVoice through [quickvoice.co](https://quickvoice.co).
+For managed hosting, implementation support, or enterprise services, contact TinkerVoice through [tinkervoice.co](https://tinkervoice.co).
 
 This section is not legal advice. Review the MIT License and consult counsel for your specific use case.
 
 ## Support The Project
 
-If QuickVoice helps you evaluate open voice-agent infrastructure, a GitHub star is a useful public signal. It helps maintainers see where there is interest without adding prompts to the product or asking for coordinated votes.
+If TinkerVoice helps you evaluate open voice-agent infrastructure, a GitHub star is a useful public signal. It helps maintainers see where there is interest without adding prompts to the product or asking for coordinated votes.
 
-[Star QuickVoice on GitHub](https://github.com/allgpt-co/QuickVoice)
+[Star TinkerVoice on GitHub](https://github.com/allgpt-co/TinkerVoice)
 
-[![QuickVoice Star History](https://api.star-history.com/svg?repos=allgpt-co/QuickVoice&type=Date)](https://www.star-history.com/#allgpt-co/QuickVoice&Date)
+[![TinkerVoice Star History](https://api.star-history.com/svg?repos=allgpt-co/TinkerVoice&type=Date)](https://www.star-history.com/#allgpt-co/TinkerVoice&Date)
 
 ## Community
 
-QuickVoice is built in public for teams that want programmable, inspectable phone automation.
+TinkerVoice is built in public for teams that want programmable, inspectable phone automation.
 
 - Use the structured issue forms for bugs, setup failures, documentation gaps, and feature proposals.
 - Read [CONTRIBUTING.md](./CONTRIBUTING.md) before submitting a pull request.

@@ -29,7 +29,7 @@ before(async () => {
   process.env.API_VERSION = "rate-limit-test";
   process.env.RATE_LIMIT_STORE = "memory";
   process.env.DATABASE_URL =
-    "postgresql://test:test@127.0.0.1:1/quickvoice-test";
+    "postgresql://test:test@127.0.0.1:1/tinkervoice-test";
   process.env.STRIPE_SECRET_KEY = "sk_test_placeholder";
   process.env.BETTER_AUTH_URL = "http://localhost:5000";
   process.env.BETTER_AUTH_SECRET = "test-secret-with-adequate-length-32chars";

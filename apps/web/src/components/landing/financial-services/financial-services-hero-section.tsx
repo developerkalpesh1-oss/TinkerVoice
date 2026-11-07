@@ -85,7 +85,7 @@ export function FinancialServicesHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
-              Elevate your financial interactions with QuickVoice&apos;s cutting-edge,
+              Elevate your financial interactions with TinkerVoice&apos;s cutting-edge,
               AI-powered conversational solutions. Our technology enables human-like
               conversation flows, automating 90% of query handling, campaign management,
               and transactional updates. This fosters trust and loyalty, providing

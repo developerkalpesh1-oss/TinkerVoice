@@ -82,7 +82,7 @@ export function ReleaseNumberDialog({
           <AlertDialogDescription>
             {externallyOwned
               ? "This removes the number from TinkerVoice only. It stays on your Twilio account, and you can add it again later."
-              : "This immediately removes the number from QuickVoice and releases it at the telephony provider. Calls and routing stop, and the same number may never be available to buy again. This cannot be undone."}
+              : "This immediately removes the number from TinkerVoice and releases it at the telephony provider. Calls and routing stop, and the same number may never be available to buy again. This cannot be undone."}
           </AlertDialogDescription>
         </AlertDialogHeader>
 

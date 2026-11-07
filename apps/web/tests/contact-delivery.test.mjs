@@ -41,7 +41,7 @@ const TURNSTILE_VERIFY_URL =
 const originalTurnstileSecret = process.env.TURNSTILE_SECRET_KEY;
 const originalTurnstileHostnames = process.env.TURNSTILE_EXPECTED_HOSTNAMES;
 process.env.TURNSTILE_SECRET_KEY = "turnstile-test-secret";
-process.env.TURNSTILE_EXPECTED_HOSTNAMES = "quickvoice.co";
+process.env.TURNSTILE_EXPECTED_HOSTNAMES = "tinkervoice.co";
 after(() => {
   if (originalTurnstileSecret === undefined)
     delete process.env.TURNSTILE_SECRET_KEY;
@@ -61,7 +61,7 @@ function request(body = payload, { secure = true, raw = false } = {}) {
           ...body,
         }
       : body;
-  return new Request("https://quickvoice.co/api/contact", {
+  return new Request("https://tinkervoice.co/api/contact", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -79,7 +79,7 @@ function mockDeliveryFetch(t, implementation) {
       return Response.json({
         success: true,
         action: "contact",
-        hostname: "quickvoice.co",
+        hostname: "tinkervoice.co",
       });
     }
     deliveries.push({ url, init });
@@ -127,7 +127,7 @@ test("contact success requires acknowledged webhook delivery", async (t) => {
   assert.equal(deliveries.length, 1);
   assert.equal(deliveries[0].init.headers["Content-Type"], "application/json");
   assert.match(
-    deliveries[0].init.headers["X-QuickVoice-Contact-Client"],
+    deliveries[0].init.headers["X-TinkerVoice-Contact-Client"],
     /^[0-9a-f]{64}$/,
   );
   assert.equal(deliveries[0].init.redirect, undefined);
@@ -181,12 +181,12 @@ test("contact forwarding adds only the server-configured secret and rejects auth
   const [{ url, init }] = deliveries;
   assert.equal(url, process.env.CONTACT_WEBHOOK_URL);
   assert.equal(
-    init.headers["X-QuickVoice-Contact-Secret"],
+    init.headers["X-TinkerVoice-Contact-Secret"],
     "server-configured-contact-secret-32chars",
   );
   assert.equal(init.redirect, "error");
   const body = JSON.parse(init.body);
-  assert.equal(body.source, "quickvoice-web-contact");
+  assert.equal(body.source, "tinkervoice-web-contact");
   assert.equal(body.to, undefined);
   assert.equal(body.secret, undefined);
   assert.equal(
@@ -212,8 +212,8 @@ test("lead analytics sends only fixed form context and remains optional", (t) =>
   assert.equal(trackContactLead("homepage"), false);
   const calls = [];
   globalThis.window = {
-    quickvoiceAnalyticsConsent: "granted",
-    quickvoiceAnalyticsPageAllowed: () => true,
+    tinkervoiceAnalyticsConsent: "granted",
+    tinkervoiceAnalyticsPageAllowed: () => true,
     location: {
       pathname: "/company/contact",
       search: "?email=private@example.com",
@@ -232,10 +232,10 @@ test("lead analytics sends only fixed form context and remains optional", (t) =>
       },
     ],
   ]);
-  window.quickvoiceAnalyticsConsent = "denied";
+  window.tinkervoiceAnalyticsConsent = "denied";
   assert.equal(trackContactLead("homepage"), false);
   assert.equal(calls.length, 1);
-  window.quickvoiceAnalyticsConsent = "granted";
+  window.tinkervoiceAnalyticsConsent = "granted";
   window.gtag = () => {
     throw new Error("Analytics blocked");
   };
@@ -294,7 +294,7 @@ test("contact API requires fresh bot verification and rejects oversized bodies b
       return Response.json({
         success: false,
         action: "contact",
-        hostname: "quickvoice.co",
+        hostname: "tinkervoice.co",
       });
     }
     throw new Error("Contact delivery must not run");
@@ -446,8 +446,8 @@ test("a successfully acknowledged submission is counted once per page, without s
   });
   const calls = [];
   globalThis.window = {
-    quickvoiceAnalyticsConsent: "granted",
-    quickvoiceAnalyticsPageAllowed: () => true,
+    tinkervoiceAnalyticsConsent: "granted",
+    tinkervoiceAnalyticsPageAllowed: () => true,
     location: { pathname: "/company/contact" },
   };
   assert.equal(

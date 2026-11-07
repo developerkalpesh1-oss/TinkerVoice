@@ -128,7 +128,7 @@ function downloadCampaignCsv(
   campaigns: BatchCampaign[],
   agentName: (id: string | null) => string,
 ) {
-  downloadRowsAsCsv("quickvoice-campaigns.csv", campaigns, [
+  downloadRowsAsCsv("tinkervoice-campaigns.csv", campaigns, [
     { header: "Campaign", value: (campaign) => campaign.name },
     { header: "Status", value: (campaign) => campaign.status },
     { header: "Agent", value: (campaign) => agentName(campaign.agentId) },

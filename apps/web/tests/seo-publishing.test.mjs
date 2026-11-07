@@ -31,7 +31,7 @@ const content = "A factual guide with source references.\n";
 const contentHash = computeContentHash(metadata, content);
 const review = {
   status: "reviewed", reviewedAt: "2026-09-06T17:00:00.000Z", reviewer: "Test reviewer",
-  sources: ["https://github.com/allgpt-co/QuickVoice/blob/main/README.md"], contentHash,
+  sources: ["https://github.com/allgpt-co/TinkerVoice/blob/main/README.md"], contentHash,
 };
 const post = { ...metadata, contentHash, evidenceReview: review, published: true, draft: false };
 
@@ -88,11 +88,11 @@ test("sitemap excludes unreviewed content and illustrative details and uses sour
   assert.equal(urls.some((entry) => entry.url.endsWith("/pending") || /\/case-studies\//.test(entry.url)), false);
   const staticEntries = urls.filter((entry) => !entry.url.includes("/blog/"));
   assert.ok(staticEntries.length >= 35);
-  assert.ok(staticEntries.some((entry) => entry.url === "https://quickvoice.co/"), "root URL uses the trailing-slash form Search Console reports as canonical");
-  assert.ok(staticEntries.some((entry) => entry.url === "https://quickvoice.co/resources/property-management-call-intake"));
+  assert.ok(staticEntries.some((entry) => entry.url === "https://tinkervoice.co/"), "root URL uses the trailing-slash form Search Console reports as canonical");
+  assert.ok(staticEntries.some((entry) => entry.url === "https://tinkervoice.co/resources/property-management-call-intake"));
   const { STATIC_PAGE_SOURCES } = require("../data/static-page-sources.mjs");
   for (const route of Object.keys(STATIC_PAGE_SOURCES)) {
-    assert.ok(staticEntries.some((entry) => entry.url === `https://quickvoice.co${route}`), `${route} is in the source map but not in the sitemap`);
+    assert.ok(staticEntries.some((entry) => entry.url === `https://tinkervoice.co${route}`), `${route} is in the source map but not in the sitemap`);
   }
   for (const entry of staticEntries) {
     assert.ok(entry.lastModified instanceof Date && Number.isFinite(entry.lastModified.getTime()), `${entry.url} needs a recorded modification date`);
@@ -123,9 +123,9 @@ test("www host permanently redirects to the apex with paths preserved", async ()
   new Function("require", "module", "exports", output)(require, compiledModule, compiledModule.exports);
   const config = compiledModule.exports.default;
   const redirects = await config.redirects();
-  const hostRedirect = redirects.find((entry) => entry.has?.some((condition) => condition.type === "host" && condition.value === "www.quickvoice.co"));
+  const hostRedirect = redirects.find((entry) => entry.has?.some((condition) => condition.type === "host" && condition.value === "www.tinkervoice.co"));
   assert.equal(hostRedirect.source, "/:path*");
-  assert.equal(hostRedirect.destination, "https://quickvoice.co/:path*");
+  assert.equal(hostRedirect.destination, "https://tinkervoice.co/:path*");
   assert.equal(hostRedirect.permanent, true);
 });
 
@@ -151,11 +151,11 @@ test("blog hub features reviewed guides and keeps legacy titles in a collapsed s
 });
 
 test("page canonicals are absolute and metadata carries no dead keywords tag", () => {
-  // Note: Next's metadata resolver collapses "https://quickvoice.co/" to the origin,
+  // Note: Next's metadata resolver collapses "https://tinkervoice.co/" to the origin,
   // so the homepage canonical cannot carry a trailing slash without site-wide trailingSlash.
   const openSource = readFileSync(new URL("../src/app/open-source/page.tsx", import.meta.url), "utf8");
-  assert.match(openSource, /canonical:\s*"https:\/\/quickvoice\.co\/open-source"/, "open-source canonical must be absolute like every other page");
-  assert.match(openSource, /url:\s*"https:\/\/quickvoice\.co\/open-source"/);
+  assert.match(openSource, /canonical:\s*"https:\/\/tinkervoice\.co\/open-source"/, "open-source canonical must be absolute like every other page");
+  assert.match(openSource, /url:\s*"https:\/\/tinkervoice\.co\/open-source"/);
   const layout = readFileSync(new URL("../src/app/layout.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(layout, /^\s*keywords:/m, "meta keywords is ignored by search engines; drop it");
 });

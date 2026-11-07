@@ -29,10 +29,10 @@ export function AboutUsHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground max-w-4xl"
             >
-              QuickVoice empowers businesses across industries to automate operations and boost efficiency through
+              TinkerVoice empowers businesses across industries to automate operations and boost efficiency through
               intelligent AI voice agents. From handling appointment scheduling in healthcare to streamlining loan
               inquiries in financial services, managing order updates in retail, or assisting customers in
-              e-commerce, QuickVoice brings real-time, human-like automation to every interaction. Our voice-driven
+              e-commerce, TinkerVoice brings real-time, human-like automation to every interaction. Our voice-driven
               solutions reduce manual workload, cut response times, and deliver consistent, personalized experiences —
               helping teams focus on what truly drives growth.
             </motion.p>

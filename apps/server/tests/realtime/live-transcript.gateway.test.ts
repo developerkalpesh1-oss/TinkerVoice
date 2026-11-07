@@ -65,7 +65,7 @@ for (const status of ["BAD_REQUEST", "UNAUTHORIZED", "FORBIDDEN", "NOT_FOUND"] a
     gateway.io.sockets.sockets.set(socket.id, socket);
     await gateway.start();
     const publish = async () => {
-      subscriber.emit("message", "quickvoice:live:events", JSON.stringify({
+      subscriber.emit("message", "tinkervoice:live:events", JSON.stringify({
         version: 1, type: "transcript.final", organizationId: "org_123",
         callId: "call_123", roomName: "room_123", eventId: "1720000001000-0", messageId: "message_123",
         speaker: "agent", text: "Private transcript", timestamp: "2026-10-03T12:00:00.000Z",

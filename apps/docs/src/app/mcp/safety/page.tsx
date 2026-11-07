@@ -4,7 +4,7 @@ import { mcpExcludedApis, mcpTools } from "@/generated/mcp-reference";
 const groups = [
   ["external-cost", "Can place calls, buy numbers, or otherwise consume provider credits."],
   ["destructive", "Can end sessions, delete state, or disconnect something already configured."],
-  ["write", "Can create or update QuickVoice data without directly costing money."],
+  ["write", "Can create or update TinkerVoice data without directly costing money."],
   ["read", "Only reads data or metadata."],
 ] as const;
 

@@ -57,7 +57,7 @@ export function SaasBenefitsSection() {
               Proven Results with AI Call Software
             </h2>
             <p className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto mb-12">
-              Experience the future of customer engagement with QuickVoice&apos;s AI call software solutions.
+              Experience the future of customer engagement with TinkerVoice&apos;s AI call software solutions.
               Discover how our Conversational AI can transform your business today.
             </p>
           </div>

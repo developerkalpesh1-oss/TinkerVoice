@@ -1,6 +1,6 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { callQuickVoiceApi } from "./api-client.js";
+import { callTinkerVoiceApi } from "./api-client.js";
 import { apiDefinitions, resourceDefinitions, toolDefinitions } from "./api-registry.js";
 import type { ApiDefinition } from "./api-registry.js";
 
@@ -36,8 +36,8 @@ const replacePathParams = (definition: ApiDefinition, input: Record<string, unkn
 
 const resourceUri = (definition: ApiDefinition) =>
   definition.params?.length
-    ? `quickvoice://${definition.name}/${definition.params.map((param) => `{${param}}`).join("/")}`
-    : `quickvoice://${definition.name}`;
+    ? `tinkervoice://${definition.name}/${definition.params.map((param) => `{${param}}`).join("/")}`
+    : `tinkervoice://${definition.name}`;
 
 const resourceQuery = (definition: ApiDefinition, uri: URL) => {
   const query: Record<string, string> = {};
@@ -58,24 +58,24 @@ const resourceParams = (definition: ApiDefinition, variables: Record<string, unk
   return input;
 };
 
-export function createQuickVoiceMcpServer() {
+export function createTinkerVoiceMcpServer() {
   const server = new McpServer({
-    name: "quickvoice-api-mcp",
+    name: "tinkervoice-api-mcp",
     version: "0.1.0",
   });
 
   server.registerResource(
     "api_catalog",
-    "quickvoice://api_catalog",
+    "tinkervoice://api_catalog",
     {
-      title: "QuickVoice API catalog",
-      description: "Machine-readable catalog of QuickVoice APIs exposed by this MCP server, including method, path, schema summary, auth, source file, and mapping kind.",
+      title: "TinkerVoice API catalog",
+      description: "Machine-readable catalog of TinkerVoice APIs exposed by this MCP server, including method, path, schema summary, auth, source file, and mapping kind.",
       mimeType: "application/json",
     },
     async () => ({
       contents: [
         {
-          uri: "quickvoice://api_catalog",
+          uri: "tinkervoice://api_catalog",
           mimeType: "application/json",
           text: JSON.stringify(apiDefinitions, null, 2),
         },
@@ -96,7 +96,7 @@ export function createQuickVoiceMcpServer() {
         const url = new URL(uri.href);
         const input = resourceParams(definition, variables as Record<string, unknown>);
         const path = replacePathParams(definition, input);
-        const data = await callQuickVoiceApi({
+        const data = await callTinkerVoiceApi({
           method: definition.method,
           path,
           query: resourceQuery(definition, url),
@@ -120,7 +120,7 @@ export function createQuickVoiceMcpServer() {
       definition.name,
       {
         title: definition.name,
-        description: `${definition.description} Required params/body/query: ${definition.requestSchema}. Calls QuickVoice ${definition.method} ${definition.path}.`,
+        description: `${definition.description} Required params/body/query: ${definition.requestSchema}. Calls TinkerVoice ${definition.method} ${definition.path}.`,
         inputSchema: definition.toolSchema ?? {
           query: z.record(z.string(), z.unknown()).optional(),
           body: z.record(z.string(), z.unknown()).optional(),
@@ -134,7 +134,7 @@ export function createQuickVoiceMcpServer() {
       },
       async (input: ToolInput, extra) => {
         const path = replacePathParams(definition, input);
-        const data = await callQuickVoiceApi({
+        const data = await callTinkerVoiceApi({
           method: definition.method,
           path,
           query: input.query,

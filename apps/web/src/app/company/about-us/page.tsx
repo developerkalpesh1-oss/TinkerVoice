@@ -11,12 +11,12 @@ export default function AboutUsPage() {
   const organization = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "QuickVoice",
-    url: "https://quickvoice.co",
-    logo: "https://quickvoice.co/logo.svg",
+    name: "TinkerVoice",
+    url: "https://tinkervoice.co",
+    logo: "https://tinkervoice.co/logo.svg",
     sameAs: [
-      "https://www.linkedin.com/company/quickvoiceai",
-      "https://github.com/allgpt-co/QuickVoice",
+      "https://www.linkedin.com/company/tinkervoiceai",
+      "https://github.com/allgpt-co/TinkerVoice",
     ],
   };
   return (

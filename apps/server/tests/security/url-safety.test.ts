@@ -6,7 +6,7 @@ import { assertSafeRemoteUrl } from "../../src/lib/url-safety.js";
 
 test("assertSafeRemoteUrl rejects hosts that resolve to private addresses", async () => {
   await assert.rejects(
-    assertSafeRemoteUrl("https://metadata.quickvoice.test/hook", {
+    assertSafeRemoteUrl("https://metadata.tinkervoice.test/hook", {
       lookup: async () => [{ address: "169.254.169.254", family: 4 }],
     }),
     BadRequestError

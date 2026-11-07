@@ -70,7 +70,7 @@ export function CustomerSupportHeroSection() {
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
               Deliver human-like AI customer service that boosts client satisfaction, cuts response times,
-              and automates resolution with QuickVoice&apos;s cutting-edge technology.
+              and automates resolution with TinkerVoice&apos;s cutting-edge technology.
             </motion.p>
 
             <motion.div

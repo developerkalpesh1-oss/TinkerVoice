@@ -603,7 +603,7 @@ class QdrantVectorStoreAdapter(BaseVectorStoreAdapter):
         raw_url = url or os.environ.get("QDRANT_URL", "http://localhost:6333")
         self._url = str(raw_url).strip().strip("'\"")
         self._api_key = api_key or os.environ.get("QDRANT_API_KEY")
-        self._collection_name = collection_name or os.environ.get("QDRANT_COLLECTION_NAME", "quickvoice-kb")
+        self._collection_name = collection_name or os.environ.get("QDRANT_COLLECTION_NAME", "tinkervoice-kb")
         self._client = None
         self._collection_vector_size: Optional[int] = None
         self._collection_lock = threading.Lock()

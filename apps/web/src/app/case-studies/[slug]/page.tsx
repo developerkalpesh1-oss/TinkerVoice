@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${scenario.useCase} workflow scenario`,
     description: `An illustrative ${scenario.industry.toLowerCase()} AI phone-agent planning worksheet. It does not report customer results or establish an implemented integration.`,
     alternates: {
-      canonical: `https://quickvoice.co/case-studies/${scenario.slug}`,
+      canonical: `https://tinkervoice.co/case-studies/${scenario.slug}`,
     },
     robots: {
       index: false,
@@ -73,8 +73,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description:
         "Illustrative planning content, not a verified customer case study or performance claim.",
       type: "website",
-      url: `https://quickvoice.co/case-studies/${scenario.slug}`,
-      siteName: "QuickVoice",
+      url: `https://tinkervoice.co/case-studies/${scenario.slug}`,
+      siteName: "TinkerVoice",
     },
     twitter: {
       card: "summary_large_image",
@@ -118,7 +118,7 @@ export default async function WorkflowScenarioPage({ params }: Props) {
               <p>
                 This route is an illustrative planning aid, not a customer case
                 study. It does not present organization profiles, quotes,
-                timelines, prices, or outcome figures as QuickVoice evidence.
+                timelines, prices, or outcome figures as TinkerVoice evidence.
                 Validate every workflow assumption before using it in a
                 proposal, launch, directory listing, or buying decision.
               </p>

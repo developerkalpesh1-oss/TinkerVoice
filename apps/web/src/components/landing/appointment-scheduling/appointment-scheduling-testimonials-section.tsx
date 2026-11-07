@@ -9,7 +9,7 @@ const testimonials = [
     role: "Implementation Manager",
     company: "Smartcat",
     content:
-      "QuickVoice's Voice AI Agents help us book more demos faster. We increased the conversion rates in the top of our lead pipeline: the number of contacts dialed by 31% and the number of answered calls, 24%. With more people dialed, we re-focused the sales team on high-value signals.",
+      "TinkerVoice's Voice AI Agents help us book more demos faster. We increased the conversion rates in the top of our lead pipeline: the number of contacts dialed by 31% and the number of answered calls, 24%. With more people dialed, we re-focused the sales team on high-value signals.",
     rating: 5,
     metrics: {
       icon: TrendingUp,
@@ -22,7 +22,7 @@ const testimonials = [
     role: "CEO & Co-Founder",
     company: "Medbelle",
     content:
-      "QuickVoice's platform is incredibly user-friendly and versatile. Whether it's for handling customer support queries or managing appointments, the AI delivers consistent, high-quality interactions that our patients appreciate.",
+      "TinkerVoice's platform is incredibly user-friendly and versatile. Whether it's for handling customer support queries or managing appointments, the AI delivers consistent, high-quality interactions that our patients appreciate.",
     rating: 5,
     metrics: {
       icon: Users,

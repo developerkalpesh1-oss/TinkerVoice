@@ -47,7 +47,7 @@ export function HrRecruitingCtaSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-6 max-w-md text-base text-white sm:text-lg md:mb-8"
           >
-            Join leading organizations already using QuickVoice to streamline recruitment, automate administrative tasks, and enhance candidate experiences.
+            Join leading organizations already using TinkerVoice to streamline recruitment, automate administrative tasks, and enhance candidate experiences.
           </motion.p>
 
           <motion.div

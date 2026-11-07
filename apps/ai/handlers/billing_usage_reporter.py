@@ -40,7 +40,7 @@ MAX_QUEUE_RETRY_BACKOFF_SECONDS = 300.0
 QUEUE_CLAIM_STALE_SECONDS = 300.0
 MAX_RESERVE_WINDOW_SECONDS = 60.0
 QUEUE_DIR_ENV = "AI_BILLING_USAGE_QUEUE_DIR"
-DEFAULT_QUEUE_DIR = "/tmp/quickvoice-ai-billing-usage"
+DEFAULT_QUEUE_DIR = "/tmp/tinkervoice-ai-billing-usage"
 DEAD_LETTER_DIR_NAME = "dead-letter"
 
 PostJson = Callable[
@@ -928,7 +928,7 @@ def _billing_usage_headers(
     headers = {
         "Authorization": f"Bearer {internal_api_key}",
         "Content-Type": "application/json",
-        "Idempotency-Key": f"quickvoice-usage-{idempotency_digest}",
+        "Idempotency-Key": f"tinkervoice-usage-{idempotency_digest}",
         "x-organization-id": organization_id,
         # Internal auth still requires a non-empty actor. Keep creator
         # attribution nullable in the payload while authenticating deleted-user

@@ -23,7 +23,7 @@ export function HealthcareBenefitsSection() {
     {
       icon: Users,
       title: "Fewer Missed Calls, More Booked Appointments",
-      description: "Keep patients on the line and connected to care with QuickVoice's AI-driven call management."
+      description: "Keep patients on the line and connected to care with TinkerVoice's AI-driven call management."
     }
   ];
 
@@ -62,7 +62,7 @@ export function HealthcareBenefitsSection() {
               viewport={{ once: true }}
               className="font-geist mt-4 text-3xl font-normal tracking-tighter text-foreground sm:text-4xl md:text-5xl"
             >
-              Benefits of QuickVoice for Healthcare
+              Benefits of TinkerVoice for Healthcare
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -149,7 +149,7 @@ export function HealthcareBenefitsSection() {
                 viewport={{ once: true }}
                 className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto"
               >
-                QuickVoice serves diverse healthcare organizations with specialized solutions for different care settings.
+                TinkerVoice serves diverse healthcare organizations with specialized solutions for different care settings.
               </motion.p>
             </div>
             <div
@@ -290,7 +290,7 @@ export function HealthcareBenefitsSection() {
                   </h4>
                 </div>
                 <p className="text-muted-foreground leading-relaxed transition-colors duration-300 ease-out group-hover:text-foreground/90">
-                  A hospital group reduced average call handling time by 40% and improved patient satisfaction scores by 25% by using QuickVoice&apos;s voice agents to manage routine inquiries and follow-ups.
+                  A hospital group reduced average call handling time by 40% and improved patient satisfaction scores by 25% by using TinkerVoice&apos;s voice agents to manage routine inquiries and follow-ups.
                 </p>
               </div>
             </motion.div>

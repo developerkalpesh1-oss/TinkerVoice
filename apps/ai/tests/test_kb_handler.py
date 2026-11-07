@@ -119,8 +119,8 @@ class KbHandlerTests(unittest.TestCase):
     def test_pinecone_host_is_trimmed_before_index_use(self):
         original = os.environ.get("PINECONE_HOST")
         try:
-            os.environ["PINECONE_HOST"] = '  "https://quickvoice-index.svc.pinecone.io"  \n'
-            self.assertEqual(pinecone_host(), "https://quickvoice-index.svc.pinecone.io")
+            os.environ["PINECONE_HOST"] = '  "https://tinkervoice-index.svc.pinecone.io"  \n'
+            self.assertEqual(pinecone_host(), "https://tinkervoice-index.svc.pinecone.io")
         finally:
             if original is None:
                 os.environ.pop("PINECONE_HOST", None)
@@ -140,7 +140,7 @@ class KbHandlerTests(unittest.TestCase):
         original_index_name = os.environ.get("PINECONE_INDEX")
         try:
             kb_handler._pinecone = lambda: FakePinecone()
-            os.environ["PINECONE_HOST"] = "https://quickvoice-index.svc.pinecone.io"
+            os.environ["PINECONE_HOST"] = "https://tinkervoice-index.svc.pinecone.io"
             os.environ["PINECONE_INDEX"] = "legacy-index-name"
 
             kb_handler._index()
@@ -155,7 +155,7 @@ class KbHandlerTests(unittest.TestCase):
             else:
                 os.environ["PINECONE_INDEX"] = original_index_name
 
-        self.assertEqual(calls, [{"host": "https://quickvoice-index.svc.pinecone.io"}])
+        self.assertEqual(calls, [{"host": "https://tinkervoice-index.svc.pinecone.io"}])
 
     def test_validate_ingest_url_rejects_private_hosts_and_bad_schemes(self):
         unsafe_urls = [

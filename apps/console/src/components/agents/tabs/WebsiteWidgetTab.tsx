@@ -83,7 +83,7 @@ const DEFAULT_THEME: AgentWidgetTheme = {
   avatarImageUrl: null,
   avatarOrbColor1: "#002FA7",
   avatarOrbColor2: "#00F0FF",
-  brandName: "QuickVoice",
+  brandName: "TinkerVoice",
   actionText: "Talk to us",
   welcomeText: "Talk with our voice agent.",
   startButtonText: "Start call",
@@ -346,7 +346,7 @@ function WidgetEditor({
             <section className="space-y-4 border bg-background p-4">
               <SectionTitle
                 title="Brand and whitelabeling"
-                description="Set the visible brand, avatar, and whether QuickVoice branding appears."
+                description="Set the visible brand, avatar, and whether TinkerVoice branding appears."
               />
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Brand name">
@@ -392,7 +392,7 @@ function WidgetEditor({
                   <div>
                     <Label className="text-sm font-medium">Whitelabel widget</Label>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Hide “Powered by QuickVoice” from the embed.
+                      Hide “Powered by TinkerVoice” from the embed.
                     </p>
                   </div>
                   <Switch
@@ -874,7 +874,7 @@ function WidgetPreview({ form }: { form: WidgetForm }) {
               </Button>
               {!form.whiteLabel ? (
                 <p className="text-center text-[11px]" style={{ color: form.mutedTextColor }}>
-                  Powered by QuickVoice
+                  Powered by TinkerVoice
                 </p>
               ) : null}
             </div>

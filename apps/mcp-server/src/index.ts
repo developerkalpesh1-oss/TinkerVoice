@@ -4,9 +4,9 @@ import { isIP } from "node:net";
 import cors from "cors";
 import { createHash, randomUUID, timingSafeEqual } from "node:crypto";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { createQuickVoiceMcpServer } from "./mcp-server.js";
+import { createTinkerVoiceMcpServer } from "./mcp-server.js";
 import { authContext } from "./auth-context.js";
-import { validateQuickVoiceApiKey } from "./api-client.js";
+import { validateTinkerVoiceApiKey } from "./api-client.js";
 
 const app = express();
 // Trust only explicitly configured immediate proxies; direct traffic cannot spoof XFF.
@@ -96,7 +96,7 @@ app.use(
   }),
 );
 
-function extractQuickVoiceApiKey(req: express.Request) {
+function extractTinkerVoiceApiKey(req: express.Request) {
   const direct = req.header("x-api-key");
   if (direct) return direct;
   const authorization = req.header("authorization");
@@ -179,9 +179,9 @@ async function transportForRequest(
     else pendingByKey.delete(pendingKey);
   };
   try {
-    if (!(await validateQuickVoiceApiKey(upstreamApiKey))) {
+    if (!(await validateTinkerVoiceApiKey(upstreamApiKey))) {
       releaseInitialization();
-      res.status(401).json({ error: "Invalid QuickVoice API key" });
+      res.status(401).json({ error: "Invalid TinkerVoice API key" });
       return null;
     }
 
@@ -207,7 +207,7 @@ async function transportForRequest(
       }
     };
 
-    await createQuickVoiceMcpServer().connect(transport);
+    await createTinkerVoiceMcpServer().connect(transport);
     return { transport, releaseInitialization } satisfies McpTransportLease;
   } catch (error) {
     releaseInitialization();
@@ -216,13 +216,13 @@ async function transportForRequest(
 }
 
 app.get("/health", (_req, res) => {
-  res.json({ ok: true, service: "quickvoice-mcp-server", activeSessions: transports.size });
+  res.json({ ok: true, service: "tinkervoice-mcp-server", activeSessions: transports.size });
 });
 
 app.all(endpointPath, async (req, res) => {
-  const upstreamApiKey = extractQuickVoiceApiKey(req);
+  const upstreamApiKey = extractTinkerVoiceApiKey(req);
   if (!upstreamApiKey) {
-    res.status(401).json({ error: "Missing QuickVoice API key. Send x-api-key or Authorization: Bearer <api-key>." });
+    res.status(401).json({ error: "Missing TinkerVoice API key. Send x-api-key or Authorization: Bearer <api-key>." });
     return;
   }
 
@@ -255,5 +255,5 @@ app.all(endpointPath, async (req, res) => {
 });
 
 export const httpServer = app.listen(port, () => {
-  console.log(`QuickVoice MCP server listening on http://0.0.0.0:${port}${endpointPath}`);
+  console.log(`TinkerVoice MCP server listening on http://0.0.0.0:${port}${endpointPath}`);
 });

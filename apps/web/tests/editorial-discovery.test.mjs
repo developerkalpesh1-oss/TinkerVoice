@@ -156,16 +156,16 @@ test("search, topics and pagination compose and invalid ranges cannot repeat pag
 
 test("plain pagination is self-canonical and crawlable; search/topic variants are noindex", () => {
   assert.deepEqual(discovery.blogListingMetadata({}), {
-    canonical: "https://quickvoice.co/blog",
+    canonical: "https://tinkervoice.co/blog",
     index: true,
   });
   assert.deepEqual(discovery.blogListingMetadata({ page: "2" }), {
-    canonical: "https://quickvoice.co/blog?page=2",
+    canonical: "https://tinkervoice.co/blog?page=2",
     index: true,
   });
   assert.deepEqual(
     discovery.blogListingMetadata({ page: "1", q: "", topic: "" }),
-    { canonical: "https://quickvoice.co/blog", index: true },
+    { canonical: "https://tinkervoice.co/blog", index: true },
   );
   for (const params of [
     { q: "support" },
@@ -174,7 +174,7 @@ test("plain pagination is self-canonical and crawlable; search/topic variants ar
     { page: "invalid" },
   ]) {
     assert.deepEqual(discovery.blogListingMetadata(params), {
-      canonical: "https://quickvoice.co/blog",
+      canonical: "https://tinkervoice.co/blog",
       index: false,
     });
   }
@@ -337,7 +337,7 @@ test("rendered SSR pagination provides real links, preserves filters and exclude
   assert.equal(metadata.robots.index, true);
   assert.equal(
     metadata.alternates.canonical,
-    "https://quickvoice.co/blog?page=2",
+    "https://tinkervoice.co/blog?page=2",
   );
 });
 

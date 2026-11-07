@@ -3,12 +3,12 @@ import type { InformationPageContent } from "@/components/seo/information-page";
 export const marketingInformation: Record<string, InformationPageContent> = {
   about: {
     path: "/company/about-us",
-    label: "About QuickVoice",
+    label: "About TinkerVoice",
     title: "An inspectable foundation for business voice workflows",
     description:
-      "Learn about QuickVoice's open-source voice-agent project, deployment model and practical approach to business phone workflows.",
+      "Learn about TinkerVoice's open-source voice-agent project, deployment model and practical approach to business phone workflows.",
     introduction:
-      "QuickVoice is an open-source voice-agent platform for teams that want to inspect, configure and operate their own stack. The project brings a website, console, API and voice worker into one repository.",
+      "TinkerVoice is an open-source voice-agent platform for teams that want to inspect, configure and operate their own stack. The project brings a website, console, API and voice worker into one repository.",
     sections: [
       {
         title: "Start with a business question",
@@ -22,7 +22,7 @@ export const marketingInformation: Record<string, InformationPageContent> = {
         body: "The repository is available under the MIT license and is under active development. Source access lets your technical team review implementation and changes; it does not establish production readiness for your deployment.",
         links: [
           {
-            href: "https://github.com/allgpt-co/QuickVoice",
+            href: "https://github.com/allgpt-co/TinkerVoice",
             label: "View the repository",
           },
           { href: "/open-source", label: "Understand the open-source stack" },
@@ -35,11 +35,11 @@ export const marketingInformation: Record<string, InformationPageContent> = {
       },
       {
         title: "Follow the project",
-        body: "Use the repository for source and contribution information. The official QuickVoice LinkedIn profile is linked below for project updates.",
+        body: "Use the repository for source and contribution information. The official TinkerVoice LinkedIn profile is linked below for project updates.",
         links: [
           {
-            href: "https://www.linkedin.com/company/quickvoiceai",
-            label: "QuickVoice on LinkedIn",
+            href: "https://www.linkedin.com/company/tinkervoiceai",
+            label: "TinkerVoice on LinkedIn",
           },
           {
             href: "/company/careers",
@@ -54,20 +54,20 @@ export const marketingInformation: Record<string, InformationPageContent> = {
     label: "Contributions and careers",
     title: "Work on practical voice-agent problems",
     description:
-      "Explore QuickVoice's source, contribution guidance and contact route for current employment or collaboration opportunities.",
+      "Explore TinkerVoice's source, contribution guidance and contact route for current employment or collaboration opportunities.",
     introduction:
-      "QuickVoice spans a web experience, an operator console, an API and a voice worker. Explore the project to understand the work, or contact the team to ask about current employment and collaboration opportunities.",
+      "TinkerVoice spans a web experience, an operator console, an API and a voice worker. Explore the project to understand the work, or contact the team to ask about current employment and collaboration opportunities.",
     sections: [
       {
         title: "Explore before contributing",
         body: "Read the repository setup and contribution guidance, reproduce a relevant issue and discuss the intended change. Useful contributions can include a focused bug fix, a clearer setup instruction or evidence from a reproducible test.",
         links: [
           {
-            href: "https://github.com/allgpt-co/QuickVoice",
+            href: "https://github.com/allgpt-co/TinkerVoice",
             label: "Read the project and contribution guidance",
           },
           {
-            href: "https://github.com/allgpt-co/QuickVoice/issues",
+            href: "https://github.com/allgpt-co/TinkerVoice/issues",
             label: "Browse repository issues",
           },
         ],
@@ -87,11 +87,11 @@ export const marketingInformation: Record<string, InformationPageContent> = {
       },
       {
         title: "Keep in touch",
-        body: "Follow the official QuickVoice profile and repository for project updates. Contributions and employment enquiries follow separate discussions; this page does not announce a specific vacancy or benefits package.",
+        body: "Follow the official TinkerVoice profile and repository for project updates. Contributions and employment enquiries follow separate discussions; this page does not announce a specific vacancy or benefits package.",
         links: [
           {
-            href: "https://www.linkedin.com/company/quickvoiceai",
-            label: "QuickVoice on LinkedIn",
+            href: "https://www.linkedin.com/company/tinkervoiceai",
+            label: "TinkerVoice on LinkedIn",
           },
         ],
       },
@@ -102,7 +102,7 @@ export const marketingInformation: Record<string, InformationPageContent> = {
     label: "Industry workflow guides",
     title: "Plan around the calls your industry receives",
     description:
-      "Explore industry-specific phone workflow requirements, data boundaries and human escalation before implementing QuickVoice.",
+      "Explore industry-specific phone workflow requirements, data boundaries and human escalation before implementing TinkerVoice.",
     introduction:
       "Choose an industry to review its phone requests, sensitive information and exception paths. These guides describe implementation patterns and evaluation criteria; they do not establish customer deployments, built-in industry integrations or measured customer results.",
     sections: [
@@ -229,7 +229,7 @@ export const marketingInformation: Record<string, InformationPageContent> = {
     description:
       "Compare support, scheduling, lead intake, order enquiries, operations and reminder workflows with explicit implementation and evaluation requirements.",
     introduction:
-      "Define the call purpose, approved information, system of record and human owner before a pilot. QuickVoice provides an inspectable foundation; provider accounts, system connections and permitted actions still need configuration and testing.",
+      "Define the call purpose, approved information, system of record and human owner before a pilot. TinkerVoice provides an inspectable foundation; provider accounts, system connections and permitted actions still need configuration and testing.",
     sections: [
       {
         title: "Customer support",

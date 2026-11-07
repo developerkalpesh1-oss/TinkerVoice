@@ -1,5 +1,5 @@
-export function QuickVoiceLogo({
-  label = "QuickVoice",
+export function TinkerVoiceLogo({
+  label = "TinkerVoice",
   compact = false,
 }: {
   label?: string;

@@ -4,7 +4,7 @@ import { Moon, Sun } from "lucide-react";
 import { useSyncExternalStore } from "react";
 
 type Theme = "dark" | "light";
-const storageKey = "quickvoice-docs-theme";
+const storageKey = "tinkervoice-docs-theme";
 
 function getInitialTheme(): Theme {
   if (typeof document === "undefined") return "dark";

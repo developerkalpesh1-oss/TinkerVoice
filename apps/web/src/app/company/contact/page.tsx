@@ -6,40 +6,40 @@ import {
 } from "@/components/landing/contact-us";
 
 export const metadata: Metadata = {
-  title: "Contact QuickVoice — Book a Demo or Send an Enquiry",
+  title: "Contact TinkerVoice — Book a Demo or Send an Enquiry",
   description:
-    "Book a QuickVoice demo or contact the team about pricing, implementation, and support for your calling workflow.",
+    "Book a TinkerVoice demo or contact the team about pricing, implementation, and support for your calling workflow.",
   keywords:
-    "contact QuickVoice, voice technology support, AI voice agents contact, business consultation, voice automation support",
-  authors: [{ name: "QuickVoice Team" }],
-  creator: "QuickVoice",
-  publisher: "QuickVoice",
+    "contact TinkerVoice, voice technology support, AI voice agents contact, business consultation, voice automation support",
+  authors: [{ name: "TinkerVoice Team" }],
+  creator: "TinkerVoice",
+  publisher: "TinkerVoice",
   robots: "index, follow",
   openGraph: {
-    title: "Contact QuickVoice",
+    title: "Contact TinkerVoice",
     description:
-      "Book a demo or send the QuickVoice team an enquiry about your calling workflow.",
+      "Book a demo or send the TinkerVoice team an enquiry about your calling workflow.",
     type: "website",
-    url: "https://quickvoice.co/company/contact",
-    siteName: "QuickVoice",
+    url: "https://tinkervoice.co/company/contact",
+    siteName: "TinkerVoice",
     images: [
       {
         url: "/images/analytics-dashboard.png",
         width: 1200,
         height: 630,
-        alt: "QuickVoice AI-powered voice automation contact page",
+        alt: "TinkerVoice AI-powered voice automation contact page",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact QuickVoice",
+    title: "Contact TinkerVoice",
     description:
-      "Book a demo or send the QuickVoice team an enquiry about your calling workflow.",
+      "Book a demo or send the TinkerVoice team an enquiry about your calling workflow.",
     images: ["/images/analytics-dashboard.png"],
   },
   alternates: {
-    canonical: "https://quickvoice.co/company/contact",
+    canonical: "https://tinkervoice.co/company/contact",
   },
 };
 
@@ -47,20 +47,20 @@ export default function ContactUsPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    name: "Contact Us - QuickVoice",
+    name: "Contact Us - TinkerVoice",
     description:
-      "Book a demo or contact the QuickVoice team about your calling workflow.",
-    url: "https://quickvoice.co/company/contact",
+      "Book a demo or contact the TinkerVoice team about your calling workflow.",
+    url: "https://tinkervoice.co/company/contact",
     mainEntity: {
       "@type": "Organization",
-      name: "QuickVoice",
+      name: "TinkerVoice",
       description: "Voice agent software for business calling workflows",
-      url: "https://quickvoice.co",
-      logo: "https://quickvoice.co/logo.svg",
+      url: "https://tinkervoice.co",
+      logo: "https://tinkervoice.co/logo.svg",
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "customer service",
-        url: "https://quickvoice.co/company/contact",
+        url: "https://tinkervoice.co/company/contact",
       },
     },
   };

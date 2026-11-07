@@ -405,24 +405,24 @@ export const mcpResources = [
     "method": "GET",
     "path": "/health",
     "auth": "none",
-    "description": "Read QuickVoice API health status.",
+    "description": "Read TinkerVoice API health status.",
     "requestSchema": "none",
     "responseSchema": "{ success, message }",
     "file": "apps/server/src/index.ts",
     "mappingReason": "Read-only health check.",
-    "uri": "quickvoice://get_health"
+    "uri": "tinkervoice://get_health"
   },
   {
     "name": "get_readiness",
     "method": "GET",
     "path": "/ready",
     "auth": "none",
-    "description": "Read QuickVoice API readiness including dependent service health.",
+    "description": "Read TinkerVoice API readiness including dependent service health.",
     "requestSchema": "none",
     "responseSchema": "{ success, message, data }",
     "file": "apps/server/src/index.ts",
     "mappingReason": "Read-only readiness check.",
-    "uri": "quickvoice://get_readiness"
+    "uri": "tinkervoice://get_readiness"
   },
   {
     "name": "list_agents",
@@ -434,7 +434,7 @@ export const mcpResources = [
     "responseSchema": "Agent[]",
     "file": "apps/server/src/modules/agent/agent.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_agents"
+    "uri": "tinkervoice://list_agents"
   },
   {
     "name": "get_voice_catalog",
@@ -446,7 +446,7 @@ export const mcpResources = [
     "responseSchema": "VoiceCatalog",
     "file": "apps/server/src/modules/agent/agent.route.ts",
     "mappingReason": "Read-only catalog.",
-    "uri": "quickvoice://get_voice_catalog"
+    "uri": "tinkervoice://get_voice_catalog"
   },
   {
     "name": "get_agent_config",
@@ -458,7 +458,7 @@ export const mcpResources = [
     "responseSchema": "AgentConfiguration|null",
     "file": "apps/server/src/modules/agent/agent.route.ts",
     "mappingReason": "Read-only configuration.",
-    "uri": "quickvoice://get_agent_config/{agentId}"
+    "uri": "tinkervoice://get_agent_config/{agentId}"
   },
   {
     "name": "list_call_logs",
@@ -470,7 +470,7 @@ export const mcpResources = [
     "responseSchema": "paginated CallLog[]",
     "file": "apps/server/src/modules/calllogs/calllog.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_call_logs"
+    "uri": "tinkervoice://list_call_logs"
   },
   {
     "name": "list_live_calls",
@@ -482,7 +482,7 @@ export const mcpResources = [
     "responseSchema": "LiveCall[]",
     "file": "apps/server/src/modules/calllogs/calllog.route.ts",
     "mappingReason": "Read-only live state.",
-    "uri": "quickvoice://list_live_calls"
+    "uri": "tinkervoice://list_live_calls"
   },
   {
     "name": "get_call_log",
@@ -494,7 +494,7 @@ export const mcpResources = [
     "responseSchema": "CallLog",
     "file": "apps/server/src/modules/calllogs/calllog.route.ts",
     "mappingReason": "Read-only detail.",
-    "uri": "quickvoice://get_call_log/{callId}"
+    "uri": "tinkervoice://get_call_log/{callId}"
   },
   {
     "name": "list_call_transcripts",
@@ -506,7 +506,7 @@ export const mcpResources = [
     "responseSchema": "paginated CallTranscript[]",
     "file": "apps/server/src/modules/calllogs/calllog.route.ts",
     "mappingReason": "Read-only transcript.",
-    "uri": "quickvoice://list_call_transcripts/{callId}"
+    "uri": "tinkervoice://list_call_transcripts/{callId}"
   },
   {
     "name": "get_dashboard_summary",
@@ -518,7 +518,7 @@ export const mcpResources = [
     "responseSchema": "DashboardSummary",
     "file": "apps/server/src/modules/dashboard/dashboard.route.ts",
     "mappingReason": "Read-only analytics.",
-    "uri": "quickvoice://get_dashboard_summary"
+    "uri": "tinkervoice://get_dashboard_summary"
   },
   {
     "name": "list_knowledge_sources",
@@ -530,7 +530,7 @@ export const mcpResources = [
     "responseSchema": "KnowledgeSource[]",
     "file": "apps/server/src/modules/kb/kb.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_knowledge_sources"
+    "uri": "tinkervoice://list_knowledge_sources"
   },
   {
     "name": "search_phone_numbers",
@@ -542,7 +542,7 @@ export const mcpResources = [
     "responseSchema": "Array<{ phoneNumber, friendlyName, locality?, region?, isoCountry?, providerMonthlyCostMicros, monthlyPriceMicros, quoteId, quoteExpiresAt, rateCatalogVersion }>",
     "file": "apps/server/src/modules/numbers/phone.route.ts",
     "mappingReason": "Read-only provider lookup.",
-    "uri": "quickvoice://search_phone_numbers"
+    "uri": "tinkervoice://search_phone_numbers"
   },
   {
     "name": "list_phone_numbers",
@@ -554,7 +554,7 @@ export const mcpResources = [
     "responseSchema": "PhoneNumber[]",
     "file": "apps/server/src/modules/numbers/phone.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_phone_numbers"
+    "uri": "tinkervoice://list_phone_numbers"
   },
   {
     "name": "list_outbound_calls",
@@ -566,7 +566,7 @@ export const mcpResources = [
     "responseSchema": "paginated OutboundCall[]",
     "file": "apps/server/src/modules/outbound/outbound-call.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_outbound_calls"
+    "uri": "tinkervoice://list_outbound_calls"
   },
   {
     "name": "list_batch_campaigns",
@@ -578,7 +578,7 @@ export const mcpResources = [
     "responseSchema": "BatchCampaign[]",
     "file": "apps/server/src/modules/outbound/outbound-call.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_batch_campaigns"
+    "uri": "tinkervoice://list_batch_campaigns"
   },
   {
     "name": "get_batch_campaign",
@@ -590,7 +590,7 @@ export const mcpResources = [
     "responseSchema": "BatchCampaign detail",
     "file": "apps/server/src/modules/outbound/outbound-call.route.ts",
     "mappingReason": "Read-only detail.",
-    "uri": "quickvoice://get_batch_campaign/{campaignId}"
+    "uri": "tinkervoice://get_batch_campaign/{campaignId}"
   },
   {
     "name": "get_outbound_call_status",
@@ -602,7 +602,7 @@ export const mcpResources = [
     "responseSchema": "{ outboundId,status,failureReason,updatedAt }",
     "file": "apps/server/src/modules/outbound/outbound-call.route.ts",
     "mappingReason": "Read-only status.",
-    "uri": "quickvoice://get_outbound_call_status/{outboundId}"
+    "uri": "tinkervoice://get_outbound_call_status/{outboundId}"
   },
   {
     "name": "get_outbound_call",
@@ -614,7 +614,7 @@ export const mcpResources = [
     "responseSchema": "OutboundCall",
     "file": "apps/server/src/modules/outbound/outbound-call.route.ts",
     "mappingReason": "Read-only detail.",
-    "uri": "quickvoice://get_outbound_call/{outboundId}"
+    "uri": "tinkervoice://get_outbound_call/{outboundId}"
   },
   {
     "name": "list_tools",
@@ -626,7 +626,7 @@ export const mcpResources = [
     "responseSchema": "Tool[]",
     "file": "apps/server/src/modules/tools/tool.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_tools"
+    "uri": "tinkervoice://list_tools"
   },
   {
     "name": "list_agent_tools",
@@ -638,7 +638,7 @@ export const mcpResources = [
     "responseSchema": "Tool[]",
     "file": "apps/server/src/modules/tools/tool.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_agent_tools/{agentId}"
+    "uri": "tinkervoice://list_agent_tools/{agentId}"
   },
   {
     "name": "list_secrets",
@@ -650,7 +650,7 @@ export const mcpResources = [
     "responseSchema": "Secret[] redacted",
     "file": "apps/server/src/modules/secrets/secret.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_secrets"
+    "uri": "tinkervoice://list_secrets"
   },
   {
     "name": "list_agent_widgets",
@@ -662,7 +662,7 @@ export const mcpResources = [
     "responseSchema": "AgentWidget[]",
     "file": "apps/server/src/modules/widgets/widget.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_agent_widgets/{agentId}"
+    "uri": "tinkervoice://list_agent_widgets/{agentId}"
   },
   {
     "name": "get_agent_widget",
@@ -674,7 +674,7 @@ export const mcpResources = [
     "responseSchema": "AgentWidget",
     "file": "apps/server/src/modules/widgets/widget.route.ts",
     "mappingReason": "Read-only detail.",
-    "uri": "quickvoice://get_agent_widget/{widgetId}"
+    "uri": "tinkervoice://get_agent_widget/{widgetId}"
   },
   {
     "name": "list_mcp_catalog",
@@ -686,7 +686,7 @@ export const mcpResources = [
     "responseSchema": "MCP catalog",
     "file": "apps/server/src/modules/mcp/mcp.route.ts",
     "mappingReason": "Read-only catalog.",
-    "uri": "quickvoice://list_mcp_catalog"
+    "uri": "tinkervoice://list_mcp_catalog"
   },
   {
     "name": "list_mcp_connections",
@@ -698,7 +698,7 @@ export const mcpResources = [
     "responseSchema": "McpConnection[]",
     "file": "apps/server/src/modules/mcp/mcp.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_mcp_connections"
+    "uri": "tinkervoice://list_mcp_connections"
   },
   {
     "name": "list_agent_mcp_connections",
@@ -710,7 +710,7 @@ export const mcpResources = [
     "responseSchema": "McpConnection[]",
     "file": "apps/server/src/modules/mcp/mcp.route.ts",
     "mappingReason": "Read-only list.",
-    "uri": "quickvoice://list_agent_mcp_connections/{agentId}"
+    "uri": "tinkervoice://list_agent_mcp_connections/{agentId}"
   }
 ] as const;
 
@@ -821,7 +821,7 @@ export const mcpExcludedApis = [
     "auth": "x-internal-key",
     "description": "AI runtime internal APIs.",
     "file": "apps/ai/api.py",
-    "excludedReason": "Internal server-to-server AI runtime APIs; they are consumed by QuickVoice API and should not be exposed directly over MCP."
+    "excludedReason": "Internal server-to-server AI runtime APIs; they are consumed by TinkerVoice API and should not be exposed directly over MCP."
   }
 ] as const;
 

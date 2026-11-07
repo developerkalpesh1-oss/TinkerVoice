@@ -6,7 +6,7 @@ export function ContactUsHeroSection() {
     <section className="page-section border-b border-border bg-muted/40">
       <div className="site-container grid gap-8 lg:grid-cols-[1.35fr_1fr] lg:items-end">
         <div>
-          <p className="eyebrow">Contact QuickVoice</p>
+          <p className="eyebrow">Contact TinkerVoice</p>
           <h1 className="page-title mt-4">
             Let’s talk about your calling workflow.
           </h1>

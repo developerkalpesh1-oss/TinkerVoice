@@ -6,7 +6,7 @@ export default function TroubleshootingPage() {
         <h1>Troubleshooting</h1>
         <h2>401 Unauthorized</h2>
         <p>
-          Confirm the client sends a QuickVoice API key with{" "}
+          Confirm the client sends a TinkerVoice API key with{" "}
           <code>x-api-key</code> or{" "}
           <code>Authorization: Bearer &lt;key&gt;</code>. Do not use a console
           browser cookie as the MCP credential.
@@ -21,14 +21,14 @@ export default function TroubleshootingPage() {
         <h2>Upstream 404</h2>
         <p>
           The MCP server is reachable, but the configured{" "}
-          <code>QUICKVOICE_API_BASE_URL</code> does not expose the wrapped API
-          route. Deploy the latest QuickVoice server or point MCP at the correct
+          <code>TINKERVOICE_API_BASE_URL</code> does not expose the wrapped API
+          route. Deploy the latest TinkerVoice server or point MCP at the correct
           API host.
         </p>
         <h2>Tool succeeds locally but fails remotely</h2>
         <p>
           Compare deployment environment, network egress,{" "}
-          <code>QUICKVOICE_API_BASE_URL</code>, and API key permissions. Then
+          <code>TINKERVOICE_API_BASE_URL</code>, and API key permissions. Then
           run the MCP smoke script against the deployed URL.
         </p>
         <h2>Model picks a risky tool</h2>

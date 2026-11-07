@@ -45,7 +45,7 @@ export function OperationsAutomationTrustedSection() {
               Trusted by Enterprises
                   </h3>
             <p className="text-white/80 mb-8 max-w-2xl mx-auto">
-              See how enterprise support teams use QuickVoice to resolve queries and delight customers.
+              See how enterprise support teams use TinkerVoice to resolve queries and delight customers.
             </p>
 
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -75,7 +75,7 @@ export function OperationsAutomationTrustedSection() {
               Join Leading Enterprises
             </h3>
             <p className="mx-auto mb-6 max-w-2xl text-sm sm:text-base text-foreground/75">
-              Discover how QuickVoice is transforming customer support operations
+              Discover how TinkerVoice is transforming customer support operations
               across industries with measurable results and proven ROI.
             </p>
 

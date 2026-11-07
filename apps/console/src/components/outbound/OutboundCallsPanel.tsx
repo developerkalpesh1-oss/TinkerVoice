@@ -6,6 +6,7 @@ import {
   Loader2,
   MoreHorizontal,
   PhoneCall,
+  PhoneOff,
   PhoneOutgoing,
   RefreshCw,
   RotateCcw,
@@ -66,9 +67,16 @@ import {
   useOutboundCalls,
   useRetryOutboundCall,
 } from "@/src/hooks/queries/outbound";
+import { callsApi } from "@/src/lib/api/resources/calls";
+import { outboundApi } from "@/src/lib/api/resources/outbound";
 import type { OutboundCall } from "@/src/lib/api/resources/outbound";
 import type { CallStatus } from "@/src/lib/api/types";
 import { downloadRowsAsCsv } from "@/src/lib/export-csv";
+import {
+  outboundCallCanStop,
+  outboundCallsToStop,
+  terminateOutboundCall,
+} from "@/src/lib/outbound/call-control";
 
 const STATUS_OPTIONS: Array<"all" | CallStatus> = [
   "all",
@@ -114,12 +122,16 @@ function canCancel(call: OutboundCall) {
   return call.status === "SCHEDULED";
 }
 
+function canStop(call: OutboundCall) {
+  return outboundCallCanStop(call.status) && call.status !== "SCHEDULED";
+}
+
 function canRetry(call: OutboundCall) {
   return call.status === "FAILED" || call.status === "NOT_ANSWERED";
 }
 
 function downloadOutboundCsv(calls: OutboundCall[], agentName: (id: string | null) => string) {
-  downloadRowsAsCsv("quickvoice-outbound-calls.csv", calls, [
+  downloadRowsAsCsv("tinkervoice-outbound-calls.csv", calls, [
     { header: "Outbound ID", value: (call) => call.outboundId },
     { header: "Status", value: (call) => call.status },
     { header: "Mode", value: (call) => call.mode },
@@ -234,6 +246,9 @@ export function OutboundCallsPanel() {
   const [mode, setMode] = useState<"all" | "quick" | "campaign">("all");
   const [selectedCall, setSelectedCall] = useState<OutboundCall | null>(null);
   const [cancelTarget, setCancelTarget] = useState<OutboundCall | null>(null);
+  const [stopTarget, setStopTarget] = useState<OutboundCall | null>(null);
+  const [stoppingAll, setStoppingAll] = useState(false);
+  const [stoppingOne, setStoppingOne] = useState(false);
   const retryCall = useRetryOutboundCall();
   const cancelCall = useCancelOutboundCall();
 
@@ -245,8 +260,14 @@ export function OutboundCallsPanel() {
     }),
     [mode, status]
   );
-  const { data, isLoading, isError, isFetching, refetch } = useOutboundCalls(params);
+  const { data, isLoading, isError, isFetching, refetch } = useOutboundCalls(params, {
+    pollWhileLive: true,
+  });
   const calls = useMemo(() => data?.items ?? [], [data?.items]);
+  const stoppableCalls = useMemo(
+    () => calls.filter((call) => outboundCallCanStop(call.status)),
+    [calls],
+  );
 
   const agentNames = useMemo(
     () => new Map(agents.map((agent) => [agent.agentId, agent.name])),
@@ -282,6 +303,51 @@ export function OutboundCallsPanel() {
     }
   }
 
+  async function confirmStop() {
+    if (!stopTarget || stoppingOne) return;
+    setStoppingOne(true);
+    try {
+      await terminateOutboundCall({
+        outboundId: stopTarget.outboundId,
+        status: stopTarget.status,
+        endLive: (roomName) => callsApi.endLive(roomName),
+        cancelScheduled: (id) => outboundApi.cancelOutboundCall(id),
+      });
+      setStopTarget(null);
+      toast.success("Call stopped");
+      await refetch();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not stop the call");
+    } finally {
+      setStoppingOne(false);
+    }
+  }
+
+  async function stopAllLive() {
+    if (stoppingAll || stoppableCalls.length === 0) return;
+    setStoppingAll(true);
+    const ids = outboundCallsToStop(
+      stoppableCalls.map((call) => ({ outboundId: call.outboundId, status: call.status })),
+    );
+    const statusById = new Map(stoppableCalls.map((call) => [call.outboundId, call.status]));
+    const results = await Promise.allSettled(
+      ids.map((outboundId) =>
+        terminateOutboundCall({
+          outboundId,
+          status: statusById.get(outboundId),
+          endLive: (roomName) => callsApi.endLive(roomName),
+          cancelScheduled: (id) => outboundApi.cancelOutboundCall(id),
+        }),
+      ),
+    );
+    const stopped = results.filter((result) => result.status === "fulfilled").length;
+    setStoppingAll(false);
+    void refetch();
+    if (stopped > 0) toast.success(stopped === 1 ? "Stopped 1 call" : `Stopped ${stopped} calls`);
+    const failed = ids.length - stopped;
+    if (failed > 0) toast.error(failed === 1 ? "Could not stop 1 call" : `Could not stop ${failed} calls`);
+  }
+
   if (isLoading) {
     return (
       <div className="space-y-3">
@@ -310,7 +376,7 @@ export function OutboundCallsPanel() {
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-3 border bg-card p-4 xl:grid-cols-[minmax(0,1fr)_180px_160px_auto]">
+      <div className="grid gap-3 border bg-card p-4 xl:grid-cols-[minmax(0,1fr)_180px_160px_auto_auto]">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -342,6 +408,15 @@ export function OutboundCallsPanel() {
             <SelectItem value="campaign">Campaign</SelectItem>
           </SelectContent>
         </Select>
+        <Button
+          variant="outline"
+          onClick={() => void stopAllLive()}
+          disabled={stoppableCalls.length === 0 || stoppingAll}
+        >
+          {stoppingAll ? <Loader2 className="size-4 animate-spin" /> : <PhoneOff className="size-4" />}
+          Stop all
+          {stoppableCalls.length > 0 ? ` (${stoppableCalls.length})` : ""}
+        </Button>
         <Button
           variant="outline"
           onClick={() => {
@@ -426,6 +501,18 @@ export function OutboundCallsPanel() {
                             Retry call
                           </DropdownMenuItem>
                         ) : null}
+                        {canStop(call) ? (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              variant="destructive"
+                              onClick={() => setStopTarget(call)}
+                            >
+                              <PhoneOff className="size-4" />
+                              Stop call
+                            </DropdownMenuItem>
+                          </>
+                        ) : null}
                         {canCancel(call) ? (
                           <>
                             <DropdownMenuSeparator />
@@ -466,7 +553,6 @@ export function OutboundCallsPanel() {
             <AlertDialogTitle>Cancel outbound call?</AlertDialogTitle>
             <AlertDialogDescription>
               This cancels the scheduled call to {cancelTarget?.phoneNumber}.
-              Calls already in progress cannot be cancelled here.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -485,6 +571,36 @@ export function OutboundCallsPanel() {
                 <Loader2 className="size-4 animate-spin" />
               ) : null}
               Cancel call
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={!!stopTarget}
+        onOpenChange={(open) => {
+          if (!open && !stoppingOne) setStopTarget(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Stop outbound call?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This ends the live or queued call to {stopTarget?.phoneNumber}.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={stoppingOne}>Keep call</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={(event) => {
+                event.preventDefault();
+                void confirmStop();
+              }}
+              disabled={stoppingOne}
+            >
+              {stoppingOne ? <Loader2 className="size-4 animate-spin" /> : null}
+              Stop call
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

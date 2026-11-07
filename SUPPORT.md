@@ -1,6 +1,6 @@
-# QuickVoice Support
+# TinkerVoice Support
 
-QuickVoice is community-supported open-source software. Public help is best effort and has no guaranteed response or resolution time.
+TinkerVoice is community-supported open-source software. Public help is best effort and has no guaranteed response or resolution time.
 
 ## Choose The Right Channel
 
@@ -10,9 +10,9 @@ QuickVoice is community-supported open-source software. Public help is best effo
 | `task up:dev` or local prerequisite failure                                | Use the setup issue form.                                                         |
 | Documentation gap                                                          | Use the documentation issue form.                                                 |
 | Feature or integration proposal                                            | Use the feature issue form before opening a broad pull request.                   |
-| How-to or architecture discussion                                          | Start a [GitHub Discussion](https://github.com/allgpt-co/QuickVoice/discussions). |
+| How-to or architecture discussion                                          | Start a [GitHub Discussion](https://github.com/allgpt-co/TinkerVoice/discussions). |
 | Security vulnerability                                                     | Follow [SECURITY.md](./SECURITY.md); never post vulnerability details publicly.   |
-| Commercial licensing, managed hosting, implementation, or enterprise terms | Use the contact path on [quickvoice.co](https://quickvoice.co).                   |
+| Commercial licensing, managed hosting, implementation, or enterprise terms | Use the contact path on [tinkervoice.co](https://tinkervoice.co).                   |
 
 Do not use a public issue as an emergency operations channel.
 
@@ -39,10 +39,10 @@ The project can help diagnose code and documentation in this repository. Communi
 - Guaranteeing carrier delivery, model quality, latency, uptime, cost, or third-party availability.
 - Supporting a modified fork without a minimal reproduction against the upstream repository.
 
-Provider-specific failures may require the provider's own support channel once QuickVoice has sent a valid request and the remaining problem is account, quota, carrier, billing, regional, or service-side behavior.
+Provider-specific failures may require the provider's own support channel once TinkerVoice has sent a valid request and the remaining problem is account, quota, carrier, billing, regional, or service-side behavior.
 
 ## Security And Safety
 
 Vulnerability details belong in private reporting. Suspected credential exposure should be treated as an incident: revoke or rotate the credential first, preserve appropriate evidence privately, and follow [SECURITY.md](./SECURITY.md).
 
-For telephony testing, use numbers and recordings you are authorized to use. Consent, calling-hour, recording, disclosure, opt-out, and other legal requirements vary by jurisdiction and deployment; QuickVoice does not make those decisions for an operator.
+For telephony testing, use numbers and recordings you are authorized to use. Consent, calling-hour, recording, disclosure, opt-out, and other legal requirements vary by jurisdiction and deployment; TinkerVoice does not make those decisions for an operator.

@@ -49,7 +49,7 @@ def main() -> int:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the QuickVoice Phase 2D LiveKit voice smoke.")
+    parser = argparse.ArgumentParser(description="Run the TinkerVoice Phase 2D LiveKit voice smoke.")
     parser.add_argument(
         "--api-base-url",
         default=os.getenv("AI_API_BASE_URL", "http://localhost:5555"),

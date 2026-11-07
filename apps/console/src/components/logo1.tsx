@@ -35,7 +35,7 @@ export default function Logo() {
             fontWeight="800"
             fill="currentColor"
           >
-            QuickVoice
+            TinkerVoice
           </text>
         </svg>
   

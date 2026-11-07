@@ -50,7 +50,7 @@ export function AboutUsIndustriesSection() {
               Empowering Businesses Across Industries
             </h2>
             <p className="text-lg text-foreground/70 max-w-3xl mx-auto">
-              QuickVoice&apos;s AI-powered voice automation solutions simplify operations and enhance customer
+              TinkerVoice&apos;s AI-powered voice automation solutions simplify operations and enhance customer
               experience across various sectors.
             </p>
           </div>

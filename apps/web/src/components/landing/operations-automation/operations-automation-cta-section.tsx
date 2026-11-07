@@ -19,7 +19,7 @@ export function OperationsAutomationCtaSection() {
             Book a Demo
           </h2>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Experience the power of QuickVoice&apos;s conversational AI agents. Book a demo today and discover how our technology can transform your customer support and drive operations automation across your industry.
+            Experience the power of TinkerVoice&apos;s conversational AI agents. Book a demo today and discover how our technology can transform your customer support and drive operations automation across your industry.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

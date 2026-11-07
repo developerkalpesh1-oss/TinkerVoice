@@ -81,7 +81,7 @@ const STATE_VIEW_COPY = {
   offline: {
     icon: WifiOff,
     title: "You are offline",
-    description: "Reconnect to the internet to continue working in QuickVoice.",
+    description: "Reconnect to the internet to continue working in TinkerVoice.",
     role: "alert",
     live: "assertive",
     surfaceClassName: "border-muted-foreground/30 bg-muted/40",

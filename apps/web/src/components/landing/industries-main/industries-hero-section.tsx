@@ -90,7 +90,7 @@ export function IndustriesHeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-lg leading-8 text-muted-foreground mb-8 max-w-2xl mx-auto"
           >
-            Discover how QuickVoice&apos;s AI-powered voice agents transform customer interactions,
+            Discover how TinkerVoice&apos;s AI-powered voice agents transform customer interactions,
             streamline operations, and drive growth across diverse industries.
           </motion.p>
 

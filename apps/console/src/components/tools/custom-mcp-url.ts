@@ -44,6 +44,6 @@ export function validateCustomMcpUrl(value: string): CustomMcpUrlValidation {
   return {
     isValid: true,
     tone: "success",
-    message: "HTTPS endpoint ready. QuickVoice will verify the MCP server when you connect.",
+    message: "HTTPS endpoint ready. TinkerVoice will verify the MCP server when you connect.",
   };
 }

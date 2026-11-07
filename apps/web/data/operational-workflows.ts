@@ -320,7 +320,7 @@ export const operationalWorkflows: Record<string, WorkflowPageContent> = {
           "Verify the target booking API, permissions, rate rules and available operations with your implementation team. No named connector is assumed.",
       },
       {
-        question: "Does QuickVoice support every guest language?",
+        question: "Does TinkerVoice support every guest language?",
         answer:
           "Language quality depends on the configured providers and workflow. Test required languages, names, addresses and escalation before launch rather than assuming a universal language count.",
       },

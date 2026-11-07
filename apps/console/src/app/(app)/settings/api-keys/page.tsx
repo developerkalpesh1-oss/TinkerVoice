@@ -168,8 +168,8 @@ export default function ApiKeysPage() {
           <div className="space-y-1">
             <h2 className="text-base font-semibold">API keys</h2>
             <p className="text-sm text-muted-foreground">
-              Use these organization-scoped keys to authenticate the QuickVoice
-              API and QuickVoice MCP server with the{" "}
+              Use these organization-scoped keys to authenticate the TinkerVoice
+              API and TinkerVoice MCP server with the{" "}
               <code className="bg-muted px-1 py-0.5 font-mono text-xs">
                 x-api-key
               </code>{" "}
@@ -247,7 +247,7 @@ export default function ApiKeysPage() {
           <EmptyState
             icon={KeyRound}
             title="No API keys yet"
-            description="Create a key to call QuickVoice from your application."
+            description="Create a key to call TinkerVoice from your application."
             className="border-0"
           />
         ) : (

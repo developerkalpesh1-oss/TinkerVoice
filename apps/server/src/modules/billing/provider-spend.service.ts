@@ -136,7 +136,7 @@ export async function runProviderSpendMonitor(
     alertDay = today,
   ) {
     const id = digest([sourceId(source), alertDay, severity]);
-    const subject = `[QuickVoice] ${severity.toUpperCase()}: ${source.key} ${severity === "unavailable" ? "monitoring unavailable" : "daily usage"}`;
+    const subject = `[TinkerVoice] ${severity.toUpperCase()}: ${source.key} ${severity === "unavailable" ? "monitoring unavailable" : "daily usage"}`;
     await db.providerSpendAlert.upsert({
       where: { id },
       update: {},
@@ -235,7 +235,7 @@ export async function runProviderSpendMonitor(
           `Collected at: ${now.toISOString()}`,
           `Provider data timestamp: ${current.sourceAsOf?.toISOString() ?? "not supplied; collection time is not a freshness guarantee"}`,
           note,
-          "Provider expenses exclude QuickVoice markup. Review the provider dashboard and active calls. This alert does not stop calls.",
+          "Provider expenses exclude TinkerVoice markup. Review the provider dashboard and active calls. This alert does not stop calls.",
         ].join("\n"),
         current.day,
       );

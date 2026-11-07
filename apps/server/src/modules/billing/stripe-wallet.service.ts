@@ -33,9 +33,9 @@ import {
 } from "./stripe-wallet-state.js";
 import { withTransactionConflictRetries } from "./transaction-conflict.js";
 
-const TOP_UP_KIND = "quickvoice_top_up";
-const AUTO_RECHARGE_KIND = "quickvoice_auto_recharge";
-const PAYMENT_METHOD_KIND = "quickvoice_wallet_payment_method";
+const TOP_UP_KIND = "tinkervoice_top_up";
+const AUTO_RECHARGE_KIND = "tinkervoice_auto_recharge";
+const PAYMENT_METHOD_KIND = "tinkervoice_wallet_payment_method";
 const AUTOMATIC_PROCESSING_LEASE_MS = 2 * 60 * 1_000;
 const FINANCIAL_PROCESSING_LEASE_MS = 2 * 60 * 1_000;
 const WEBHOOK_PROCESSING_LEASE_MS = 5 * 60 * 1_000;
@@ -122,7 +122,7 @@ export async function createTopUpCheckout(args: {
             price_data: {
               currency: "usd",
               product_data: {
-                name: "QuickVoice prepaid call credit",
+                name: "TinkerVoice prepaid call credit",
                 description:
                   "Prepaid wallet credit. Promotional credit is tracked separately.",
                 ...(topUp.taxMode === TopUpTaxMode.STRIPE_TAX
@@ -1105,7 +1105,7 @@ async function resolveTopUpForPaymentIntent(paymentIntentId: string | null) {
   const topUpId = intent.metadata.top_up_id;
   const organizationId = intent.metadata.organization_id;
   if (!topUpId || !organizationId) {
-    throw new Error("QuickVoice PaymentIntent is missing wallet metadata");
+    throw new Error("TinkerVoice PaymentIntent is missing wallet metadata");
   }
   const topUp = await prisma.topUp.findFirst({
     where: { topUpId, organizationId },
@@ -1418,7 +1418,7 @@ async function ensureOrganizationStripeCustomer(organizationId: string) {
       name: organization.name,
       metadata: { organization_id: organization.id },
     },
-    { idempotencyKey: `quickvoice-organization:${organization.id}` },
+    { idempotencyKey: `tinkervoice-organization:${organization.id}` },
   );
   await prisma.organization.updateMany({
     where: { id: organization.id, stripeCustomerId: null },
@@ -1454,7 +1454,7 @@ async function deleteStripeCustomerIdempotently(customerId: string) {
 function requireHostedPayments() {
   if (!isHostedBilling) {
     throw new CustomApiError(
-      "QuickVoice billing is disabled in self-hosted mode",
+      "TinkerVoice billing is disabled in self-hosted mode",
       409,
       { code: "BILLING_DISABLED" },
     );

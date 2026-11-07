@@ -21,7 +21,7 @@ import {
 } from "@/lib/links";
 
 const QUICKSTART_COMMANDS = `git clone ${GITHUB_REPO_URL}.git
-cd QuickVoice
+cd TinkerVoice
 task up:dev`;
 
 const architectureComponents = [
@@ -118,10 +118,10 @@ const contributorLinks = [
 const openSourceSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
-  name: "QuickVoice",
+  name: "TinkerVoice",
   description:
     "Open-source, self-hostable AI phone-agent infrastructure with a Next.js console, Express API, LiveKit-powered Python worker, telephony integrations, and local development tooling.",
-  url: "https://quickvoice.co/open-source",
+  url: "https://tinkervoice.co/open-source",
   codeRepository: GITHUB_REPO_URL,
   license: GITHUB_LICENSE_URL,
   programmingLanguage: ["TypeScript", "Python"],
@@ -131,23 +131,23 @@ const openSourceSchema = {
 export const metadata: Metadata = {
   title: "Open-Source AI Phone Agent Stack",
   description:
-    "Inspect, run, and extend QuickVoice: an MIT-licensed AI phone-agent stack with a console, Express API, LiveKit worker, telephony integrations, and local development tooling.",
+    "Inspect, run, and extend TinkerVoice: an MIT-licensed AI phone-agent stack with a console, Express API, LiveKit worker, telephony integrations, and local development tooling.",
   alternates: {
-    canonical: "https://quickvoice.co/open-source",
+    canonical: "https://tinkervoice.co/open-source",
   },
   openGraph: {
     type: "website",
-    url: "https://quickvoice.co/open-source",
-    title: "QuickVoice Open Source",
+    url: "https://tinkervoice.co/open-source",
+    title: "TinkerVoice Open Source",
     description:
-      "Inspect, run, and extend the QuickVoice AI phone-agent stack.",
+      "Inspect, run, and extend the TinkerVoice AI phone-agent stack.",
     images: ["/og-image.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "QuickVoice Open Source",
+    title: "TinkerVoice Open Source",
     description:
-      "Inspect, run, and extend the QuickVoice AI phone-agent stack.",
+      "Inspect, run, and extend the TinkerVoice AI phone-agent stack.",
     images: ["/og-image.png"],
   },
 };

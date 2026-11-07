@@ -19,7 +19,7 @@ function setSmtpEmailEnv() {
   process.env.SMTP_PORT = "587";
   process.env.SMTP_USERNAME = "emailapikey";
   process.env.SMTP_PASSWORD = "test-token";
-  process.env.FROM_EMAIL = "no-reply@mail.quickvoice.co";
+  process.env.FROM_EMAIL = "no-reply@mail.tinkervoice.co";
   delete process.env.ZEPTOMAIL_TOKEN;
   delete process.env.ZEPTOMAIL_URL;
 }
@@ -27,7 +27,7 @@ function setSmtpEmailEnv() {
 function setApiEmailEnv() {
   process.env.ZEPTOMAIL_URL = "smtp.zeptomail.in";
   process.env.ZEPTOMAIL_TOKEN = "test-token";
-  process.env.FROM_EMAIL = "no-reply@mail.quickvoice.co";
+  process.env.FROM_EMAIL = "no-reply@mail.tinkervoice.co";
   delete process.env.SMTP_HOST;
   delete process.env.SMTP_PORT;
   delete process.env.SMTP_USERNAME;
@@ -55,7 +55,7 @@ test("sendEmail uses SMTP when only SMTP credentials are configured", async () =
   await sendEmail(
     "verifyEmail",
     "ada@example.com",
-    "https://console.quickvoice.co/verify",
+    "https://console.tinkervoice.co/verify",
     "Ada",
   );
 
@@ -76,19 +76,19 @@ test("sendEmail uses SMTP when only SMTP credentials are configured", async () =
     html: string;
   };
   assert.deepEqual(message.from, {
-    address: "no-reply@mail.quickvoice.co",
+    address: "no-reply@mail.tinkervoice.co",
     name: "Console|Quickvoice",
   });
   assert.deepEqual(message.to, [{ address: "ada@example.com", name: "Ada" }]);
-  assert.equal(message.subject, "Verify your QuickVoice email");
+  assert.equal(message.subject, "Verify your TinkerVoice email");
   assert.equal(
     message.text,
     [
       "Hi Ada,",
       "",
-      "Confirm your email address to finish setting up your QuickVoice account.",
+      "Confirm your email address to finish setting up your TinkerVoice account.",
       "",
-      "Verify email: https://console.quickvoice.co/verify",
+      "Verify email: https://console.tinkervoice.co/verify",
     ].join("\n"),
   );
   assert.match(message.html, /Verify your email/);
@@ -109,7 +109,7 @@ test("sendEmail derives the ZeptoMail API endpoint from the SMTP host", async ()
   await sendEmail(
     "verifyEmail",
     "ada@example.com",
-    "https://console.quickvoice.co/verify",
+    "https://console.tinkervoice.co/verify",
     "Ada",
   );
 
@@ -133,7 +133,7 @@ test("sendEmail rejects with a controlled error when SMTP transport fails", asyn
     sendEmail(
       "resetPassword",
       "ada@example.com",
-      "https://console.quickvoice.co/reset",
+      "https://console.tinkervoice.co/reset",
       "Ada",
     ),
     /Failed to send resetPassword email via SMTP: SMTP down/,

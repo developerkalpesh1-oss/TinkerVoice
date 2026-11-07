@@ -13,10 +13,10 @@ export type AnalyticsProperties = Record<
 
 declare global {
   interface Window {
-    quickvoiceAnalyticsConsent?: "unknown" | "granted" | "denied";
-    quickvoiceAnalyticsMeasurementId?: string;
-    quickvoiceStartAnalytics?: () => void;
-    quickvoiceAnalyticsPageAllowed?: () => boolean;
+    tinkervoiceAnalyticsConsent?: "unknown" | "granted" | "denied";
+    tinkervoiceAnalyticsMeasurementId?: string;
+    tinkervoiceStartAnalytics?: () => void;
+    tinkervoiceAnalyticsPageAllowed?: () => boolean;
     gtag?: (...args: unknown[]) => void;
   }
 }
@@ -25,11 +25,11 @@ export function trackAnalyticsEvent(
   eventName: AnalyticsEventName,
   properties: AnalyticsProperties = {},
 ): boolean {
-  if (typeof window === "undefined" || window.quickvoiceAnalyticsConsent !== "granted" || !window.gtag) return false;
+  if (typeof window === "undefined" || window.tinkervoiceAnalyticsConsent !== "granted" || !window.gtag) return false;
 
   try {
     // Startup permission does not grant permission on later private/unknown routes.
-    if (window.quickvoiceAnalyticsPageAllowed?.() !== true) return false;
+    if (window.tinkervoiceAnalyticsPageAllowed?.() !== true) return false;
     window.gtag("event", eventName, properties);
     return true;
   } catch {

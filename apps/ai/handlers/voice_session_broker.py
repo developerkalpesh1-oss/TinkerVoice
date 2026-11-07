@@ -9,7 +9,7 @@ from livekit import api
 from handlers.voice_config_resolution import resolve_voice_config
 
 
-SCHEMA_VERSION = "quickvoice.voice-session.v1"
+SCHEMA_VERSION = "tinkervoice.voice-session.v1"
 MAX_SESSION_TTL_SECONDS = 10800
 _PLACEHOLDER_LIVEKIT_URL_MARKERS = ("your-livekit-host",)
 _PLACEHOLDER_LIVEKIT_CREDENTIALS = {
@@ -82,7 +82,7 @@ class VoiceSessionBroker:
         livekit_url = _livekit_url()
         api_key = _livekit_credential("LIVEKIT_API_KEY")
         api_secret = _livekit_credential("LIVEKIT_API_SECRET")
-        agent_name = os.getenv("LIVEKIT_AGENT_NAME", "quickvoice-voice-agent")
+        agent_name = os.getenv("LIVEKIT_AGENT_NAME", "tinkervoice-voice-agent")
         ttl_seconds = _ttl_seconds(payload)
 
         catalog = self.catalog_loader()

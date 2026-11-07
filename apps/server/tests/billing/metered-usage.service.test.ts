@@ -11,12 +11,12 @@ test("call meter events use stable provider and request idempotency identifiers"
       durationSeconds: 61,
       timestamp: new Date("2026-07-03T12:01:00Z"),
     },
-    "quickvoice_call_minutes",
+    "tinkervoice_call_minutes",
     "cus_123",
   );
 
   assert.equal(event.params.identifier, "call:call_123");
-  assert.equal(event.requestOptions.idempotencyKey, "quickvoice-call:call_123");
+  assert.equal(event.requestOptions.idempotencyKey, "tinkervoice-call:call_123");
   assert.equal(event.params.payload.value, "2");
   assert.equal(event.params.payload.stripe_customer_id, "cus_123");
   assert.equal(event.billableMinutes, 2);

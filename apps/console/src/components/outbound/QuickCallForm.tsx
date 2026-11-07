@@ -1,10 +1,13 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Loader2, PhoneOutgoing, RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 
 import { EmptyState } from "@/src/components/common/EmptyState";
 import { DynamicVariableInputs } from "@/src/components/agents/DynamicVariableInputs";
+import { QuickCallContactField } from "@/src/components/outbound/QuickCallContactField";
 import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -17,16 +20,22 @@ import {
   SelectValue,
 } from "@/src/components/ui/select";
 import { Textarea } from "@/src/components/ui/textarea";
+import { useOutboundPromptCampaigns } from "@/src/hooks/use-outbound-prompt-campaigns";
+import { useOutboundSavedContacts } from "@/src/hooks/use-outbound-saved-contacts";
 import { useAgentConfig, useAgents } from "@/src/hooks/queries/agents";
 import { useNumbers } from "@/src/hooks/queries/numbers";
-import { useQuickOutboundCall } from "@/src/hooks/queries/outbound";
-import { quickCallSchema } from "@/src/models/outbound/quickCall";
+import { outboundApi } from "@/src/lib/api/resources/outbound";
 import type { Agent, PhoneNumber } from "@/src/lib/api/types";
 import {
   dynamicVariablePayload,
   normalizeAgentVariables,
   uniqueDynamicVariableNames,
 } from "@/src/lib/agents/dynamic-variables";
+import { tinkerismCampaignPrompt } from "@/src/lib/outbound/prompt-campaigns";
+import type { OutboundSavedContact } from "@/src/lib/outbound/saved-contacts";
+import { TINKERISM_FIRST_MESSAGE } from "@/src/lib/tinkerism/contacts";
+import { quickCallSchema } from "@/src/models/outbound/quickCall";
+import { queryKeys } from "@/src/lib/query-keys";
 
 type DialableAgent = Agent & {
   numbers: PhoneNumber[];
@@ -62,9 +71,11 @@ export function QuickCallForm({
   fixedAgentId,
   hideReadyLines = false,
 }: QuickCallFormProps = {}) {
+  const queryClient = useQueryClient();
+  const { selectedCampaign } = useOutboundPromptCampaigns();
+  const { contacts: savedContacts } = useOutboundSavedContacts();
   const { data: agents = [], isLoading: agentsLoading, refetch: refetchAgents } = useAgents();
   const { data: numbers = [], isLoading: numbersLoading, refetch: refetchNumbers } = useNumbers();
-  const quickCall = useQuickOutboundCall();
   const dialableAgents = useMemo(() => {
     const ready = asDialableAgents(agents, numbers);
     if (!fixedAgentId) return ready;
@@ -82,6 +93,7 @@ export function QuickCallForm({
   });
   const [formError, setFormError] = useState<string | null>(null);
   const [startedCall, setStartedCall] = useState<StartedCall | null>(null);
+  const [starting, setStarting] = useState(false);
 
   const agentId = fixedAgentId
     ? dialableAgents.some((agent) => agent.agentId === fixedAgentId)
@@ -133,44 +145,49 @@ export function QuickCallForm({
     Boolean(agentId) &&
     Boolean(fromNumber) &&
     phoneNumber.trim().length >= 10 &&
-    !quickCall.isPending;
+    !starting;
 
   function refresh() {
     refetchAgents();
     refetchNumbers();
+    void queryClient.invalidateQueries({ queryKey: queryKeys.outbound.all });
   }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFormError(null);
     setStartedCall(null);
-
-    const parsed = quickCallSchema.safeParse({
-      agentId,
-      phoneNumber,
-      fromNumber,
-      username: username.trim() || undefined,
-      firstMessage: firstMessage.trim() || undefined,
-      systemPrompt: systemPrompt.trim() || undefined,
-      dynamicVariables: dynamicVariablePayload(
-        selectedAgentVariables,
-        dynamicVariableValues
-      ),
-    });
-
-    if (!parsed.success) {
-      setFormError(parsed.error.issues[0]?.message ?? "Check the call details");
-      return;
-    }
+    setStarting(true);
 
     try {
-      await quickCall.mutateAsync(parsed.data);
-      setStartedCall({
-        phoneNumber: parsed.data.phoneNumber,
-        fromNumber: parsed.data.fromNumber,
+      const toNumber = phoneNumber.trim();
+      const contactName = username.trim() || "the recipient";
+      const greeting = firstMessage.trim() || TINKERISM_FIRST_MESSAGE;
+      const parsed = quickCallSchema.safeParse({
+        agentId,
+        phoneNumber: toNumber,
+        fromNumber,
+        username: username.trim() || undefined,
+        firstMessage: greeting,
+        systemPrompt: systemPrompt.trim()
+          || tinkerismCampaignPrompt(selectedCampaign, contactName, toNumber),
+        dynamicVariables: {
+          ...dynamicVariablePayload(selectedAgentVariables, dynamicVariableValues),
+          tinkerism_call: "1",
+        },
       });
-    } catch {
-      // The mutation hook owns the toast; keep the form in place for retry.
+      if (!parsed.success) {
+        throw new Error(parsed.error.issues[0]?.message ?? "Check the call details");
+      }
+      await outboundApi.quickCall(parsed.data);
+      setStartedCall({ phoneNumber: toNumber, fromNumber });
+      toast.success("Outbound call started");
+      refresh();
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : "Could not start outbound call");
+      toast.error(error instanceof Error ? error.message : "Could not start outbound call");
+    } finally {
+      setStarting(false);
     }
   }
 
@@ -179,6 +196,11 @@ export function QuickCallForm({
     setDynamicVariableValues({});
     const nextAgent = dialableAgents.find((agent) => agent.agentId === nextAgentId);
     setRequestedFromNumber(nextAgent?.numbers[0]?.number ?? "");
+  }
+
+  function selectSavedContact(contact: OutboundSavedContact) {
+    setPhoneNumber(contact.phoneNumber);
+    setUsername(contact.name);
   }
 
   if (isLoading) {
@@ -267,13 +289,13 @@ export function QuickCallForm({
           <div className="grid gap-4 md:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="phoneNumber">To</Label>
-              <Input
+              <QuickCallContactField
                 id="phoneNumber"
-                type="tel"
-                inputMode="tel"
-                placeholder="+15551234567"
-                value={phoneNumber}
-                onChange={(event) => setPhoneNumber(event.target.value)}
+                contacts={savedContacts}
+                phoneNumber={phoneNumber}
+                onPhoneNumberChange={setPhoneNumber}
+                onSelectContact={selectSavedContact}
+                disabled={starting}
               />
             </div>
 
@@ -293,7 +315,7 @@ export function QuickCallForm({
             <Textarea
               id="firstMessage"
               rows={3}
-              placeholder="Hi, this is a quick call from QuickVoice."
+              placeholder={TINKERISM_FIRST_MESSAGE}
               value={firstMessage}
               onChange={(event) => setFirstMessage(event.target.value)}
             />
@@ -304,7 +326,7 @@ export function QuickCallForm({
             <Textarea
               id="systemPrompt"
               rows={4}
-              placeholder="Keep the call brief and confirm the requested information."
+              placeholder="Optional. Leave blank to use the shared Tinkerism Call campaign prompt."
               value={systemPrompt}
               onChange={(event) => setSystemPrompt(event.target.value)}
             />
@@ -322,7 +344,7 @@ export function QuickCallForm({
               variableNames={dynamicVariableNames}
               values={dynamicVariableValues}
               placeholders={selectedAgentVariables.placeholders}
-              disabled={quickCall.isPending}
+              disabled={starting}
               onValuesChange={setDynamicVariableValues}
             />
           ) : null}
@@ -337,6 +359,7 @@ export function QuickCallForm({
               className="border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
             >
               Started call to {startedCall.phoneNumber} from {startedCall.fromNumber}.
+              {" "}Track live status under Outbound calls.
             </div>
           ) : null}
 
@@ -345,7 +368,7 @@ export function QuickCallForm({
               <RefreshCw /> Refresh
             </Button>
             <Button type="submit" disabled={!canSubmit}>
-              {quickCall.isPending ? <Loader2 className="animate-spin" /> : <PhoneOutgoing />}
+              {starting ? <Loader2 className="animate-spin" /> : <PhoneOutgoing />}
               Start call
             </Button>
           </div>

@@ -11,14 +11,14 @@ const compiled = ts.transpileModule(
   { compilerOptions: { module: ts.ModuleKind.CommonJS } },
 ).outputText;
 
-function fixture({ configuredId = "", hostname = "quickvoice.co" } = {}) {
+function fixture({ configuredId = "", hostname = "tinkervoice.co" } = {}) {
   const scripts = [];
   const compiledModule = { exports: {} };
   const context = {
     URL, module: compiledModule, exports: compiledModule.exports,
     window: {
       location: { hostname, pathname: "/pricing" },
-      quickvoiceAnalyticsConsent: "granted",
+      tinkervoiceAnalyticsConsent: "granted",
     },
     document: {
       getElementById: (id) => scripts.find((script) => script.id === id),
@@ -56,7 +56,7 @@ test("custom events recheck the exact current route after the tag has loaded", (
 test("missing or broken route guards fail closed without breaking the user action", () => {
   const f = fixture();
   for (const guard of [undefined, () => false, () => { throw new Error("unavailable"); }]) {
-    f.context.window.quickvoiceAnalyticsPageAllowed = guard;
+    f.context.window.tinkervoiceAnalyticsPageAllowed = guard;
     assert.equal(f.trackAnalyticsEvent("cta_click"), false);
   }
   assert.equal(f.events().length, 0);
@@ -67,9 +67,9 @@ test("consent still gates events and a blocked lead does not consume its receipt
   f.context.window.location.pathname = "/unknown";
   assert.equal(f.trackContactLead("contact_page", "synthetic-receipt"), false);
   f.context.window.location.pathname = "/company/contact";
-  f.context.window.quickvoiceAnalyticsConsent = "denied";
+  f.context.window.tinkervoiceAnalyticsConsent = "denied";
   assert.equal(f.trackContactLead("contact_page", "synthetic-receipt"), false);
-  f.context.window.quickvoiceAnalyticsConsent = "granted";
+  f.context.window.tinkervoiceAnalyticsConsent = "granted";
   assert.equal(f.trackContactLead("contact_page", "synthetic-receipt"), true);
   assert.equal(f.trackContactLead("contact_page", "synthetic-receipt"), false);
   assert.equal(f.events().length, 1);

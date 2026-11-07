@@ -5,14 +5,14 @@ export default function ApiKeysPage() {
       <article className="prose prose-qv mx-auto max-w-4xl">
         <h1>API keys and authentication</h1>
         <p>
-          The remote MCP endpoint must not be public. QuickVoice MCP
+          The remote MCP endpoint must not be public. TinkerVoice MCP
           authenticates every request with the caller&apos;s organization-scoped
-          QuickVoice API key, then forwards that key to the existing QuickVoice
+          TinkerVoice API key, then forwards that key to the existing TinkerVoice
           API layer.
         </p>
         <h2>Create a key</h2>
         <ol>
-          <li>Open the QuickVoice console.</li>
+          <li>Open the TinkerVoice console.</li>
           <li>
             Go to <strong>Settings → API keys</strong>.
           </li>
@@ -25,9 +25,9 @@ export default function ApiKeysPage() {
         <h2>Required environment</h2>
         <ul>
           <li>
-            <code>QUICKVOICE_API_BASE_URL</code>: server API base URL including
+            <code>TINKERVOICE_API_BASE_URL</code>: server API base URL including
             the API version prefix, for example{" "}
-            <code>https://api.quickvoice.co/api/v1</code>.
+            <code>https://api.tinkervoice.co/api/v1</code>.
           </li>
           <li>
             <code>PORT</code> or <code>MCP_PORT</code>: HTTP port for{" "}
@@ -47,13 +47,13 @@ export default function ApiKeysPage() {
           Send the copied key on every MCP request with <code>x-api-key</code>.
           The MCP server also accepts{" "}
           <code>Authorization: Bearer &lt;key&gt;</code> for client
-          compatibility, but <code>x-api-key</code> is the canonical QuickVoice
+          compatibility, but <code>x-api-key</code> is the canonical TinkerVoice
           header.
         </p>
         <h2>Rotation checklist</h2>
         <ol>
           <li>
-            Create a new QuickVoice API key in the console with the same or
+            Create a new TinkerVoice API key in the console with the same or
             narrower permissions.
           </li>
           <li>Update the MCP client secret/configuration.</li>

@@ -6,6 +6,7 @@ from livekit.agents import (
     Agent,
     JobContext,
     LanguageCode,
+    RunContext,
     TurnHandlingOptions,
     function_tool,
     ToolError,
@@ -106,6 +107,15 @@ IVR_TOOL_INSTRUCTIONS = (
     "not clear yet, keep listening until it is clear. Never send tones when you "
     "are unsure which menu option applies."
 )
+END_CALL_INSTRUCTIONS = (
+    "\n\nEnding the call: When the caller clearly wants to finish the conversation "
+    "(for example goodbye, bye, that's all, not interested, no thanks, please stop, "
+    "hang up, or they ask you to end the call), call end_call with one brief polite "
+    "closing greeting in the language they just used. Do not speak a separate goodbye "
+    "before that tool call. Do not call end_call while they are still asking questions, "
+    "sharing details, or continuing the discussion. A mention of not wanting one option "
+    "while asking about another is not a reason to end the call."
+)
 
 
 def _config_bool(value) -> bool:
@@ -194,6 +204,7 @@ def build_agent_instructions(config: dict, call_context: dict | None = None) -> 
         instructions += RAG_TOOL_INSTRUCTIONS
     if ivr_navigation_enabled(config, call_context):
         instructions += IVR_TOOL_INSTRUCTIONS
+    instructions += END_CALL_INSTRUCTIONS
     metadata_instructions = build_metadata_collection_instructions(config)
     if metadata_instructions:
         instructions += f"\n\n{metadata_instructions}"
@@ -448,6 +459,7 @@ class Assistant(Agent):
         config: dict,
         call_context: dict,
         transcript_collector: TranscriptCollector | None = None,
+        hangup_call=None,
     ):
         super().__init__(
             instructions=system_prompt,
@@ -457,6 +469,8 @@ class Assistant(Agent):
         self._call_context = call_context
         self._metadata_collector = CallMetadataCollector(config)
         self._transcript_collector = transcript_collector
+        self._hangup_call = hangup_call
+        self._end_call_started = False
 
     def _rag_enabled(self) -> bool:
         return bool(self._config.get("use_rag"))
@@ -597,6 +611,41 @@ class Assistant(Agent):
             call_context=self._call_context,
         )
         return json.dumps(result.get("data", result), ensure_ascii=False)
+
+    @function_tool
+    async def end_call(self, context: RunContext, closing_message: str = "") -> str:
+        """
+        End this live call after the caller clearly wants to finish.
+
+        Use only for clear conversation-ending intent such as goodbye, that's all,
+        not interested, no thanks, please stop, or hang up. Pass one brief polite
+        closing greeting in the caller's language. Do not use this while the caller
+        is still asking questions or continuing the discussion.
+
+        Args:
+            closing_message: One short polite closing greeting in the caller's language.
+        """
+        if self._end_call_started:
+            return "Call ending."
+        self._end_call_started = True
+        try:
+            context.disallow_interruptions()
+        except RuntimeError:
+            pass
+        # Finish any in-progress reply from this turn, then speak the close so
+        # hangup never cuts off the greeting.
+        await context.wait_for_playout()
+        message = " ".join(str(closing_message or "").split()).strip()
+        if not message:
+            message = "Thank you for your time. Goodbye."
+        speech = context.session.say(message, allow_interruptions=False)
+        await speech.wait_for_playout()
+        hangup = self._hangup_call
+        if hangup is None:
+            logger.warning("[CALL_TERMINATION] end_call requested without a hangup handler")
+            return "Call ending is unavailable."
+        await hangup()
+        return "Call ended."
 
 
 async def end_call_without_billing(ctx: JobContext, reason: str) -> None:
@@ -1070,6 +1119,7 @@ async def _run_entrypoint(ctx: JobContext):
         config=config,
         call_context=call_context,
         transcript_collector=transcript_collector,
+        hangup_call=lambda: billing_reporter.request_stop("conversation_ended"),
     )
 
     @ctx.room.on("data_received")
@@ -1187,6 +1237,6 @@ if __name__ == "__main__":
             entrypoint_fnc=entrypoint,
             # Allow bounded post-call analysis and existing durable delivery retries.
             shutdown_process_timeout=75.0,
-            agent_name=os.getenv("LIVEKIT_AGENT_NAME", "quickvoice-voice-agent"),
+            agent_name=os.getenv("LIVEKIT_AGENT_NAME", "tinkervoice-voice-agent"),
         )
     )

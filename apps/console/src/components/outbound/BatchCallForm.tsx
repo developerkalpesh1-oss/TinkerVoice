@@ -63,6 +63,11 @@ import {
   goalsToDefinition,
 } from "./GoalBuilder";
 import { CSVPreview } from "./CSVPreview";
+import {
+  outboundCampaignBatchSystemPrompt,
+  withCampaignPromptOnRecipientFile,
+  type OutboundPromptCampaign,
+} from "@/src/lib/outbound/prompt-campaigns";
 
 const ACCEPT_STRING =
   ".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -90,12 +95,16 @@ function contentTypeFor(file: File) {
 }
 
 function templateFileName(agentName: string | undefined) {
-  const base = (agentName ?? "quickvoice")
+  const base = (agentName ?? "tinkervoice")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-  return `${base || "quickvoice"}-recipients-template.csv`;
+  return `${base || "tinkervoice"}-recipients-template.csv`;
 }
+
+type BatchCallFormProps = {
+  selectedPromptCampaign?: OutboundPromptCampaign | null;
+};
 
 function normalizeCsvHeader(value: string) {
   return value
@@ -212,7 +221,9 @@ function parseRecipientsFromCsv(file: File, maxRows: number): Promise<CampaignRe
     });
 }
 
-export function BatchCallForm() {
+export function BatchCallForm({
+  selectedPromptCampaign = null,
+}: BatchCallFormProps) {
   const {
     data: agents = [],
     isLoading: agentsLoading,
@@ -439,15 +450,21 @@ export function BatchCallForm() {
     }
 
     try {
+      const recipientFile = selectedPromptCampaign
+        ? await withCampaignPromptOnRecipientFile(
+            parsed.data.file,
+            outboundCampaignBatchSystemPrompt(selectedPromptCampaign),
+          )
+        : parsed.data.file;
       const upload = await outboundApi.getBatchUploadUrl(
-        parsed.data.file.name,
-        contentTypeFor(parsed.data.file),
-        parsed.data.file.size,
+        recipientFile.name,
+        contentTypeFor(recipientFile),
+        recipientFile.size,
       );
       const uploadRes = await fetch(upload.uploadUrl, {
         method: "PUT",
         headers: { "Content-Type": upload.contentType },
-        body: parsed.data.file,
+        body: recipientFile,
       });
       if (!uploadRes.ok) {
         throw new Error(`File upload failed: ${uploadRes.status}`);
@@ -458,7 +475,7 @@ export function BatchCallForm() {
         agentId: parsed.data.agentId,
         fromNumber: parsed.data.fromNumber,
         sourceFileKey: upload.s3Key,
-        sourceFileName: parsed.data.file.name,
+        sourceFileName: recipientFile.name,
         scheduledAt: parsed.data.scheduledAt ?? null,
         timezone: parsed.data.timezone,
         ringingTimeoutSeconds: parsed.data.ringingTimeoutSeconds,
@@ -607,9 +624,10 @@ export function BatchCallForm() {
               {templateHeader}
             </span>
             <span className="text-xs text-muted-foreground">
-              language and voice_id can be blank to use the agent defaults. Add
-              patient_name and question_1, question_2 columns for
-              questionnaires.
+              language and voice_id can be blank to use the agent defaults. CSV
+              uploads inherit the selected campaign prompt when a row has no
+              prompt column. Add patient_name and question_1, question_2 columns
+              for questionnaires.
             </span>
           </button>
           {dynamicVariableNames.length > 0 ? (

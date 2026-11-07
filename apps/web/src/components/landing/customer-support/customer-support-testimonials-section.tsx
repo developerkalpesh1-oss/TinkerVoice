@@ -9,7 +9,7 @@ const testimonials = [
     role: "CEO",
     company: "Medbelle",
     content:
-      "QuickVoice's solution has given our patients the flexibility they need. Being able to handle their inquiries via phone has made a real difference in reducing wait times and improving care access.",
+      "TinkerVoice's solution has given our patients the flexibility they need. Being able to handle their inquiries via phone has made a real difference in reducing wait times and improving care access.",
     rating: 5,
     metrics: {
       icon: Users,

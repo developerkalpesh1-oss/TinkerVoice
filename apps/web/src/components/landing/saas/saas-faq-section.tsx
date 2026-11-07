@@ -15,24 +15,24 @@ export function SaasFaqSection() {
       answer: "AI voice agents can significantly streamline SaaS customer onboarding by providing instant support during setup, answering common configuration questions, guiding users through feature tutorials, and scheduling personalized demo calls. This reduces time-to-value for new customers and decreases support ticket volume by up to 70% during the critical onboarding phase."
     },
     {
-      question: "Can QuickVoice integrate with popular SaaS platforms like Salesforce, HubSpot, and Zendesk?",
-      answer: "Yes, QuickVoice offers native integrations with all major SaaS platforms including Salesforce, HubSpot, Zendesk, Intercom, and many others. Our API-first approach ensures seamless data synchronization, allowing AI voice agents to access customer information, update records, and trigger workflows across your entire tech stack in real-time."
+      question: "Can TinkerVoice integrate with popular SaaS platforms like Salesforce, HubSpot, and Zendesk?",
+      answer: "Yes, TinkerVoice offers native integrations with all major SaaS platforms including Salesforce, HubSpot, Zendesk, Intercom, and many others. Our API-first approach ensures seamless data synchronization, allowing AI voice agents to access customer information, update records, and trigger workflows across your entire tech stack in real-time."
     },
     {
       question: "How does AI call software handle complex technical support queries for SaaS products?",
       answer: "Our AI voice agents are trained on technical documentation and can handle complex SaaS support queries including API troubleshooting, integration issues, billing questions, and feature explanations. When queries exceed the AI's capabilities, it seamlessly escalates to human agents with full context, ensuring customers always receive appropriate support."
     },
     {
-      question: "What security measures does QuickVoice implement for SaaS companies handling sensitive customer data?",
-      answer: "QuickVoice implements enterprise-grade security including SOC 2 Type II compliance, end-to-end encryption, secure data centers, and comprehensive audit logs. We offer Business Associate Agreements (BAA) for healthcare SaaS companies and maintain strict data privacy protocols to ensure your customer data remains secure and compliant with industry regulations."
+      question: "What security measures does TinkerVoice implement for SaaS companies handling sensitive customer data?",
+      answer: "TinkerVoice implements enterprise-grade security including SOC 2 Type II compliance, end-to-end encryption, secure data centers, and comprehensive audit logs. We offer Business Associate Agreements (BAA) for healthcare SaaS companies and maintain strict data privacy protocols to ensure your customer data remains secure and compliant with industry regulations."
     },
     {
       question: "How can SaaS companies use AI voice agents for customer success and retention?",
       answer: "AI voice agents excel at proactive customer success by conducting health checks, identifying at-risk accounts, scheduling renewal calls, and gathering feedback. They can automatically reach out to customers showing low engagement, offer personalized training sessions, and ensure customers are getting maximum value from your SaaS platform, ultimately improving retention rates."
     },
     {
-      question: "Does QuickVoice support multi-tenant SaaS architectures and customer isolation?",
-      answer: "Absolutely. QuickVoice is designed for multi-tenant SaaS environments with complete customer data isolation. Each tenant's AI voice agents operate independently with their own knowledge base, call routing, and analytics. Our platform ensures strict data segregation and provides tenant-specific customization options while maintaining scalability and performance."
+      question: "Does TinkerVoice support multi-tenant SaaS architectures and customer isolation?",
+      answer: "Absolutely. TinkerVoice is designed for multi-tenant SaaS environments with complete customer data isolation. Each tenant's AI voice agents operate independently with their own knowledge base, call routing, and analytics. Our platform ensures strict data segregation and provides tenant-specific customization options while maintaining scalability and performance."
     }
   ];
 

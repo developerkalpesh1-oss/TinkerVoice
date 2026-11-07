@@ -623,6 +623,26 @@ export async function getOutboundCall(
   return formatOutboundCall(outbound);
 }
 
+const STOPPABLE_OUTBOUND_STATUSES = new Set<CallStatus>([
+  CallStatus.SCHEDULED,
+  CallStatus.PROCESSED,
+  CallStatus.IN_PROGRESS,
+]);
+
+function isLiveKitRoomNotFound(error: unknown) {
+  if (!error || typeof error !== "object") return false;
+  const code = "code" in error ? String((error as { code?: unknown }).code ?? "") : "";
+  const status =
+    "status" in error ? Number((error as { status?: unknown }).status) : NaN;
+  const message = error instanceof Error ? error.message.toLowerCase() : "";
+  return (
+    code === "not_found" ||
+    status === 404 ||
+    message.includes("not found") ||
+    message.includes("does not exist")
+  );
+}
+
 export async function cancelOutboundCall(
   args: {
     organizationId: string;
@@ -630,23 +650,34 @@ export async function cancelOutboundCall(
     outboundId: string;
     reason?: string;
   },
-  deps: OutboundWorkflowDeps = {}
+  deps: {
+    repository?: CancelOutboundCallDeps;
+    roomClient?: RoomServiceClientLike;
+  } = {},
 ) {
   const repository = deps.repository ?? outboundCallRepository;
+  const roomClient = deps.roomClient ?? (livekitRoomServiceClient as RoomServiceClientLike);
   const outbound = await repository.getForOrg(args.outboundId, args.organizationId);
   if (!outbound) {
     throw new NotFoundError("Outbound call not found");
   }
 
-  if (outbound.status !== CallStatus.SCHEDULED) {
-    throw new BadRequestError("Only scheduled outbound calls can be cancelled");
+  if (!STOPPABLE_OUTBOUND_STATUSES.has(outbound.status)) {
+    throw new BadRequestError("Only active or queued outbound calls can be stopped");
+  }
+
+  const roomName = `outbound_${args.outboundId}`;
+  try {
+    await roomClient.deleteRoom(roomName);
+  } catch (error) {
+    if (!isLiveKitRoomNotFound(error)) throw error;
   }
 
   const updated = await repository.markCancelled({
     organizationId: args.organizationId,
     userId: args.userId,
     outboundId: args.outboundId,
-    reason: args.reason ?? "Cancelled by user",
+    reason: args.reason ?? "Stopped by user",
   });
 
   return formatOutboundCall(updated);

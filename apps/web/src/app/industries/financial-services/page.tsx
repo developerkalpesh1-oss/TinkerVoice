@@ -17,24 +17,24 @@ export const metadata: Metadata = {
   description:
     "Evaluate self-hostable phone-agent workflows for financial-services support, reminders, routing, and follow-up with explicit security and regulatory boundaries.",
   alternates: {
-    canonical: "https://quickvoice.co/industries/financial-services",
+    canonical: "https://tinkervoice.co/industries/financial-services",
   },
   twitter: {
     card: "summary_large_image",
-    title: "QuickVoice for Financial Services Workflows",
+    title: "TinkerVoice for Financial Services Workflows",
     description:
       "Evaluate financial-services phone workflows with explicit data, provider, action and compliance review boundaries.",
     images: ["/og-image.png"],
   },
   openGraph: {
-    title: "QuickVoice for Financial-Services Workflows",
+    title: "TinkerVoice for Financial-Services Workflows",
     description:
       "Inspect and adapt open-source phone-agent infrastructure for financial-services workflows. Compliance depends on the complete deployment and operating controls.",
-    url: "https://quickvoice.co/industries/financial-services",
-    siteName: "QuickVoice",
+    url: "https://tinkervoice.co/industries/financial-services",
+    siteName: "TinkerVoice",
     type: "website",
     images: [
-      { url: "https://quickvoice.co/og-image.png", width: 1200, height: 630 },
+      { url: "https://tinkervoice.co/og-image.png", width: 1200, height: 630 },
     ],
   },
 };
@@ -88,7 +88,7 @@ export default function FinancialServicesPage() {
             Prototype regulated call flows on inspectable infrastructure
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground">
-            QuickVoice exposes the application, API, agent runtime, call data
+            TinkerVoice exposes the application, API, agent runtime, call data
             paths, and provider boundaries so teams can review them before
             connecting sensitive financial workflows.
           </p>
@@ -96,7 +96,7 @@ export default function FinancialServicesPage() {
           <div className="mt-10">
             <EvidenceStatusNotice title="No automatic compliance or certification">
               <p>
-                QuickVoice does not claim that a fresh clone or generic
+                TinkerVoice does not claim that a fresh clone or generic
                 deployment is PCI DSS, SOC 2, ISO 27001, TCPA, FDCPA, or
                 otherwise compliant. Production use requires review of the exact
                 workflow, deployment, providers, contracts, controls,

@@ -20,9 +20,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "QuickVoice",
+  title: "TinkerVoice",
   description:
-    "QuickVoice is a platform for creating and managing voice agents.",
+    "TinkerVoice is a platform for creating and managing voice agents.",
 };
 
 export default function RootLayout({

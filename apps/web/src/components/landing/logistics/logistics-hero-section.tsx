@@ -75,7 +75,7 @@ export function LogisticsHeroSection() {
             >
               Elevate Logistics Business with{" "}
               <span className="text-primary">
-                QuickVoice&apos;s AI Call Software Solutions
+                TinkerVoice&apos;s AI Call Software Solutions
               </span>
             </motion.h1>
 
@@ -87,7 +87,7 @@ export function LogisticsHeroSection() {
             >
               Deliver 24/7 customer support with AI voice agents that automate
               repetitive queries, resolve tickets instantly, and ensure seamless
-              customer experiences across all interactions. QuickVoice&apos;s
+              customer experiences across all interactions. TinkerVoice&apos;s
               conversational AI agents help logistics companies like yours to enhance efficiency,
               reduce operational costs, and improve customer satisfaction.
             </motion.p>

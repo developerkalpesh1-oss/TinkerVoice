@@ -7,7 +7,7 @@ import { CONTACT_URL, DEMO_BOOKING_URL, GITHUB_DOCS_URL } from "@/lib/links";
 
 export function workflowMetadata(page: WorkflowPageContent): Metadata {
   const title = page.seoTitle ?? `${page.label} for business`;
-  const url = `https://quickvoice.co${page.path}`;
+  const url = `https://tinkervoice.co${page.path}`;
   return {
     title,
     description: page.description,
@@ -38,13 +38,13 @@ export function WorkflowPage({ page }: { page: WorkflowPageContent }) {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://quickvoice.co",
+          item: "https://tinkervoice.co",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: page.label,
-          item: `https://quickvoice.co${page.path}`,
+          item: `https://tinkervoice.co${page.path}`,
         },
       ],
     },
@@ -78,7 +78,7 @@ export function WorkflowPage({ page }: { page: WorkflowPageContent }) {
                   href="/"
                   className="inline-flex min-h-11 items-center hover:text-primary"
                 >
-                  QuickVoice
+                  TinkerVoice
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
@@ -135,7 +135,7 @@ export function WorkflowPage({ page }: { page: WorkflowPageContent }) {
           <div>
             <h2 className="text-3xl font-semibold">What your team needs</h2>
             <p className="mt-5 leading-7 text-muted-foreground">
-              QuickVoice provides agent configuration, knowledge retrieval,
+              TinkerVoice provides agent configuration, knowledge retrieval,
               phone integrations, and call records. Your implementation connects
               the business systems and defines how people handle exceptions.
             </p>

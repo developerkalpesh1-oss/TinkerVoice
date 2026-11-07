@@ -5,25 +5,25 @@ import { DEMO_BOOKING_URL } from "@/lib/links";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "QuickVoice Terms of Service — usage terms, acceptable use policy, billing, liability, and your rights when using our AI voice agent platform.",
+    "TinkerVoice Terms of Service — usage terms, acceptable use policy, billing, liability, and your rights when using our AI voice agent platform.",
   alternates: {
-    canonical: "https://quickvoice.co/terms-of-service",
+    canonical: "https://tinkervoice.co/terms-of-service",
   },
   openGraph: {
     title: "Terms of Service",
     description:
-      "QuickVoice Terms of Service — usage terms, acceptable use, and your rights.",
+      "TinkerVoice Terms of Service — usage terms, acceptable use, and your rights.",
     type: "website",
-    url: "https://quickvoice.co/terms-of-service",
-    siteName: "QuickVoice",
-    images: [{ url: "https://quickvoice.co/og-image.png", width: 1200, height: 630 }],
+    url: "https://tinkervoice.co/terms-of-service",
+    siteName: "TinkerVoice",
+    images: [{ url: "https://tinkervoice.co/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary",
-    title: "Terms of Service | QuickVoice",
+    title: "Terms of Service | TinkerVoice",
     description:
-      "QuickVoice Terms of Service — usage terms, acceptable use, and your rights.",
-    images: ["https://quickvoice.co/og-image.png"],
+      "TinkerVoice Terms of Service — usage terms, acceptable use, and your rights.",
+    images: ["https://tinkervoice.co/og-image.png"],
   },
 };
 
@@ -70,7 +70,7 @@ export default function TermsOfServicePage() {
             </h2>
             <div className="mt-4 space-y-4 text-muted-foreground">
               <p>
-                Welcome to QuickVoice. By accessing or using the QuickVoice
+                Welcome to TinkerVoice. By accessing or using the TinkerVoice
                 platform, website, APIs, or any associated services
                 (collectively, the &ldquo;Services&rdquo;), you agree to be
                 bound by these Terms of Service (&ldquo;Terms&rdquo;). If you
@@ -94,7 +94,7 @@ export default function TermsOfServicePage() {
             </h2>
             <div className="mt-4 space-y-4 text-muted-foreground">
               <p>
-                QuickVoice provides an AI-powered voice agent platform that
+                TinkerVoice provides an AI-powered voice agent platform that
                 enables businesses to create, deploy, and manage intelligent
                 voice agents for automated phone conversations. Our Services
                 include, but are not limited to:
@@ -115,7 +115,7 @@ export default function TermsOfServicePage() {
                 </li>
               </ul>
               <p>
-                QuickVoice reserves the right to modify, suspend, or discontinue
+                TinkerVoice reserves the right to modify, suspend, or discontinue
                 any part of the Services at any time with reasonable notice. We
                 will make commercially reasonable efforts to notify you of
                 material changes that affect your use of the Services.
@@ -147,12 +147,12 @@ export default function TermsOfServicePage() {
                   account, whether or not authorized by you
                 </li>
                 <li>
-                  Notify QuickVoice immediately at{" "}
+                  Notify TinkerVoice immediately at{" "}
                   <a
-                    href="mailto:support@quickvoice.co"
+                    href="mailto:support@tinkervoice.co"
                     className="text-foreground underline underline-offset-4 hover:text-foreground/80"
                   >
-                    support@quickvoice.co
+                    support@tinkervoice.co
                   </a>{" "}
                   if you suspect unauthorized access to or use of your account
                 </li>
@@ -162,7 +162,7 @@ export default function TermsOfServicePage() {
                 </li>
               </ul>
               <p>
-                QuickVoice reserves the right to suspend or terminate accounts
+                TinkerVoice reserves the right to suspend or terminate accounts
                 that violate these Terms or that have been inactive for an
                 extended period, in accordance with applicable law and with
                 reasonable notice where practicable.
@@ -177,7 +177,7 @@ export default function TermsOfServicePage() {
             </h2>
             <div className="mt-4 space-y-4 text-muted-foreground">
               <p>
-                QuickVoice generally provides the hosted Services through a
+                TinkerVoice generally provides the hosted Services through a
                 prepaid, US-dollar wallet maintained at the organization level.
                 Unless you have a separate written agreement or are completing
                 a transition from a legacy plan, adding wallet credit does not
@@ -188,7 +188,7 @@ export default function TermsOfServicePage() {
                   <strong className="text-foreground">Paid Credit:</strong>{" "}
                   You may add paid wallet credit in $5 increments, from $5 to
                   $500 per top-up. The full purchased amount is credited after
-                  Stripe confirms payment; QuickVoice absorbs ordinary payment
+                  Stripe confirms payment; TinkerVoice absorbs ordinary payment
                   processor fees. Taxes, if applicable, may be charged
                   separately. Wallet credit is not a bank account, deposit, or
                   stored-value product and does not earn interest.
@@ -211,7 +211,7 @@ export default function TermsOfServicePage() {
                   Calls consume credit based on actual measured speech-to-text,
                   text-to-speech, and language-model usage at the applicable
                   provider market cost plus 20%; telephony at the applicable
-                  carrier or provider cost plus 20%; and a QuickVoice platform
+                  carrier or provider cost plus 20%; and a TinkerVoice platform
                   fee of $0.01 per connected minute, prorated per second.
                   Provider minimums, increments, and rounding may affect the
                   final amount. Current estimates are informational, and rates
@@ -222,9 +222,9 @@ export default function TermsOfServicePage() {
                   <strong className="text-foreground">
                     Holds and Settlement:
                   </strong>{" "}
-                  QuickVoice may place a temporary wallet hold before a call or
+                  TinkerVoice may place a temporary wallet hold before a call or
                   phone-number transaction. A hold reserves credit and is not a
-                  final charge. After processing, QuickVoice settles the actual
+                  final charge. After processing, TinkerVoice settles the actual
                   charge and releases unused reserved credit. Calls may be
                   stopped when available credit is exhausted. Delayed provider
                   records or reconciliation may result in an outstanding debt;
@@ -236,7 +236,7 @@ export default function TermsOfServicePage() {
                     Payment Methods and Auto-Reload:
                   </strong>{" "}
                   You may save a valid payment method and optionally enable
-                  auto-reload. If enabled, you authorize QuickVoice and Stripe
+                  auto-reload. If enabled, you authorize TinkerVoice and Stripe
                   to charge that payment method off-session for the amount you
                   choose when available wallet credit reaches your selected
                   threshold. You may disable auto-reload at any time, but doing
@@ -248,7 +248,7 @@ export default function TermsOfServicePage() {
                   Phone-number rentals are payable only with paid credit. Each
                   number costs the greater of $2 or the provider rental cost
                   plus 20% for each 30-day rental period. If paid credit is
-                  insufficient at renewal, QuickVoice may suspend and unlink the
+                  insufficient at renewal, TinkerVoice may suspend and unlink the
                   number, attempt auto-reload if you enabled it, and retry
                   renewal daily. If renewal remains unpaid, the number is
                   scheduled for release 72 hours after suspension and may be
@@ -271,7 +271,7 @@ export default function TermsOfServicePage() {
                   <strong className="text-foreground">Taxes:</strong> Fees are
                   exclusive of applicable taxes unless stated otherwise. You are
                   responsible for taxes associated with your use of the
-                  Services, excluding taxes based on QuickVoice&apos;s net income.
+                  Services, excluding taxes based on TinkerVoice&apos;s net income.
                 </li>
               </ul>
             </div>
@@ -327,7 +327,7 @@ export default function TermsOfServicePage() {
                 </li>
                 <li>
                   Resell, sublicense, or redistribute the Services without
-                  QuickVoice&apos;s prior written consent
+                  TinkerVoice&apos;s prior written consent
                 </li>
                 <li>
                   Use the Services to collect, store, or process sensitive
@@ -336,7 +336,7 @@ export default function TermsOfServicePage() {
                 </li>
               </ul>
               <p>
-                QuickVoice reserves the right to investigate and take
+                TinkerVoice reserves the right to investigate and take
                 appropriate action against violations of this Acceptable Use
                 Policy, including suspending or terminating your access to the
                 Services and reporting conduct to law enforcement authorities.
@@ -352,11 +352,11 @@ export default function TermsOfServicePage() {
             <div className="mt-4 space-y-4 text-muted-foreground">
               <p>
                 <strong className="text-foreground">
-                  QuickVoice&apos;s Intellectual Property:
+                  TinkerVoice&apos;s Intellectual Property:
                 </strong>{" "}
                 The Services, including all software, algorithms, AI models,
                 user interface designs, documentation, trademarks, logos, and
-                other materials, are owned by or licensed to QuickVoice and are
+                other materials, are owned by or licensed to TinkerVoice and are
                 protected by copyright, trademark, patent, trade secret, and
                 other intellectual property laws. Nothing in these Terms grants
                 you any right, title, or interest in the Services except for the
@@ -368,14 +368,14 @@ export default function TermsOfServicePage() {
                 retain ownership of all data, content, scripts, prompts, and
                 configurations that you upload, create, or input into the
                 Services (&ldquo;Your Content&rdquo;). By using the Services,
-                you grant QuickVoice a limited, non-exclusive, worldwide,
+                you grant TinkerVoice a limited, non-exclusive, worldwide,
                 royalty-free license to use, process, and store Your Content
                 solely for the purpose of providing and improving the Services.
               </p>
               <p>
                 <strong className="text-foreground">Feedback:</strong> If you
                 provide suggestions, ideas, or feedback about the Services
-                (&ldquo;Feedback&rdquo;), you grant QuickVoice a perpetual,
+                (&ldquo;Feedback&rdquo;), you grant TinkerVoice a perpetual,
                 irrevocable, royalty-free license to use, modify, and
                 incorporate that Feedback into the Services without any
                 obligation to you.
@@ -404,7 +404,7 @@ export default function TermsOfServicePage() {
               <p>By using the Services, you acknowledge and agree that:</p>
               <ul className="list-disc space-y-2 pl-6">
                 <li>
-                  QuickVoice may collect and process voice data, call
+                  TinkerVoice may collect and process voice data, call
                   recordings, transcripts, and metadata as part of delivering
                   the Services
                 </li>
@@ -417,10 +417,10 @@ export default function TermsOfServicePage() {
                 <li>
                   You will not use the Services to process personal data in a
                   manner that violates applicable law or any data processing
-                  agreement between you and QuickVoice
+                  agreement between you and TinkerVoice
                 </li>
                 <li>
-                  Where required, QuickVoice will enter into appropriate data
+                  Where required, TinkerVoice will enter into appropriate data
                   processing agreements to support your compliance with
                   applicable data protection regulations (such as GDPR or CCPA)
                 </li>
@@ -435,7 +435,7 @@ export default function TermsOfServicePage() {
             </h2>
             <div className="mt-4 space-y-4 text-muted-foreground">
               <p>
-                QuickVoice strives to maintain high availability of the
+                TinkerVoice strives to maintain high availability of the
                 Services. While we target 99.9% uptime for our production
                 infrastructure, we do not guarantee uninterrupted or error-free
                 operation. Specifically:
@@ -445,7 +445,7 @@ export default function TermsOfServicePage() {
                   <strong className="text-foreground">
                     Scheduled Maintenance:
                   </strong>{" "}
-                  QuickVoice may perform scheduled maintenance that temporarily
+                  TinkerVoice may perform scheduled maintenance that temporarily
                   affects availability. We will provide reasonable advance
                   notice of scheduled maintenance windows.
                 </li>
@@ -453,7 +453,7 @@ export default function TermsOfServicePage() {
                   <strong className="text-foreground">
                     Unscheduled Downtime:
                   </strong>{" "}
-                  In the event of unscheduled outages, QuickVoice will use
+                  In the event of unscheduled outages, TinkerVoice will use
                   commercially reasonable efforts to restore the Services as
                   quickly as possible and communicate status updates through our
                   status page.
@@ -468,7 +468,7 @@ export default function TermsOfServicePage() {
                 <li>
                   <strong className="text-foreground">Exclusions:</strong>{" "}
                   Uptime commitments do not apply to outages caused by factors
-                  outside QuickVoice&apos;s reasonable control, including
+                  outside TinkerVoice&apos;s reasonable control, including
                   internet connectivity issues, third-party service failures,
                   force majeure events, or your misuse of the Services.
                 </li>
@@ -488,7 +488,7 @@ export default function TermsOfServicePage() {
                   <strong className="text-foreground">
                     No Indirect Damages:
                   </strong>{" "}
-                  In no event shall QuickVoice, its affiliates, officers,
+                  In no event shall TinkerVoice, its affiliates, officers,
                   directors, employees, or agents be liable for any indirect,
                   incidental, special, consequential, or punitive damages,
                   including but not limited to loss of profits, revenue, data,
@@ -498,10 +498,10 @@ export default function TermsOfServicePage() {
                 </li>
                 <li>
                   <strong className="text-foreground">Liability Cap:</strong>{" "}
-                  QuickVoice&apos;s total aggregate liability for all claims
+                  TinkerVoice&apos;s total aggregate liability for all claims
                   arising out of or related to these Terms or the Services shall
                   not exceed the greater of (a) the total fees you paid to
-                  QuickVoice during the twelve (12) months immediately preceding
+                  TinkerVoice during the twelve (12) months immediately preceding
                   the event giving rise to the claim, or (b) one hundred US
                   dollars ($100).
                 </li>
@@ -510,7 +510,7 @@ export default function TermsOfServicePage() {
                     AI-Generated Content:
                   </strong>{" "}
                   The Services utilize artificial intelligence to generate voice
-                  responses. QuickVoice does not guarantee the accuracy,
+                  responses. TinkerVoice does not guarantee the accuracy,
                   completeness, or appropriateness of AI-generated content. You
                   acknowledge that AI voice agents may occasionally produce
                   errors, and you are responsible for monitoring and reviewing
@@ -535,7 +535,7 @@ export default function TermsOfServicePage() {
             </h2>
             <div className="mt-4 space-y-4 text-muted-foreground">
               <p>
-                You agree to indemnify, defend, and hold harmless QuickVoice,
+                You agree to indemnify, defend, and hold harmless TinkerVoice,
                 its affiliates, officers, directors, employees, agents, and
                 licensors from and against any and all claims, liabilities,
                 damages, losses, costs, and expenses (including reasonable
@@ -558,9 +558,9 @@ export default function TermsOfServicePage() {
                 </li>
               </ul>
               <p>
-                QuickVoice reserves the right to assume the exclusive defense
+                TinkerVoice reserves the right to assume the exclusive defense
                 and control of any matter subject to indemnification by you, in
-                which case you agree to cooperate with QuickVoice in asserting
+                which case you agree to cooperate with TinkerVoice in asserting
                 any available defenses.
               </p>
             </div>
@@ -578,10 +578,10 @@ export default function TermsOfServicePage() {
                   <strong className="text-foreground">By You:</strong> You may
                   terminate your account at any time by contacting us at{" "}
                   <a
-                    href="mailto:support@quickvoice.co"
+                    href="mailto:support@tinkervoice.co"
                     className="text-foreground underline underline-offset-4 hover:text-foreground/80"
                   >
-                    support@quickvoice.co
+                    support@tinkervoice.co
                   </a>{" "}
                   or through the account settings in the platform. Disabling
                   auto-reload alone does not close your account. Before closure,
@@ -589,12 +589,12 @@ export default function TermsOfServicePage() {
                   remains immediately due.
                 </li>
                 <li>
-                  <strong className="text-foreground">By QuickVoice:</strong>{" "}
-                  QuickVoice may suspend or terminate your access to the
+                  <strong className="text-foreground">By TinkerVoice:</strong>{" "}
+                  TinkerVoice may suspend or terminate your access to the
                   Services immediately and without prior notice if you breach
                   these Terms, engage in conduct that is harmful to other users
                   or the Services, or if required to do so by law. For
-                  non-breach terminations, QuickVoice will provide at least 30
+                  non-breach terminations, TinkerVoice will provide at least 30
                   days&apos; notice.
                 </li>
               </ul>
@@ -612,7 +612,7 @@ export default function TermsOfServicePage() {
                   outstanding debt
                 </li>
                 <li>
-                  QuickVoice will make Your Content available for export for a
+                  TinkerVoice will make Your Content available for export for a
                   period of 30 days following termination, after which it may be
                   permanently deleted
                 </li>
@@ -669,7 +669,7 @@ export default function TermsOfServicePage() {
             </h2>
             <div className="mt-4 space-y-4 text-muted-foreground">
               <p>
-                QuickVoice reserves the right to update or modify these Terms at
+                TinkerVoice reserves the right to update or modify these Terms at
                 any time. When we make changes, we will:
               </p>
               <ul className="list-disc space-y-2 pl-6">
@@ -706,7 +706,7 @@ export default function TermsOfServicePage() {
                 <strong className="text-foreground">Entire Agreement:</strong>{" "}
                 These Terms, together with the Privacy Policy and any applicable
                 order forms or service agreements, constitute the entire
-                agreement between you and QuickVoice regarding the Services and
+                agreement between you and TinkerVoice regarding the Services and
                 supersede all prior agreements and understandings.
               </p>
               <p>
@@ -718,19 +718,19 @@ export default function TermsOfServicePage() {
               </p>
               <p>
                 <strong className="text-foreground">Waiver:</strong> The failure
-                of QuickVoice to enforce any right or provision of these Terms
+                of TinkerVoice to enforce any right or provision of these Terms
                 shall not constitute a waiver of that right or provision.
               </p>
               <p>
                 <strong className="text-foreground">Assignment:</strong> You may
                 not assign or transfer these Terms or your rights under them
-                without QuickVoice&apos;s prior written consent. QuickVoice may
+                without TinkerVoice&apos;s prior written consent. TinkerVoice may
                 assign these Terms in connection with a merger, acquisition, or
                 sale of all or substantially all of its assets.
               </p>
               <p>
                 <strong className="text-foreground">Force Majeure:</strong>{" "}
-                QuickVoice shall not be liable for any failure or delay in
+                TinkerVoice shall not be liable for any failure or delay in
                 performing its obligations under these Terms due to
                 circumstances beyond its reasonable control, including natural
                 disasters, war, terrorism, pandemics, strikes, government
@@ -750,23 +750,23 @@ export default function TermsOfServicePage() {
                 Terms of Service, please contact us at:
               </p>
               <div className="mt-2">
-                <p className="font-medium text-foreground">QuickVoice</p>
+                <p className="font-medium text-foreground">TinkerVoice</p>
                 <p>
                   Email:{" "}
                   <a
-                    href="mailto:support@quickvoice.co"
+                    href="mailto:support@tinkervoice.co"
                     className="text-foreground underline underline-offset-4 hover:text-foreground/80"
                   >
-                    support@quickvoice.co
+                    support@tinkervoice.co
                   </a>
                 </p>
                 <p>
                   Website:{" "}
                   <a
-                    href="https://quickvoice.co"
+                    href="https://tinkervoice.co"
                     className="text-foreground underline underline-offset-4 hover:text-foreground/80"
                   >
-                    https://quickvoice.co
+                    https://tinkervoice.co
                   </a>
                 </p>
               </div>
@@ -782,7 +782,7 @@ export default function TermsOfServicePage() {
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
             Schedule a demo to walk through onboarding, billing, usage, and
-            compliance expectations with a QuickVoice specialist.
+            compliance expectations with a TinkerVoice specialist.
           </p>
           <Link
             href={DEMO_BOOKING_URL}

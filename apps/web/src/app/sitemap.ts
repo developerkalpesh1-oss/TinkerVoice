@@ -100,12 +100,12 @@ function recordedModificationDate(path: string): Date | undefined {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://quickvoice.co";
+  const baseUrl = "https://tinkervoice.co";
 
   const staticPages: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => {
     const lastModified = recordedModificationDate(route.path);
     return {
-      // Search Console reports the homepage canonical as "https://quickvoice.co/";
+      // Search Console reports the homepage canonical as "https://tinkervoice.co/";
       // emit that form so the sitemap and the inspection report agree. (Next's
       // metadata resolver strips the trailing slash from the page canonical; the
       // two forms are URL-equivalent.)

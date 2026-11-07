@@ -79,7 +79,7 @@ export function EcommerceFeaturesSection() {
               Comprehensive E-commerce Solutions
             </h2>
             <p className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto">
-              From customer support to sales optimization, QuickVoice provides end-to-end conversational AI solutions
+              From customer support to sales optimization, TinkerVoice provides end-to-end conversational AI solutions
               tailored for e-commerce businesses of all sizes.
             </p>
           </div>

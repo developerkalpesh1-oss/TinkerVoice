@@ -1,7 +1,7 @@
 import { isIP } from "node:net";
 import type { RequestHandler } from "express";
 
-export const AUTH_CLIENT_IP_HEADER = "x-quickvoice-client-ip";
+export const AUTH_CLIENT_IP_HEADER = "x-tinkervoice-client-ip";
 
 export const AUTH_IP_ADDRESS_OPTIONS = {
   ipAddressHeaders: [AUTH_CLIENT_IP_HEADER],

@@ -19,12 +19,12 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     alternates: { canonical: policy.canonical },
     robots: { index: policy.index, follow: true },
     openGraph: {
-      title: "AI phone-agent guides for business | QuickVoice",
+      title: "AI phone-agent guides for business | TinkerVoice",
       description: "Find the next useful step for your business phone workflow.",
       url: policy.canonical, type: "website",
       images: [{ url: "/og-image.png", width: 1200, height: 630 }],
     },
-    twitter: { card: "summary_large_image", title: "QuickVoice buyer guides", images: ["/og-image.png"] },
+    twitter: { card: "summary_large_image", title: "TinkerVoice buyer guides", images: ["/og-image.png"] },
   };
 }
 
@@ -41,7 +41,7 @@ export default async function BlogIndexPage({ searchParams }: Props) {
   const topicLabel = BLOG_TOPICS.find((item) => item.id === topic)?.label;
   const pageHref = (page: number) => blogListingHref({ query, topic, page });
   const schema = {
-    "@context": "https://schema.org", "@type": "CollectionPage", name: "QuickVoice buyer guides",
+    "@context": "https://schema.org", "@type": "CollectionPage", name: "TinkerVoice buyer guides",
     description: "Reviewed guides to business phone workflows and voice-agent evaluation.",
     url: blogListingMetadata(params).canonical,
   };

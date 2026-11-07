@@ -52,7 +52,7 @@ export function HealthcareIntegrationsSection() {
               viewport={{ once: true }}
               className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto"
             >
-              Connect QuickVoice to your CRM, telephony, and tools with enterprise-grade APIs and
+              Connect TinkerVoice to your CRM, telephony, and tools with enterprise-grade APIs and
               out-of-the-box integrations. We work with leading platforms to ensure seamless connectivity.
             </motion.p>
           </div>

@@ -18,12 +18,12 @@ test("Smithery disconnect sends an authenticated DELETE", async (t) => {
     async () => new Response(null, { status: 204 }),
   );
 
-  await disconnectSmitheryConnection("quickvoice-prod", "org-123-gmail");
+  await disconnectSmitheryConnection("tinkervoice-prod", "org-123-gmail");
 
   assert.equal(fetch.mock.callCount(), 1);
   assert.equal(
     fetch.mock.calls[0]?.arguments[0],
-    "https://api.smithery.ai/connect/quickvoice-prod/org-123-gmail",
+    "https://api.smithery.ai/connect/tinkervoice-prod/org-123-gmail",
   );
   const options = fetch.mock.calls[0]?.arguments[1] as RequestInit;
   assert.equal(options.method, "DELETE");
@@ -39,7 +39,7 @@ test("Smithery disconnect treats an already-missing connection as success", asyn
     async () => new Response(null, { status: 404 }),
   );
 
-  await disconnectSmitheryConnection("quickvoice-prod", "missing");
+  await disconnectSmitheryConnection("tinkervoice-prod", "missing");
 });
 
 test("Smithery disconnect does not discard the local retry handle on rejection", async (t) => {
@@ -55,7 +55,7 @@ test("Smithery disconnect does not discard the local retry handle on rejection",
   );
 
   await assert.rejects(
-    disconnectSmitheryConnection("quickvoice-prod", "org-123-gmail"),
+    disconnectSmitheryConnection("tinkervoice-prod", "org-123-gmail"),
     /Could not disconnect Smithery connection/,
   );
 });

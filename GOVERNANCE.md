@@ -1,6 +1,6 @@
-# QuickVoice Governance
+# TinkerVoice Governance
 
-QuickVoice uses maintainer-led, contribution-friendly governance. Contributors can propose and implement changes; maintainers remain accountable for what enters the upstream repository and what is presented as a release.
+TinkerVoice uses maintainer-led, contribution-friendly governance. Contributors can propose and implement changes; maintainers remain accountable for what enters the upstream repository and what is presented as a release.
 
 ## Principles
 

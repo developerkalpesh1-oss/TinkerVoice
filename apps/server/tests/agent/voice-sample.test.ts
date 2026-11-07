@@ -21,7 +21,7 @@ let restorePrisma = () => {};
 
 before(async () => {
   Object.assign(process.env, {
-    RATE_LIMIT_STORE: "memory", AI_API_URL: "http://quickvoice-ai:5555", INTERNAL_API_KEY: "test-internal-key",
+    RATE_LIMIT_STORE: "memory", AI_API_URL: "http://tinkervoice-ai:5555", INTERNAL_API_KEY: "test-internal-key",
     DATABASE_URL: "postgresql://test:test@127.0.0.1:1/test", STRIPE_SECRET_KEY: "sk_test_placeholder",
     BETTER_AUTH_URL: "http://localhost:5000", BETTER_AUTH_SECRET: "test-secret-with-adequate-length-32chars",
     GOOGLE_CLIENT_ID: "test", GOOGLE_CLIENT_SECRET: "test",
@@ -88,7 +88,7 @@ test("voice samples use unsaved selections and return audio through the authenti
   assert.equal(response.status, 200);
   assert.deepEqual((await response.json()).data, sample);
   assert.equal(response.headers["cache-control"], "private, no-store");
-  assert.equal(calls[0]?.url, "http://quickvoice-ai:5555/voice/sample");
+  assert.equal(calls[0]?.url, "http://tinkervoice-ai:5555/voice/sample");
   assert.deepEqual(JSON.parse(String(calls[0]?.init?.body)), input);
   assert.deepEqual(calls[0]?.init?.headers, { "content-type": "application/json", "x-internal-key": "test-internal-key" });
 });

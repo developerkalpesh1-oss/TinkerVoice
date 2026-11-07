@@ -215,7 +215,7 @@ test("agent model estimate renders only from a server-provided field", () => {
   assert.match(voiceTab, /Estimated AI \+ platform spend/);
   assert.match(
     voiceTab,
-    /estimate includes configured STT, TTS, and LLM usage plus the \$0\.01-per-connected-minute QuickVoice platform fee/,
+    /estimate includes configured STT, TTS, and LLM usage plus the \$0\.01-per-connected-minute TinkerVoice platform fee/,
   );
   assert.match(voiceTab, /Telephony is charged separately/);
 });

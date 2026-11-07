@@ -91,7 +91,7 @@ export default function Globe3D() {
           <div className="relative z-10 mx-auto max-w-5xl rounded-2xl shadow-[0_0_50px_rgba(var(--primary-rgb),0.2)]">
             <Image
               src="/dashboard.png"
-              alt="QuickVoice Dashboard"
+              alt="TinkerVoice Dashboard"
               width={1200}
               height={630}
               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 1200px"

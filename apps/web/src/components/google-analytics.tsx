@@ -23,7 +23,7 @@ export function GoogleAnalytics({
 
   // A consented visit may start on a 404. Next Script runs once per layout, so
   // retry its guarded initializer after navigation to a known public page.
-  useEffect(() => { window.quickvoiceStartAnalytics?.(); }, [pathname]);
+  useEffect(() => { window.tinkervoiceStartAnalytics?.(); }, [pathname]);
 
   useEffect(() => {
     if (!manualPageviews) return;
@@ -34,7 +34,7 @@ export function GoogleAnalytics({
       coordinator.current = createPageviewCoordinator(measurementId, (parameters) => {
         // The bootstrap configures the destination before inserting this tag.
         // A delayed bootstrap must not lose the initial visit or send prematurely.
-        if (window.quickvoiceAnalyticsConsent !== "granted" || !window.gtag || !document.getElementById("quickvoice-google-tag")) return false;
+        if (window.tinkervoiceAnalyticsConsent !== "granted" || !window.gtag || !document.getElementById("tinkervoice-google-tag")) return false;
         window.gtag("event", "page_view", parameters);
         return true;
       });
@@ -61,7 +61,7 @@ export function GoogleAnalytics({
       id="google-analytics"
       strategy="afterInteractive"
       onReady={() => {
-        window.quickvoiceStartAnalytics?.();
+        window.tinkervoiceStartAnalytics?.();
         coordinator.current?.flush();
       }}
     >

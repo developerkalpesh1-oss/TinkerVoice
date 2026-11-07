@@ -225,6 +225,7 @@ test("Tinkerism Call is a sidebar page with status, logs, and selected-only dial
   const sidebar = read("src/components/shell/AppSidebar.tsx");
   const page = read("src/app/(app)/tinkerism/page.tsx");
   const panel = read("src/components/tinkerism/TinkerismCallPanel.tsx");
+  const editor = read("src/components/tinkerism/CampaignEditor.tsx");
 
   assert.match(sidebar, /title: "Tinkerism Call", href: "\/tinkerism"/);
   assert.match(page, /TinkerismCallPanel/);
@@ -235,7 +236,12 @@ test("Tinkerism Call is a sidebar page with status, logs, and selected-only dial
   assert.match(panel, /cancelOutboundCall|endLive/);
   assert.match(panel, /retryOutboundCall/);
   assert.match(panel, /TINKERISM_FIRST_MESSAGE/);
-  assert.match(panel, /tinkerismSystemPrompt/);
+  assert.match(panel, /tinkerismCampaignPrompt/);
+  assert.match(panel, /CampaignEditor/);
+  assert.match(editor, /Campaign prompt/);
+  assert.match(editor, /Website URL/);
+  assert.match(editor, /Preview/);
+  assert.match(editor, /Save campaign/);
   assert.match(panel, /tinkerism_call: "1"/);
   assert.match(panel, /Delete all/);
   assert.match(panel, /AlertDialog/);

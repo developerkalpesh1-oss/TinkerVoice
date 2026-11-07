@@ -14,7 +14,7 @@ function fixture(t: TestContext) {
   const oldKey = process.env.COMPOSIO_API_KEY;
   const oldConsole = process.env.CONSOLE_URL;
   process.env.COMPOSIO_API_KEY = `test-${Math.random()}`;
-  process.env.CONSOLE_URL = "https://console.quickvoice.test";
+  process.env.CONSOLE_URL = "https://console.tinkervoice.test";
   const state: any = {
     connection: null,
     failSaveAccount: false,
@@ -259,7 +259,7 @@ test("Composio OAuth is saved once, refreshed, and reused by subsequent calls wi
   assert.equal(pending?.status, "AUTH_REQUIRED");
   assert.equal(
     f.calls.find((call) => call.path.endsWith("/link"))?.body.callback_url,
-    "https://console.quickvoice.test/tools?mcpConnectionId=local",
+    "https://console.tinkervoice.test/tools?mcpConnectionId=local",
   );
   const principal = f.state.connection.providerUserId;
   await f.setup();
@@ -334,11 +334,11 @@ test("OAuth redirect requires a configured console origin before creating a cons
   await assert.rejects(f.setup(), /CONSOLE_URL/);
   assert.equal(f.calls.filter((call) => call.path.endsWith("/link")).length, 0);
   process.env.CONSOLE_URL =
-    "https://console.quickvoice.test/,https://other.example";
+    "https://console.tinkervoice.test/,https://other.example";
   await f.setup();
   assert.equal(
     f.calls.find((call) => call.path.endsWith("/link"))?.body.callback_url,
-    "https://console.quickvoice.test/tools?mcpConnectionId=local",
+    "https://console.tinkervoice.test/tools?mcpConnectionId=local",
   );
 });
 
@@ -601,7 +601,7 @@ test("custom MCP registration is scoped to the organization and explicit auth mo
   );
 });
 
-test("custom bearer credentials are collected by Composio, never in the QuickVoice request", async (t) => {
+test("custom bearer credentials are collected by Composio, never in the TinkerVoice request", async (t) => {
   const f = fixture(t);
   await connect("org", "admin", {
     customUrl: "https://8.8.8.8/mcp",

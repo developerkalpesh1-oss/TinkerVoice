@@ -5,8 +5,8 @@ export type McpFaq = {
 
 export const mcpFaq: McpFaq[] = [
   {
-    question: "What is QuickVoice MCP?",
-    answer: "QuickVoice MCP is a Streamable HTTP server that lets MCP-capable AI clients call verified QuickVoice APIs as tools and read QuickVoice data as resources.",
+    question: "What is TinkerVoice MCP?",
+    answer: "TinkerVoice MCP is a Streamable HTTP server that lets MCP-capable AI clients call verified TinkerVoice APIs as tools and read TinkerVoice data as resources.",
   },
   {
     question: "Which AI clients can connect?",
@@ -22,7 +22,7 @@ export const mcpFaq: McpFaq[] = [
   },
   {
     question: "Can we self-host the MCP server?",
-    answer: "Yes. The MCP server is an app in this monorepo and can run as a dedicated HTTP service or beside the existing QuickVoice server task on ECS.",
+    answer: "Yes. The MCP server is an app in this monorepo and can run as a dedicated HTTP service or beside the existing TinkerVoice server task on ECS.",
   },
   {
     question: "What should require human approval?",

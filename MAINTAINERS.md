@@ -1,4 +1,4 @@
-# QuickVoice Maintainers
+# TinkerVoice Maintainers
 
 This file names the people currently accountable for repository decisions. Git history alone does not grant maintainer status.
 
@@ -8,7 +8,7 @@ This file names the people currently accountable for repository decisions. Git h
 | ------------------------------------------ | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
 | [@rahuliitk](https://github.com/rahuliitk) | Repository lead and release approver | Final repository decisions, maintainer appointments, security coordination, release approval, and fallback code ownership. |
 
-QuickVoice currently has a small formal maintainer group. That is a bus-factor risk, not a claim that every decision receives single-person review. Sensitive changes should receive an additional qualified review when one is available.
+TinkerVoice currently has a small formal maintainer group. That is a bus-factor risk, not a claim that every decision receives single-person review. Sensitive changes should receive an additional qualified review when one is available.
 
 ## Maintainer Responsibilities
 

@@ -58,7 +58,7 @@ export function OrderStatusReturnsHeroSection() {
               className="font-geist text-4xl font-light tracking-tighter text-foreground sm:text-5xl lg:text-6xl mb-6 relative z-10"
             >
               Streamline Order Status and Returns with{" "}
-              <span className="text-primary">QuickVoice&apos;s AI Voice Agents</span>
+              <span className="text-primary">TinkerVoice&apos;s AI Voice Agents</span>
             </motion.h1>
 
             <motion.p
@@ -67,7 +67,7 @@ export function OrderStatusReturnsHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
-              QuickVoice&apos;s AI voice agents revolutionize order status updates and returns across industries,
+              TinkerVoice&apos;s AI voice agents revolutionize order status updates and returns across industries,
               empowering businesses to deliver exceptional customer experiences. By deploying voice agents that
               provide real-time updates and simplify resolution, companies can enhance customer satisfaction,
               reduce operational costs, and improve overall efficiency.

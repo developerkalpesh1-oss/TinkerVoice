@@ -4,19 +4,19 @@ import { ArrowRight, BookOpen, Braces, FileText, Network } from "lucide-react";
 const docSections = [
   {
     title: "MCP",
-    description: "Connect AI clients to QuickVoice tools and resources over the dedicated MCP server.",
+    description: "Connect AI clients to TinkerVoice tools and resources over the dedicated MCP server.",
     href: "/mcp",
     icon: Network,
   },
   {
     title: "API reference",
-    description: "Browse QuickVoice REST endpoints, authentication, parameters, schemas, and responses.",
+    description: "Browse TinkerVoice REST endpoints, authentication, parameters, schemas, and responses.",
     href: "/api-reference",
     icon: Braces,
   },
   {
     title: "Guides",
-    description: "Follow setup, deployment, security, and troubleshooting guides for QuickVoice operations.",
+    description: "Follow setup, deployment, security, and troubleshooting guides for TinkerVoice operations.",
     href: "/guides",
     icon: BookOpen,
   },
@@ -32,12 +32,12 @@ export default function DocsHomePage() {
   return (
     <main className="min-h-screen qv-grid-bg">
       <section className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-20">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#002FA7]">QuickVoice Docs</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#002FA7]">TinkerVoice Docs</p>
         <h1 className="mt-5 max-w-3xl text-5xl font-semibold tracking-[-0.04em] text-slate-950 md:text-7xl">
           Build, operate, and connect AI voice agents.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-          Technical documentation for QuickVoice MCP, REST APIs, implementation guides, and product changes.
+          Technical documentation for TinkerVoice MCP, REST APIs, implementation guides, and product changes.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
           <a className="border border-[#002FA7] bg-[#002FA7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#001f70]" href="/mcp">

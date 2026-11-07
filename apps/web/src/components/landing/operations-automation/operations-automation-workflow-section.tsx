@@ -63,7 +63,7 @@ export function OperationsAutomationWorkflowSection() {
               Optimize Your Support Workflow
             </h2>
             <p className="mx-auto max-w-3xl text-xl text-foreground/70">
-              From inbound queries to proactive engagement, QuickVoice&apos;s conversational AI
+              From inbound queries to proactive engagement, TinkerVoice&apos;s conversational AI
               agents optimize every step, across voice and chat.
             </p>
           </div>

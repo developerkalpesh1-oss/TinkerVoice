@@ -1,4 +1,4 @@
-export const defaultMcpServerUrl = "https://mcp.quickvoice.co/mcp";
+export const defaultMcpServerUrl = "https://mcp.tinkervoice.co/mcp";
 
 export function buildMcpConfig({
   apiKey,
@@ -9,11 +9,11 @@ export function buildMcpConfig({
 }) {
   return {
     mcpServers: {
-      quickvoice: {
+      tinkervoice: {
         url: serverUrl.trim() || defaultMcpServerUrl,
         transport: "streamable-http",
         headers: {
-          "x-api-key": apiKey.trim() || "YOUR_QUICKVOICE_API_KEY",
+          "x-api-key": apiKey.trim() || "YOUR_TINKERVOICE_API_KEY",
         },
       },
     },

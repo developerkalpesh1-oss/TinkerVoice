@@ -389,7 +389,7 @@ export const buyNumber = async (args: BuyNumberArgs) => {
     return row;
   } catch (err) {
     // Best-effort rollback. Log loudly — a failure here leaves a paid number
-    // floating at the provider with no QuickVoice record.
+    // floating at the provider with no TinkerVoice record.
     try {
       if (provider === TelephonyProvider.TWILIO) {
         await twilioClient.incomingPhoneNumbers(sid).remove();

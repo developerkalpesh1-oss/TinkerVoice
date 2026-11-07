@@ -79,7 +79,7 @@ test("api error state copy distinguishes auth, permission, offline, server, and 
   );
   assert.equal(server.kind, "error");
   assert.equal(server.reason, "server");
-  assert.equal(server.title, "QuickVoice service unavailable");
+  assert.equal(server.title, "TinkerVoice service unavailable");
   assert.match(server.description, /server error/i);
   assert.doesNotMatch(server.description, /checking your connection/i);
 

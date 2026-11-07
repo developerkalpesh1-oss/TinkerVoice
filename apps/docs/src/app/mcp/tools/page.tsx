@@ -10,7 +10,7 @@ export default function ToolsPage() {
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-[var(--qv-blue)]">Reference</p>
           <h1 className="mt-2 text-4xl font-semibold tracking-[-0.035em] text-slate-950">MCP tools</h1>
-          <p className="mt-3 max-w-2xl text-[var(--qv-muted)]">Actions that can mutate QuickVoice state or trigger external work. Cost-sensitive and destructive tools should require explicit user confirmation in the client.</p>
+          <p className="mt-3 max-w-2xl text-[var(--qv-muted)]">Actions that can mutate TinkerVoice state or trigger external work. Cost-sensitive and destructive tools should require explicit user confirmation in the client.</p>
         </div>
         <span className="rounded-full border border-[var(--qv-border)] bg-white px-4 py-2 text-sm font-semibold text-slate-700">{mcpTools.length} tools</span>
       </div>

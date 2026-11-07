@@ -1,11 +1,11 @@
 export const CONTACT_URL = "/company/contact";
-export const DEMO_BOOKING_URL = "https://tidycal.com/team/quickvoice/demo";
+export const DEMO_BOOKING_URL = "https://tidycal.com/team/tinkervoice/demo";
 
-export const DOCS_URL = "https://docs.quickvoice.co";
+export const DOCS_URL = "https://docs.tinkervoice.co";
 export const API_REFERENCE_URL = `${DOCS_URL}/api-reference`;
 export const MCP_DOCS_URL = `${DOCS_URL}/mcp`;
 
-export const GITHUB_REPO_URL = "https://github.com/allgpt-co/QuickVoice";
+export const GITHUB_REPO_URL = "https://github.com/allgpt-co/TinkerVoice";
 export const GITHUB_DOCS_URL = `${GITHUB_REPO_URL}/tree/main/docs`;
 export const GITHUB_ISSUES_URL = `${GITHUB_REPO_URL}/issues`;
 export const GITHUB_DISCUSSIONS_URL = `${GITHUB_REPO_URL}/discussions`;
@@ -14,7 +14,7 @@ export const GITHUB_CONTRIBUTING_URL = `${GITHUB_REPO_URL}/blob/main/CONTRIBUTIN
 export const GITHUB_LICENSE_URL = `${GITHUB_REPO_URL}/blob/main/LICENSE`;
 export const GITHUB_SECURITY_URL = `${GITHUB_REPO_URL}/blob/main/SECURITY.md`;
 
-const DEFAULT_CONSOLE_URL = "https://console.quickvoice.co";
+const DEFAULT_CONSOLE_URL = "https://console.tinkervoice.co";
 const consoleUrl =
   process.env.NEXT_PUBLIC_CONSOLE_URL?.replace(/\/+$/, "") ||
   DEFAULT_CONSOLE_URL;

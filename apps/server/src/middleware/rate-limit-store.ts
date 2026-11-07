@@ -67,7 +67,7 @@ export function rateLimitStore(scope: string): Store | undefined {
   }).on("error", () => {
     console.error("[rate-limit] Redis connection unavailable");
   });
-  return new RedisRateLimitStore(client, `quickvoice:rate-limit:v2:${scope}:`);
+  return new RedisRateLimitStore(client, `tinkervoice:rate-limit:v2:${scope}:`);
 }
 
 export function closeRateLimitStore() { client?.disconnect(); }

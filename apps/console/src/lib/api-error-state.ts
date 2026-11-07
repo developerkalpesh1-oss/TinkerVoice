@@ -201,7 +201,7 @@ export function getApiErrorStateCopy(
         kind: "permission",
         reason: "unauthorized",
         title: `Sign in to load ${resource}`,
-        description: `Your QuickVoice session expired or the API rejected authentication. Sign in again, then retry loading ${resource}.`,
+        description: `Your TinkerVoice session expired or the API rejected authentication. Sign in again, then retry loading ${resource}.`,
       },
       options.overrides
     );
@@ -232,7 +232,7 @@ export function getApiErrorStateCopy(
         kind: "offline",
         reason: "offline",
         title: `${titledResource} unavailable offline`,
-        description: `Reconnect to the internet, then retry loading ${resource}. If cached data is available, QuickVoice will keep it visible while you reconnect.`,
+        description: `Reconnect to the internet, then retry loading ${resource}. If cached data is available, TinkerVoice will keep it visible while you reconnect.`,
       },
       options.overrides
     );
@@ -247,7 +247,7 @@ export function getApiErrorStateCopy(
         ...base,
         kind: "error",
         reason: "server",
-        title: "QuickVoice service unavailable",
+        title: "TinkerVoice service unavailable",
         description: `The API returned a server error while loading ${resource}. Retry in a moment; this is not caused by your browser connection.`,
       },
       options.overrides

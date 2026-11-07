@@ -42,7 +42,7 @@ export function TravelHospitalitySupportSection() {
               Enhancing Customer Support
             </h2>
             <p className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto">
-              QuickVoice offers comprehensive customer support solutions designed specifically for the travel and hospitality industry.
+              TinkerVoice offers comprehensive customer support solutions designed specifically for the travel and hospitality industry.
             </p>
           </div>
           <div

@@ -18,7 +18,7 @@ export function AboutUsJourneySection() {
         >
           <div className="relative z-10">
             <h2 className="font-geist text-3xl font-normal tracking-tight text-foreground sm:text-4xl md:text-5xl mb-4">
-              Why QuickVoice
+              Why TinkerVoice
             </h2>
             <p className="text-lg text-foreground/70 max-w-3xl mx-auto">
               Our mission is to empower businesses with AI-driven voice solutions that enhance customer engagement, streamline operations, and drive growth.
@@ -45,15 +45,15 @@ export function AboutUsJourneySection() {
           <div className="relative grid md:grid-cols-2 gap-12 items-center">
             <div>
               <p className="text-lg text-foreground/75 mb-6 leading-relaxed">
-                QuickVoice was founded in 2020 by Rahul Agarwal with a vision to help organizations reach their full
+                TinkerVoice was founded in 2020 by Rahul Agarwal with a vision to help organizations reach their full
                 potential by automating repetitive tasks and enabling teams to focus on what truly matters. Inspired by
                 the startup spirit, Rahul recognized how businesses were spending excessive resources on manual,
                 time-consuming operations that could be efficiently handled through AI automation.
               </p>
               <p className="text-lg text-foreground/75 leading-relaxed">
-                Since its inception, QuickVoice has been dedicated to transforming customer and operational experiences
+                Since its inception, TinkerVoice has been dedicated to transforming customer and operational experiences
                 through AI-powered voice agents. From scheduling and support in healthcare, to inquiries in financial
-                services, order management in retail, and assistance in e-commerce — QuickVoice empowers businesses
+                services, order management in retail, and assistance in e-commerce — TinkerVoice empowers businesses
                 across industries to operate smarter, faster, and more efficiently.
               </p>
             </div>

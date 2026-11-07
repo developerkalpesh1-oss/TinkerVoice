@@ -66,7 +66,7 @@ export function AppointmentSchedulingFeaturesSection() {
         >
           <div className="relative z-10">
             <h2 className="mb-4 font-geist text-3xl font-normal tracking-tight text-foreground sm:text-4xl md:text-5xl">
-              Why Choose QuickVoice&apos;s AI Appointment Setter?
+              Why Choose TinkerVoice&apos;s AI Appointment Setter?
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-foreground/70">
               Transform your appointment management with AI-powered scheduling

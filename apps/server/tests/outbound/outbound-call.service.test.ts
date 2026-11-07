@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
+  cancelOutboundCall,
   createQuickOutboundCall,
   dispatchScheduledOutboundCall,
   outboundCallLimits,
@@ -64,7 +65,7 @@ test("createQuickOutboundCall uses the owned number carrier for persistence, bil
       sipClient,
       dispatchClient,
       outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
-      agentName: "QuickVoice",
+      agentName: "TinkerVoice",
     }
   );
 
@@ -91,7 +92,7 @@ test("createQuickOutboundCall uses the owned number carrier for persistence, bil
   const dispatch = calls[1] as any[];
   assert.equal(dispatch[0], "dispatch");
   assert.equal(dispatch[1], "outbound_2b1f6d53-42f5-4cc7-9689-7b6f51a0c113");
-  assert.equal(dispatch[2], "QuickVoice");
+  assert.equal(dispatch[2], "TinkerVoice");
 
   assert.equal(dispatch[1], "outbound_2b1f6d53-42f5-4cc7-9689-7b6f51a0c113");
   const dispatchMetadata = JSON.parse(dispatch[3].metadata);
@@ -175,7 +176,7 @@ test("createQuickOutboundCall marks the outbound row failed when LiveKit dispatc
         sipClient,
         dispatchClient,
         outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
-        agentName: "QuickVoice",
+        agentName: "TinkerVoice",
       }
     ),
     /LiveKit unavailable/
@@ -281,7 +282,7 @@ test("tinkerism quick calls ring the phone while agent dispatch is still startin
         createDispatch: async () => dispatchGate,
       },
       outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
-      agentName: "QuickVoice",
+      agentName: "TinkerVoice",
     },
   );
 
@@ -343,7 +344,7 @@ test("createQuickOutboundCall deletes the LiveKit dispatch when SIP participant 
         sipClient,
         dispatchClient,
         outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
-        agentName: "QuickVoice",
+        agentName: "TinkerVoice",
       }
     ),
     /SIP participant failed/
@@ -387,7 +388,7 @@ test("createQuickOutboundCall rejects calls from numbers not linked to the agent
         sipClient: { createSipParticipant: async () => ({}) },
         dispatchClient: { createDispatch: async () => ({}) },
         outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
-        agentName: "QuickVoice",
+        agentName: "TinkerVoice",
       }
     ),
     /From number must belong to this organization and be linked to the selected agent/
@@ -438,7 +439,7 @@ test("createQuickOutboundCall rejects when the organization has exhausted plan m
         sipClient: { createSipParticipant: async () => ({}) },
         dispatchClient: { createDispatch: async () => ({}) },
         outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
-        agentName: "QuickVoice",
+        agentName: "TinkerVoice",
       }
     ),
     /Plan minutes exhausted/
@@ -520,7 +521,7 @@ test("dispatchScheduledOutboundCall dispatches an existing campaign row with bat
         listRooms: async () => [],
       },
       outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
-      agentName: "QuickVoice",
+      agentName: "TinkerVoice",
     }
   );
 
@@ -686,7 +687,7 @@ test("dispatchScheduledOutboundCall closes the room when cancellation wins durin
         },
       },
       outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
-      agentName: "QuickVoice",
+      agentName: "TinkerVoice",
     });
   assert.equal(result, undefined);
 
@@ -749,7 +750,7 @@ test("dispatchScheduledOutboundCall marks an existing campaign row failed when q
       sipClient: { createSipParticipant: async () => ({}) },
       dispatchClient: { createDispatch: async () => ({}) },
       outboundTrunks: { TWILIO: "twilio-trunk", TELNYX: "telnyx-trunk" },
-      agentName: "QuickVoice",
+      agentName: "TinkerVoice",
     }),
     /Plan minutes exhausted/
   );
@@ -860,3 +861,117 @@ for (const { name, stored, expected } of [
     assert.equal("sid" in (retryInput ?? {}), false);
   });
 }
+
+test("cancelOutboundCall deletes the LiveKit room and marks in-progress calls stopped", async () => {
+  const calls: unknown[] = [];
+  const outbound = {
+    outboundId: "2b1f6d53-42f5-4cc7-9689-7b6f51a0c113",
+    organizationId: "org_123",
+    agentId: "8d55565f-1111-4111-8111-f95fd03f0df2",
+    userId: "user_123",
+    campaignId: null,
+    callLogId: null,
+    phoneNumber: "+15550001111",
+    fromNumber: "+15551230000",
+    firstMessage: "Hello",
+    systemPrompt: "Prompt",
+    mode: "quick",
+    status: "IN_PROGRESS",
+    optionalData: {},
+    scheduledAt: null,
+    createdAt: new Date("2026-11-07T00:00:00.000Z"),
+    updatedAt: new Date("2026-11-07T00:00:00.000Z"),
+    callLog: null,
+  };
+
+  const result = await cancelOutboundCall(
+    {
+      organizationId: "org_123",
+      userId: "user_456",
+      outboundId: outbound.outboundId,
+      reason: "Stopped by user",
+    },
+    {
+      repository: {
+        getForOrg: async () => outbound,
+        markCancelled: async (args) => {
+          calls.push(["cancelled", args]);
+          return {
+            ...outbound,
+            status: "FAILED",
+            optionalData: {
+              cancellationReason: args.reason,
+              failureReason: args.reason,
+            },
+          };
+        },
+        listForOrg: async () => ({ items: [], count: 0 }),
+      } as any,
+      roomClient: {
+        deleteRoom: async (roomName: string) => {
+          calls.push(["deleteRoom", roomName]);
+          return {};
+        },
+      },
+    },
+  );
+
+  assert.equal(result.status, "FAILED");
+  assert.equal(result.cancellationReason, "Stopped by user");
+  assert.deepEqual(calls[0], ["deleteRoom", `outbound_${outbound.outboundId}`]);
+  assert.equal((calls[1] as any[])[0], "cancelled");
+});
+
+test("cancelOutboundCall ignores a missing LiveKit room for scheduled calls", async () => {
+  const outbound = {
+    outboundId: "2b1f6d53-42f5-4cc7-9689-7b6f51a0c114",
+    organizationId: "org_123",
+    agentId: "8d55565f-1111-4111-8111-f95fd03f0df2",
+    userId: "user_123",
+    campaignId: null,
+    callLogId: null,
+    phoneNumber: "+15550001111",
+    fromNumber: "+15551230000",
+    firstMessage: null,
+    systemPrompt: null,
+    mode: "quick",
+    status: "SCHEDULED",
+    optionalData: {},
+    scheduledAt: null,
+    createdAt: new Date("2026-11-07T00:00:00.000Z"),
+    updatedAt: new Date("2026-11-07T00:00:00.000Z"),
+    callLog: null,
+  };
+
+  const result = await cancelOutboundCall(
+    {
+      organizationId: "org_123",
+      userId: "user_456",
+      outboundId: outbound.outboundId,
+    },
+    {
+      repository: {
+        getForOrg: async () => outbound,
+        markCancelled: async (args) => ({
+          ...outbound,
+          status: "FAILED",
+          optionalData: {
+            cancellationReason: args.reason,
+            failureReason: args.reason,
+          },
+        }),
+        listForOrg: async () => ({ items: [], count: 0 }),
+      } as any,
+      roomClient: {
+        deleteRoom: async () => {
+          const error = new Error("room does not exist");
+          (error as { code?: string }).code = "not_found";
+          throw error;
+        },
+      },
+    },
+  );
+
+  assert.equal(result.status, "FAILED");
+  assert.equal(result.cancellationReason, "Stopped by user");
+});

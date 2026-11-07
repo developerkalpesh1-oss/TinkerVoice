@@ -1,4 +1,4 @@
-# QuickVoice widget
+# TinkerVoice widget
 
 ## Hosts with Content Security Policy
 
@@ -6,9 +6,9 @@ The widget creates styles inside its shadow root. To allow those styles under a
 strict CSP, supply the host page's per-response nonce on the loader script:
 
 ```html
-<quickvoice-widget widget-id="YOUR_WIDGET_ID"></quickvoice-widget>
+<tinkervoice-widget widget-id="YOUR_WIDGET_ID"></tinkervoice-widget>
 <script async nonce="HOST_GENERATED_NONCE"
-  src="https://api.quickvoice.co/widget/v1/quickvoice-widget.js"></script>
+  src="https://api.tinkervoice.co/widget/v1/tinkervoice-widget.js"></script>
 ```
 
 The widget copies the script's nonce to each style block, including styles created
@@ -17,9 +17,9 @@ style nonce directly on the widget when your script and style policies use
 separate nonces:
 
 ```html
-<quickvoice-widget widget-id="YOUR_WIDGET_ID" nonce="HOST_STYLE_NONCE"></quickvoice-widget>
+<tinkervoice-widget widget-id="YOUR_WIDGET_ID" nonce="HOST_STYLE_NONCE"></tinkervoice-widget>
 <script async nonce="HOST_SCRIPT_NONCE"
-  src="https://api.quickvoice.co/widget/v1/quickvoice-widget.js"></script>
+  src="https://api.tinkervoice.co/widget/v1/tinkervoice-widget.js"></script>
 ```
 
 The host must generate an unpredictable nonce for each HTML response and put the
@@ -36,7 +36,7 @@ option. Hosts without restrictive style policies can keep the existing snippet.
 ## Checks
 
 ```sh
-pnpm --filter quickvoice-widget build
-pnpm --filter quickvoice-widget test
-pnpm --filter quickvoice-widget check-types
+pnpm --filter tinkervoice-widget build
+pnpm --filter tinkervoice-widget test
+pnpm --filter tinkervoice-widget check-types
 ```

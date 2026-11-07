@@ -22,7 +22,7 @@ export function AutomotiveFeaturesSection() {
     },
     {
       icon: TrendingUp,
-      title: "Boost Sales and Customer Satisfaction with QuickVoice",
+      title: "Boost Sales and Customer Satisfaction with TinkerVoice",
       description: "Around-the-clock customer engagement with 24/7 hotline support. Instant lead response and qualification to capture high-quality leads. Personalized customer interactions through context-aware technology, pulling VIN, RO, and customer history from your DMS/CRM.",
       image: automotiveImages.boostSales.url,
       imageAlt: automotiveImages.boostSales.alt,
@@ -68,7 +68,7 @@ export function AutomotiveFeaturesSection() {
               Transform Your Automotive Business Operations
             </h2>
             <p className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto">
-              Discover how QuickVoice&apos;s AI voice assistants can revolutionize your dealership&apos;s customer engagement and sales processes
+              Discover how TinkerVoice&apos;s AI voice assistants can revolutionize your dealership&apos;s customer engagement and sales processes
             </p>
           </div>
           <div

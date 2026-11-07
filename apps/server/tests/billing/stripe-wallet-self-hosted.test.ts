@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import type Stripe from "stripe";
 
-process.env.QUICKVOICE_BILLING_MODE = "self_hosted";
+process.env.TINKERVOICE_BILLING_MODE = "self_hosted";
 process.env.DATABASE_URL ??=
-  "postgresql://postgres:postgres@localhost:5432/quickvoice";
+  "postgresql://postgres:postgres@localhost:5432/tinkervoice";
 
 const { processStripeWalletEvent } =
   await import("../../src/modules/billing/stripe-wallet.service.js");

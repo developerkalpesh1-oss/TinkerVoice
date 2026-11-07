@@ -38,7 +38,7 @@ class PostCallWebhookTests(unittest.TestCase):
             _send(PAYLOAD, webhook)
         request = safe_request.call_args.args[0]
         self.assertEqual(request.get_method(), "POST")
-        self.assertEqual(request.get_header("Idempotency-key"), "quickvoice-post-call-call_1")
+        self.assertEqual(request.get_header("Idempotency-key"), "tinkervoice-post-call-call_1")
         self.assertNotIn("transcript", json.loads(request.data))
         self.assertFalse(safe_request.call_args.kwargs["read_response_body"])
 

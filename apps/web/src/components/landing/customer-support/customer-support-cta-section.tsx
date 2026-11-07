@@ -25,7 +25,7 @@ export function CustomerSupportCtaSection() {
             className="mb-8"
           >
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl mb-6">
-              Get Started with QuickVoice
+              Get Started with TinkerVoice
             </h2>
             <p className="mx-auto max-w-3xl text-xl text-white/90 leading-relaxed mb-12">
               Try Your AI Customer Service Agent Now and experience the future of customer support automation.

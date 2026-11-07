@@ -12,10 +12,25 @@ import { downloadBlobAsFile } from "@/src/lib/export-csv";
 import type { QuickCallInput } from "@/src/models/outbound/quickCall";
 import { queryKeys } from "@/src/lib/query-keys";
 
-export function useOutboundCalls(params: OutboundCallListParams = {}) {
+const LIVE_OUTBOUND_STATUSES = new Set([
+  "SCHEDULED",
+  "PROCESSED",
+  "IN_PROGRESS",
+  "DIALING",
+]);
+
+export function useOutboundCalls(
+  params: OutboundCallListParams = {},
+  options?: { pollWhileLive?: boolean },
+) {
   return useQuery({
     queryKey: [...queryKeys.outbound.all, "calls", params] as const,
     queryFn: () => outboundApi.listOutboundCalls(params),
+    refetchInterval: (query) => {
+      if (!options?.pollWhileLive) return false;
+      const items = query.state.data?.items ?? [];
+      return items.some((call) => LIVE_OUTBOUND_STATUSES.has(call.status)) ? 2000 : false;
+    },
   });
 }
 

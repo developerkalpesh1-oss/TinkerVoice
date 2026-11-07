@@ -107,7 +107,7 @@ export function OperationsAutomationIndustriesSection() {
             Drive Operations Automation Across Industries
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            QuickVoice can drive operations automation by deploying voice agents that streamline backend workflows and reduce manual intervention across industries, including:
+            TinkerVoice can drive operations automation by deploying voice agents that streamline backend workflows and reduce manual intervention across industries, including:
           </p>
         </motion.div>
 
@@ -152,7 +152,7 @@ export function OperationsAutomationIndustriesSection() {
               Industry-Specific Solutions
             </h3>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              Each industry has unique operational challenges. QuickVoice&apos;s AI agents are designed to understand and automate industry-specific workflows, ensuring maximum efficiency and compliance.
+              Each industry has unique operational challenges. TinkerVoice&apos;s AI agents are designed to understand and automate industry-specific workflows, ensuring maximum efficiency and compliance.
             </p>
             <div className="space-y-4">
               <div className="flex items-center gap-3">

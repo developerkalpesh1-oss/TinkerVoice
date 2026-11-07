@@ -1,6 +1,6 @@
 # Security Policy
 
-QuickVoice handles telephony workflows, customer data, credentials, recordings, transcripts, and runtime agent configuration. The project is open source so teams can inspect these paths before they trust them. Please report security issues privately.
+TinkerVoice handles telephony workflows, customer data, credentials, recordings, transcripts, and runtime agent configuration. The project is open source so teams can inspect these paths before they trust them. Please report security issues privately.
 
 ## Reporting A Vulnerability
 
@@ -9,7 +9,7 @@ Use GitHub private vulnerability reporting for this repository if it is availabl
 If private reporting is unavailable, contact:
 
 ```text
-security@quickvoice.co
+security@tinkervoice.co
 ```
 
 Please include:

@@ -99,7 +99,7 @@ export function EcommerceHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
-              Elevate your customer experience across channels with QuickVoice&apos;s
+              Elevate your customer experience across channels with TinkerVoice&apos;s
               generative AI-powered conversational platform, replicating human-like
               in-store assistance on your online store.
             </motion.p>

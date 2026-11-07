@@ -7,16 +7,16 @@ export const metadata: Metadata = {
   description:
     "Understand measured AI and telephony costs plus a $0.01 connected-minute platform fee. Phone numbers start at $2 per 30 days; signup credits are subject to eligibility.",
   alternates: {
-    canonical: "https://quickvoice.co/pricing",
+    canonical: "https://tinkervoice.co/pricing",
   },
   openGraph: {
     title: "Usage-based AI Voice Agent Pricing",
     description:
       "A prepaid wallet for measured AI, telephony, and connected-time usage. Review the cost formula, number rental, and conditional signup credit.",
     type: "website",
-    url: "https://quickvoice.co/pricing",
+    url: "https://tinkervoice.co/pricing",
     images: [
-      { url: "https://quickvoice.co/og-image.png", width: 1200, height: 630 },
+      { url: "https://tinkervoice.co/og-image.png", width: 1200, height: 630 },
     ],
   },
 };
@@ -24,10 +24,10 @@ export const metadata: Metadata = {
 const pricingSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "QuickVoice",
+  name: "TinkerVoice",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
-  url: "https://quickvoice.co/pricing",
+  url: "https://tinkervoice.co/pricing",
 };
 
 const faqSchema = {

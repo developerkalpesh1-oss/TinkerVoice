@@ -86,7 +86,7 @@ export function OrderStatusReturnsFeaturesSection() {
             <h2 className="mb-4 font-geist text-3xl font-normal tracking-tight text-foreground sm:text-4xl md:text-5xl">
               Features and Benefits of{" "}
               <span className="text-primary">
-                QuickVoice AI
+                TinkerVoice AI
               </span>
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-foreground/70">
@@ -239,7 +239,7 @@ export function OrderStatusReturnsFeaturesSection() {
                         Live Demo
                         <span className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
                       </p>
-                      <p className="text-xs text-foreground/60">QuickVoice Agent</p>
+                      <p className="text-xs text-foreground/60">TinkerVoice Agent</p>
                     </div>
                   </div>
 

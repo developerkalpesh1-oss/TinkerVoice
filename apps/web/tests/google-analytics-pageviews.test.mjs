@@ -5,9 +5,9 @@ import { createPageviewCoordinator } from "../src/lib/google-analytics-pageviews
 test("initial, committed path/query, back and forward visits count once; duplicate and hash changes do not", () => {
   const events = [];
   const tracker = createPageviewCoordinator("G-TEST123", (event) => { events.push(event); return true; });
-  const home = { url: "https://quickvoice.co/", title: "Home", referrer: "https://example.com/search#result" };
-  const blog = { url: "https://quickvoice.co/blog", title: "Blog" };
-  const filtered = { url: "https://quickvoice.co/blog?category=scheduling", title: "Blog" };
+  const home = { url: "https://tinkervoice.co/", title: "Home", referrer: "https://example.com/search#result" };
+  const blog = { url: "https://tinkervoice.co/blog", title: "Blog" };
+  const filtered = { url: "https://tinkervoice.co/blog?category=scheduling", title: "Blog" };
 
   assert.equal(tracker.record(home), true);
   assert.equal(tracker.record(home), false); // Strict Mode effect replay.
@@ -33,17 +33,17 @@ test("late tag readiness preserves each completed visit's title and referrer wit
     events.push(event);
     return true;
   });
-  tracker.record({ url: "https://quickvoice.co/", title: "Initial title" });
-  tracker.record({ url: "https://quickvoice.co/blog?sort=new", title: "Updated title" });
+  tracker.record({ url: "https://tinkervoice.co/", title: "Initial title" });
+  tracker.record({ url: "https://tinkervoice.co/blog?sort=new", title: "Updated title" });
   assert.equal(events.length, 0);
   ready = true;
   tracker.flush();
   tracker.flush();
-  tracker.record({ url: "https://quickvoice.co/blog?sort=new#archive", title: "Updated title" });
+  tracker.record({ url: "https://tinkervoice.co/blog?sort=new#archive", title: "Updated title" });
   assert.equal(events.length, 2);
   assert.equal(events[0].page_title, "Initial title");
   assert.equal(events[1].page_title, "Updated title");
-  assert.equal(events[1].page_referrer, "https://quickvoice.co/");
+  assert.equal(events[1].page_referrer, "https://tinkervoice.co/");
 });
 
 test("an unavailable sender does not crash navigation or discard an unsent view", () => {
@@ -54,7 +54,7 @@ test("an unavailable sender does not crash navigation or discard an unsent view"
     events.push(event);
     return true;
   });
-  assert.doesNotThrow(() => tracker.record({ url: "https://quickvoice.co/blog", title: "Blog" }));
+  assert.doesNotThrow(() => tracker.record({ url: "https://tinkervoice.co/blog", title: "Blog" }));
   unavailable = false;
   tracker.flush();
   tracker.flush();

@@ -45,11 +45,11 @@ const COST_COMPONENTS = [
 export const PRICING_FAQS = [
   {
     q: "How should we budget for self-hosting?",
-    a: "The MIT software license and the cost of operating it are separate. A self-hosted deployment needs its own hosting, AI and telephony providers, phone numbers, implementation, monitoring, and human follow-up. The hosted wallet formula on this page describes QuickVoice-hosted usage; review your own provider agreements and operating costs when self-hosting.",
+    a: "The MIT software license and the cost of operating it are separate. A self-hosted deployment needs its own hosting, AI and telephony providers, phone numbers, implementation, monitoring, and human follow-up. The hosted wallet formula on this page describes TinkerVoice-hosted usage; review your own provider agreements and operating costs when self-hosting.",
   },
   {
     q: "Do I need a monthly subscription?",
-    a: "No. Hosted QuickVoice uses a prepaid wallet. Add credit in $5 increments from $5 to $500 and spend it on measured call usage and phone-number rental.",
+    a: "No. Hosted TinkerVoice uses a prepaid wallet. Add credit in $5 increments from $5 to $500 and spend it on measured call usage and phone-number rental.",
   },
   {
     q: "How does the $5 signup credit work?",
@@ -60,15 +60,15 @@ export const PRICING_FAQS = [
     a: "Each call combines measured STT, TTS, and LLM usage at provider market cost plus 20%, telephony at provider cost plus 20%, and a $0.01 platform fee per connected minute prorated per second.",
   },
   {
-    q: "Can QuickVoice recharge the wallet automatically?",
+    q: "Can TinkerVoice recharge the wallet automatically?",
     a: "Yes. After saving a payment method, owners and admins can choose a balance threshold and an automatic recharge amount. Both use $5 increments, and automatic recharge is off until you enable it.",
   },
   {
     q: "What happens when the wallet runs out?",
-    a: "QuickVoice reserves enough credit for the next short slice of a call and stops the call before funds are exhausted. Phone-number renewals are retried during a short grace period; numbers can be released if the account is not recharged.",
+    a: "TinkerVoice reserves enough credit for the next short slice of a call and stops the call before funds are exhausted. Phone-number renewals are retried during a short grace period; numbers can be released if the account is not recharged.",
   },
   {
-    q: "Is QuickVoice HIPAA-compliant?",
+    q: "Is TinkerVoice HIPAA-compliant?",
     a: "The repository or pricing selection does not by itself establish HIPAA compliance. A healthcare deployment requires review of the exact configuration, providers, contracts, access controls, retention, operations, and legal obligations. Do not process PHI until your organization completes that review.",
   },
 ] as const;
@@ -84,7 +84,7 @@ export function UsagePricing() {
               Understand how call costs add up.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
-              Hosted QuickVoice combines measured AI usage, telephony, and
+              Hosted TinkerVoice combines measured AI usage, telephony, and
               connected time in one prepaid USD wallet. Your model and carrier
               choices determine the total.
             </p>

@@ -20,7 +20,7 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
     description:
       "Evaluate an AI receptionist for business FAQs, caller intake, and appointment requests, with clear human follow-up and implementation requirements.",
     introduction:
-      "Start with the calls your front desk handles repeatedly. QuickVoice gives your implementation team an agent builder, business knowledge, phone connections, and call records to configure a focused receptionist workflow.",
+      "Start with the calls your front desk handles repeatedly. TinkerVoice gives your implementation team an agent builder, business knowledge, phone connections, and call records to configure a focused receptionist workflow.",
     steps: [
       {
         title: "Answer routine questions",
@@ -87,7 +87,7 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
     description:
       "Plan AI phone answering for FAQs, messages, and callback requests. Compare operating costs, human coverage, and setup requirements before a pilot.",
     introduction:
-      "An answering workflow should leave the caller and your team with the same understanding of what happens next. Use QuickVoice to configure routine answers and intake, then evaluate the experience with your own calls.",
+      "An answering workflow should leave the caller and your team with the same understanding of what happens next. Use TinkerVoice to configure routine answers and intake, then evaluate the experience with your own calls.",
     steps: [
       {
         title: "Choose the call types",
@@ -127,7 +127,7 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
       {
         question: "How does this compare with a staffed answering service?",
         answer:
-          "Compare representative call quality, escalation coverage, full operating cost, and responsibility for outages. QuickVoice supplies configurable software; it does not supply a staffed call center.",
+          "Compare representative call quality, escalation coverage, full operating cost, and responsibility for outages. TinkerVoice supplies configurable software; it does not supply a staffed call center.",
       },
       {
         question: "What should I include in the cost comparison?",
@@ -154,7 +154,7 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
     description:
       "Design an AI appointment scheduling workflow with availability checks, explicit booking confirmation, reminders, and human fallback.",
     introduction:
-      "Separate collecting a preferred time from making a confirmed reservation. QuickVoice can support appointment conversations; your implementation must connect the scheduling system and verify the result of each permitted action.",
+      "Separate collecting a preferred time from making a confirmed reservation. TinkerVoice can support appointment conversations; your implementation must connect the scheduling system and verify the result of each permitted action.",
     steps: [
       {
         title: "Understand the request",
@@ -162,7 +162,7 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
       },
       {
         title: "Check and confirm",
-        body: "Check availability through a tested scheduling connection. QuickVoice’s default live-tool safeguards restrict tools marked as writes, side effects, or requiring confirmation. Creating a reservation needs an explicitly implemented authorization path. Read back a verified booking result; otherwise record a request for staff.",
+        body: "Check availability through a tested scheduling connection. TinkerVoice’s default live-tool safeguards restrict tools marked as writes, side effects, or requiring confirmation. Creating a reservation needs an explicitly implemented authorization path. Read back a verified booking result; otherwise record a request for staff.",
       },
       {
         title: "Plan changes and reminders",
@@ -225,7 +225,7 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
     description:
       "Evaluate AI phone support for knowledge-based answers, request intake, and authorized lookups, with clear escalation and privacy boundaries.",
     introduction:
-      "Choose a small set of support questions your team can answer from approved information. QuickVoice combines agent instructions, knowledge retrieval, external tools, and call records so your team can evaluate that workflow.",
+      "Choose a small set of support questions your team can answer from approved information. TinkerVoice combines agent instructions, knowledge retrieval, external tools, and call records so your team can evaluate that workflow.",
     steps: [
       {
         title: "Answer from approved sources",
@@ -264,7 +264,7 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
     ],
     faqs: [
       {
-        question: "Can QuickVoice issue refunds?",
+        question: "Can TinkerVoice issue refunds?",
         answer:
           "Only an explicitly implemented and authorized external action could do that. Start with request intake; keep financial exceptions and disputed decisions with designated staff.",
       },
@@ -292,7 +292,7 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
     description:
       "Plan AI lead qualification and follow-up with defined questions, contact eligibility, human review, and clear integration requirements.",
     introduction:
-      "Use a focused conversation to understand a prospect's request and preferred next step. QuickVoice provides inbound and outbound calling paths, configurable agent instructions, and call outcomes for a sales workflow your team owns.",
+      "Use a focused conversation to understand a prospect's request and preferred next step. TinkerVoice provides inbound and outbound calling paths, configurable agent instructions, and call outcomes for a sales workflow your team owns.",
     steps: [
       {
         title: "Define useful questions",
@@ -405,9 +405,9 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
     ],
     faqs: [
       {
-        question: "Is QuickVoice a staffed answering service?",
+        question: "Is TinkerVoice a staffed answering service?",
         answer:
-          "No. QuickVoice is self-hostable phone-agent software. A scoped assisted pilot helps define the implementation; your team still owns provider accounts, approved information, operations, and staff follow-up. Agree assistance and support terms before starting.",
+          "No. TinkerVoice is self-hostable phone-agent software. A scoped assisted pilot helps define the implementation; your team still owns provider accounts, approved information, operations, and staff follow-up. Agree assistance and support terms before starting.",
       },
       {
         question: "Does a viewing request mean a tour is booked?",
@@ -416,9 +416,9 @@ export const workflowPages: Record<string, WorkflowPageContent> = {
       },
       {
         question:
-          "Does QuickVoice integrate with AppFolio, Buildium, or Yardi?",
+          "Does TinkerVoice integrate with AppFolio, Buildium, or Yardi?",
         answer:
-          "This pilot does not include a verified native connector to those systems. Keep their records authoritative and agree any access, field mapping, and write operations separately. A vendor API does not establish a working QuickVoice integration.",
+          "This pilot does not include a verified native connector to those systems. Keep their records authoritative and agree any access, field mapping, and write operations separately. A vendor API does not establish a working TinkerVoice integration.",
       },
       {
         question:

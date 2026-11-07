@@ -77,7 +77,7 @@ export function HrRecruitingCapabilitiesSection() {
               viewport={{ once: true }}
               className="font-geist text-foreground/60 mt-3 max-w-3xl mx-auto"
             >
-              QuickVoice&apos;s AI voice agent is transforming the HR and recruiting industry by:
+              TinkerVoice&apos;s AI voice agent is transforming the HR and recruiting industry by:
             </motion.p>
           </div>
           <div

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Any
 
 
-SCHEMA_VERSION = "quickvoice.voice-session.v1"
+SCHEMA_VERSION = "tinkervoice.voice-session.v1"
 
 
 class VoiceWorkerMetadataError(ValueError):

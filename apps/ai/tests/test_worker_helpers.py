@@ -229,6 +229,72 @@ class WorkerHandlerTests(unittest.TestCase):
 
         self.assertNotIn("send_dtmf_events", [tool.id for tool in agent.tools])
 
+    def test_agent_and_tinkerism_calls_learn_to_end_clearly_finished_conversations(self):
+        instructions = build_agent_instructions({"system_prompt": "Help the caller."})
+        self.assertIn("end_call", instructions)
+        self.assertIn("not interested", instructions)
+        self.assertIn("brief polite closing greeting", instructions)
+        self.assertIn("continuing the discussion", instructions)
+
+        tinkerism = build_agent_instructions({
+            "system_prompt": "Answer the question.",
+            "dynamic_variables": {"tinkerism_call": "1"},
+        })
+        self.assertIn("end_call", tinkerism)
+        self.assertIn("Do not greet again", tinkerism)
+
+        agent = Assistant(
+            system_prompt="Help the caller.",
+            config={},
+            call_context={"direction": "outbound"},
+        )
+        self.assertIn("end_call", [tool.id for tool in agent.tools])
+
+    def test_end_call_speaks_a_closing_greeting_then_disconnects(self):
+        async def exercise():
+            hangups = []
+            spoken = []
+
+            class FakeSpeech:
+                async def wait_for_playout(self):
+                    spoken.append("played")
+
+            class FakeSession:
+                def say(self, text, **kwargs):
+                    spoken.append((text, kwargs))
+                    return FakeSpeech()
+
+            class FakeContext:
+                def __init__(self):
+                    self.session = FakeSession()
+                    self.interruptions_blocked = False
+
+                def disallow_interruptions(self):
+                    self.interruptions_blocked = True
+
+                async def wait_for_playout(self):
+                    spoken.append("prior")
+
+            agent = Assistant(
+                system_prompt="Help the caller.",
+                config={},
+                call_context={},
+                hangup_call=lambda: hangups.append("conversation_ended") or asyncio.sleep(0),
+            )
+            context = FakeContext()
+            result = await agent.end_call(context, closing_message="  Thanks for your time. Goodbye.  ")
+            duplicate = await agent.end_call(context, closing_message="Again.")
+            return result, duplicate, hangups, spoken, context.interruptions_blocked
+
+        result, duplicate, hangups, spoken, blocked = asyncio.run(exercise())
+        self.assertEqual(result, "Call ended.")
+        self.assertEqual(duplicate, "Call ending.")
+        self.assertEqual(hangups, ["conversation_ended"])
+        self.assertTrue(blocked)
+        self.assertEqual(spoken[0], "prior")
+        self.assertEqual(spoken[1], ("Thanks for your time. Goodbye.", {"allow_interruptions": False}))
+        self.assertEqual(spoken[2], "played")
+
     def test_provider_section_parses_supported_provider_model_values(self):
         self.assertEqual(provider_section("deepgram/nova-3"), {"provider": "deepgram", "model": "nova-3"})
         self.assertEqual(provider_section("bedrock/us.amazon.nova-micro-v1:0"), {"provider": "bedrock", "model": "us.amazon.nova-micro-v1:0"})

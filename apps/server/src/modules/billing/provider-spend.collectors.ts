@@ -150,7 +150,7 @@ export async function collectProviderSpend(
     }
     return {
       samples: [...samples.values()],
-      note: "Deepgram project reported cost before QuickVoice markup; empty days in a successful report are zero. Provider data may be delayed.",
+      note: "Deepgram project reported cost before TinkerVoice markup; empty days in a successful report are zero. Provider data may be delayed.",
     };
   }
   if (source.kind === "livekit") return collectLiveKit(source, now, get);
@@ -221,7 +221,7 @@ async function collectLiveKit(
     }
     return {
       samples: [...samples.values()],
-      note: "ESTIMATE: QuickVoice-reported call connection minutes only, not LiveKit's invoice or participant minutes. Excludes traffic outside this database and usage missing from failed workers. Cross-midnight attribution uses the stored admission time.",
+      note: "ESTIMATE: TinkerVoice-reported call connection minutes only, not LiveKit's invoice or participant minutes. Excludes traffic outside this database and usage missing from failed workers. Cross-midnight attribution uses the stored admission time.",
     };
   }
   const apiKey = requiredSetting(source.accessKeyEnv ?? "LIVEKIT_API_KEY");

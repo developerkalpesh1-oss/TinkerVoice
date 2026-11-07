@@ -11,28 +11,28 @@ export function HealthcareFaqSection() {
 
   const faqs = [
     {
-      question: "How does QuickVoice ensure HIPAA compliance for healthcare organizations?",
-      answer: "QuickVoice is fully HIPAA compliant with comprehensive Business Associate Agreements (BAA), automatic PHI redaction from call recordings, encrypted data transmission, and complete audit logs. We maintain SOC 2 Type II certification and follow strict data handling protocols to protect patient information."
+      question: "How does TinkerVoice ensure HIPAA compliance for healthcare organizations?",
+      answer: "TinkerVoice is fully HIPAA compliant with comprehensive Business Associate Agreements (BAA), automatic PHI redaction from call recordings, encrypted data transmission, and complete audit logs. We maintain SOC 2 Type II certification and follow strict data handling protocols to protect patient information."
     },
     {
-      question: "Can QuickVoice integrate with our existing EHR system like Epic or Cerner?",
-      answer: "Yes, QuickVoice offers native integrations with leading EHR systems including Epic, Cerner, athenahealth, Allscripts, NextGen, and eClinicalWorks. Our API-first approach allows seamless data synchronization for patient scheduling, appointment management, and call routing based on patient records."
+      question: "Can TinkerVoice integrate with our existing EHR system like Epic or Cerner?",
+      answer: "Yes, TinkerVoice offers native integrations with leading EHR systems including Epic, Cerner, athenahealth, Allscripts, NextGen, and eClinicalWorks. Our API-first approach allows seamless data synchronization for patient scheduling, appointment management, and call routing based on patient records."
     },
     {
       question: "How does the AI-powered call routing work for multiple clinic locations?",
-      answer: "QuickVoice uses advanced AI to route calls based on patient ZIP code, spoken location preferences, department needs, and clinic availability. The system can automatically transfer patients to the nearest available clinic, schedule appointments at the most convenient location, and handle complex multi-location routing scenarios without human intervention."
+      answer: "TinkerVoice uses advanced AI to route calls based on patient ZIP code, spoken location preferences, department needs, and clinic availability. The system can automatically transfer patients to the nearest available clinic, schedule appointments at the most convenient location, and handle complex multi-location routing scenarios without human intervention."
     },
     {
       question: "What kind of patient data security measures are in place?",
       answer: "We implement enterprise-grade security including end-to-end encryption, automatic PHI redaction, consent capture for all recordings, role-based access controls, and comprehensive audit trails. All data is stored in HIPAA-compliant data centers with regular security assessments and compliance monitoring."
     },
     {
-      question: "How quickly can we implement QuickVoice in our healthcare organization?",
-      answer: "QuickVoice offers rapid deployment with our no-code configuration platform. Most healthcare organizations can be up and running within 2-4 weeks, including EHR integration, staff training, and workflow optimization. Our dedicated healthcare implementation team ensures smooth transition with minimal disruption to patient care."
+      question: "How quickly can we implement TinkerVoice in our healthcare organization?",
+      answer: "TinkerVoice offers rapid deployment with our no-code configuration platform. Most healthcare organizations can be up and running within 2-4 weeks, including EHR integration, staff training, and workflow optimization. Our dedicated healthcare implementation team ensures smooth transition with minimal disruption to patient care."
     },
     {
-      question: "Does QuickVoice support multilingual patient communication?",
-      answer: "Yes, QuickVoice supports over 100 languages and dialects, making it ideal for diverse patient populations. The AI can automatically detect patient language preferences, provide culturally appropriate responses, and ensure accurate medical terminology translation for better patient understanding and care coordination."
+      question: "Does TinkerVoice support multilingual patient communication?",
+      answer: "Yes, TinkerVoice supports over 100 languages and dialects, making it ideal for diverse patient populations. The AI can automatically detect patient language preferences, provide culturally appropriate responses, and ensure accurate medical terminology translation for better patient understanding and care coordination."
     }
   ];
 
@@ -62,7 +62,7 @@ export function HealthcareFaqSection() {
           </h2>
 
           <p className="text-muted-foreground max-w-2xl text-center">
-            Get answers to everything you need to know about QuickVoice&apos;s AI Voice Agents
+            Get answers to everything you need to know about TinkerVoice&apos;s AI Voice Agents
             and how they can revolutionize your healthcare communication.
           </p>
         </motion.div>

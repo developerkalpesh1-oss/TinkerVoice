@@ -108,7 +108,7 @@ export function CareersCultureSection() {
             <div className="relative w-full overflow-hidden rounded-xl">
               <Image
                 src="/images/saas/saas-ai-dashboard.png"
-                alt="QuickVoice team culture and workplace environment"
+                alt="TinkerVoice team culture and workplace environment"
                 width={800}
                 height={400}
                 sizes="(max-width: 768px) 100vw, 50vw"

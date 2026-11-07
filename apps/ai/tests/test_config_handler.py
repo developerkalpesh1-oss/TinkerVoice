@@ -50,7 +50,7 @@ class ConfigHandlerTests(unittest.TestCase):
                 "userId": "user_123",
                 "agentNumber": "+15551230000",
                 "provider": "TWILIO",
-                "firstMessage": "Hello, thanks for calling QuickVoice.",
+                "firstMessage": "Hello, thanks for calling TinkerVoice.",
                 "systemPrompt": "You are a concise support agent.",
                 "llmModel": "gpt-4o-mini",
                 "sttModel": "nova-3",
@@ -72,7 +72,7 @@ class ConfigHandlerTests(unittest.TestCase):
         self.assertEqual(config["user_id"], "user_123")
         self.assertEqual(config["agent_number"], "+15551230000")
         self.assertEqual(config["provider"], "TWILIO")
-        self.assertEqual(config["first_message"], "Hello, thanks for calling QuickVoice.")
+        self.assertEqual(config["first_message"], "Hello, thanks for calling TinkerVoice.")
         self.assertEqual(config["system_prompt"], "You are a concise support agent.")
         self.assertEqual(config["llm_model"], "openai/gpt-4o-mini")
         self.assertEqual(config["llm_provider"], "openai")

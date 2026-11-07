@@ -74,7 +74,7 @@ export function RealEstateHeroSection() {
               className="font-geist text-4xl font-light tracking-tighter text-foreground sm:text-5xl lg:text-6xl mb-6 relative z-10"
             >
               Transform Real Estate Engagement with{" "}
-              <span className="text-primary">QuickVoice AI Agents</span>
+              <span className="text-primary">TinkerVoice AI Agents</span>
             </motion.h1>
 
             <motion.p
@@ -83,7 +83,7 @@ export function RealEstateHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
-              Reimagine property interactions with QuickVoice&apos;s AI-powered
+              Reimagine property interactions with TinkerVoice&apos;s AI-powered
               voice agents. From answering buyer inquiries and scheduling property
               tours to streamlining tenant support and follow-ups, our solutions
               help real estate companies boost efficiency, close deals faster,

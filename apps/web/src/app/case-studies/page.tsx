@@ -10,16 +10,16 @@ export const metadata: Metadata = {
   title: "AI Phone-Agent Workflow Scenarios",
   description:
     "Illustrative AI phone-agent workflow scenarios for evaluating automation opportunities. These are planning examples, not verified customer case studies.",
-  alternates: { canonical: "https://quickvoice.co/case-studies" },
+  alternates: { canonical: "https://tinkervoice.co/case-studies" },
   openGraph: {
-    title: "QuickVoice AI Phone-Agent Workflow Scenarios",
+    title: "TinkerVoice AI Phone-Agent Workflow Scenarios",
     description:
-      "Explore illustrative workflow scenarios, then inspect the open-source implementation behind QuickVoice.",
+      "Explore illustrative workflow scenarios, then inspect the open-source implementation behind TinkerVoice.",
     type: "website",
-    url: "https://quickvoice.co/case-studies",
-    siteName: "QuickVoice",
+    url: "https://tinkervoice.co/case-studies",
+    siteName: "TinkerVoice",
     images: [
-      { url: "https://quickvoice.co/og-image.png", width: 1200, height: 630 },
+      { url: "https://tinkervoice.co/og-image.png", width: 1200, height: 630 },
     ],
   },
 };
@@ -62,7 +62,7 @@ export default function CaseStudiesIndexPage() {
               <p>
                 The scenarios in this library are planning examples.
                 Organization profiles, quotes, timelines, costs, and outcome
-                figures have not been validated as QuickVoice customer results
+                figures have not been validated as TinkerVoice customer results
                 and must not be cited as testimonials, benchmarks, or ROI
                 evidence.
               </p>

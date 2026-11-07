@@ -66,7 +66,7 @@ export function AppointmentSchedulingHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
-              QuickVoice&apos;s AI Appointment Setter automates scheduling, reminders, and rescheduling,
+              TinkerVoice&apos;s AI Appointment Setter automates scheduling, reminders, and rescheduling,
               simplifying appointment management and enhancing customer satisfaction while saving time.
             </motion.p>
 

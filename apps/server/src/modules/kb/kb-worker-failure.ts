@@ -21,7 +21,7 @@ export function safeKbWorkerFailure(error: Error) {
     return {
       code: "KB_FILE_UNAVAILABLE",
       userMessage:
-        "QuickVoice could not read the uploaded file from storage. Upload the file again and keep the browser open until the upload finishes.",
+        "TinkerVoice could not read the uploaded file from storage. Upload the file again and keep the browser open until the upload finishes.",
       retryable: true,
     };
   }

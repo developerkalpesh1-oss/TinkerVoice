@@ -63,7 +63,7 @@ test("Stripe preflight and customer detachment happen before local cleanup and s
       operations.push("discover-mcp-connections");
       return [
         {
-          smitheryNamespace: "quickvoice-prod",
+          smitheryNamespace: "tinkervoice-prod",
           smitheryConnectionId: "org-123-gmail",
         },
       ];
@@ -133,7 +133,7 @@ test("Stripe preflight and customer detachment happen before local cleanup and s
     "stripe-cancel:sub_checkout",
     "stripe-customer:cus_123",
     "phone:phone_1",
-    "mcp:quickvoice-prod:org-123-gmail",
+    "mcp:tinkervoice-prod:org-123-gmail",
     "kb-assets:kb_1",
     "kb-row:kb_1",
     "recording:call_1",
@@ -386,7 +386,7 @@ test("organization cleanup blocks deletion when Smithery revocation fails", asyn
         ...noLocalResources,
         listMcpConnections: async () => [
           {
-            smitheryNamespace: "quickvoice-prod",
+            smitheryNamespace: "tinkervoice-prod",
             smitheryConnectionId: "org-123-gmail",
           },
         ],

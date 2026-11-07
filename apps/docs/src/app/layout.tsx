@@ -4,11 +4,11 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 export const metadata: Metadata = {
   title: {
-    default: "QuickVoice Docs",
-    template: "%s · QuickVoice Docs",
+    default: "TinkerVoice Docs",
+    template: "%s · TinkerVoice Docs",
   },
   description:
-    "Documentation for QuickVoice product APIs, MCP server, agents, widgets, calls, and deployment.",
+    "Documentation for TinkerVoice product APIs, MCP server, agents, widgets, calls, and deployment.",
 };
 
 export default function RootLayout({
@@ -19,12 +19,12 @@ export default function RootLayout({
       <head>
         <meta
           httpEquiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.quickvoice.co; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.tinkervoice.co; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'"
         />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem("quickvoice-docs-theme")==="light"?"light":"dark";document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t}catch(e){document.documentElement.dataset.theme="dark"}`,
+            __html: `try{var t=localStorage.getItem("tinkervoice-docs-theme")==="light"?"light":"dark";document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t}catch(e){document.documentElement.dataset.theme="dark"}`,
           }}
         />
       </head>

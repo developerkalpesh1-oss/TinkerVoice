@@ -130,18 +130,18 @@ function escapeHtml(value: string) {
 function contentFor(type: AuthEmailType): EmailContent {
   if (type === "verifyEmail") {
     return {
-      subject: "Verify your QuickVoice email",
+      subject: "Verify your TinkerVoice email",
       heading: "Verify your email",
       intro:
-        "Confirm your email address to finish setting up your QuickVoice account.",
+        "Confirm your email address to finish setting up your TinkerVoice account.",
       action: "Verify email",
     };
   }
 
   return {
-    subject: "Reset your QuickVoice password",
+    subject: "Reset your TinkerVoice password",
     heading: "Reset your password",
-    intro: "Use this secure link to reset your QuickVoice password.",
+    intro: "Use this secure link to reset your TinkerVoice password.",
     action: "Reset password",
   };
 }
@@ -219,8 +219,8 @@ export async function sendWorkspaceInvitation(args: {
   }
   url.searchParams.set("invitationId", args.invitationId);
   const content = {
-    subject: "You’re invited to a QuickVoice workspace",
-    heading: "Join your team on QuickVoice",
+    subject: "You’re invited to a TinkerVoice workspace",
+    heading: "Join your team on TinkerVoice",
     intro: `${args.inviterName || "A teammate"} invited you to join ${args.workspaceName} as ${args.role}. Sign in or create an account with ${args.email} to review the invitation. This link expires on ${args.expiresAt.toUTCString()}. If you were not expecting this invitation, you can ignore it.`,
     action: "Review invitation",
   };
@@ -247,17 +247,17 @@ export async function sendNumberBillingNotice(args: {
     process.env.CONSOLE_URL?.split(",")[0]?.trim() || "http://localhost:3000"
   ).replace(/\/+$/, "")}/settings/billing`;
   const date = args.chargeDate.toISOString().slice(0, 10);
-  const subject = "Your QuickVoice number moves to prepaid billing in 7 days";
+  const subject = "Your TinkerVoice number moves to prepaid billing in 7 days";
   const text = [
     `Hi ${args.fullName || "there"},`,
     "",
-    `Your QuickVoice number ${args.phoneNumber} will renew for ${args.priceUsd} every 30 days, starting ${date}.`,
+    `Your TinkerVoice number ${args.phoneNumber} will renew for ${args.priceUsd} every 30 days, starting ${date}.`,
     "Promotional credit cannot be used for phone number rentals.",
     "Add paid credit or enable automatic reload to keep the number.",
     "",
     `Manage billing: ${billingUrl}`,
   ].join("\n");
-  const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#111827"><h1>Phone number billing starts in 7 days</h1><p>Hi ${escapeHtml(args.fullName || "there")},</p><p>Your QuickVoice number <strong>${escapeHtml(args.phoneNumber)}</strong> will renew for <strong>${escapeHtml(args.priceUsd)}</strong> every 30 days, starting ${escapeHtml(date)}.</p><p>Promotional credit cannot be used for phone number rentals. Add paid credit or enable automatic reload to keep the number.</p><p><a href="${escapeHtml(billingUrl)}">Manage billing</a></p></body></html>`;
+  const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#111827"><h1>Phone number billing starts in 7 days</h1><p>Hi ${escapeHtml(args.fullName || "there")},</p><p>Your TinkerVoice number <strong>${escapeHtml(args.phoneNumber)}</strong> will renew for <strong>${escapeHtml(args.priceUsd)}</strong> every 30 days, starting ${escapeHtml(date)}.</p><p>Promotional credit cannot be used for phone number rentals. Add paid credit or enable automatic reload to keep the number.</p><p><a href="${escapeHtml(billingUrl)}">Manage billing</a></p></body></html>`;
   return sendComposedEmail({
     email: args.email,
     fullName: args.fullName,
@@ -270,7 +270,7 @@ export async function sendNumberBillingNotice(args: {
 
 export async function sendContactSubmission(submission: ContactSubmission) {
   const recipient = contactEmailAddressSchema.parse(
-    process.env.CONTACT_RECIPIENT_EMAIL?.trim() || "info@quickvoice.co",
+    process.env.CONTACT_RECIPIENT_EMAIL?.trim() || "info@tinkervoice.co",
   );
   const replyTo = contactEmailAddressSchema.parse(submission.email);
   const fields: Array<[string, string]> = [
@@ -299,8 +299,8 @@ export async function sendContactSubmission(submission: ContactSubmission) {
 
   return sendComposedEmail({
     email: recipient,
-    fullName: "QuickVoice team",
-    subject: "New QuickVoice website enquiry",
+    fullName: "TinkerVoice team",
+    subject: "New TinkerVoice website enquiry",
     text,
     html,
     replyTo,
@@ -313,7 +313,7 @@ export async function sendContactSubmission(submission: ContactSubmission) {
 export async function sendProviderSpendAlert(args: { email: string; subject: string; text: string }) {
   return sendComposedEmail({
     ...args,
-    fullName: "QuickVoice team",
+    fullName: "TinkerVoice team",
     html: `<html><body><pre style="white-space:pre-wrap;font-family:Arial,sans-serif">${escapeHtml(args.text)}</pre></body></html>`,
     failureLabel: "provider spend alert",
     timeoutMs: 8_000,

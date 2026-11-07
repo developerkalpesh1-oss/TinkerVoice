@@ -246,7 +246,7 @@ export function ContactForm({
       ref={formRef}
       onSubmit={handleSubmit}
       noValidate
-      aria-label="Contact the QuickVoice team"
+      aria-label="Contact the TinkerVoice team"
       className="min-w-0"
     >
       {turnstileSiteKey ? (
@@ -272,7 +272,7 @@ export function ContactForm({
               Your message has been submitted.
             </h3>
             <p className="mt-3 text-muted-foreground">
-              Thank you for contacting the QuickVoice team.
+              Thank you for contacting the TinkerVoice team.
             </p>
             <button
               type="button"
@@ -298,10 +298,10 @@ export function ContactForm({
         >
           <p>{deliveryError}</p>
           <a
-            href="mailto:info@quickvoice.co"
+            href="mailto:info@tinkervoice.co"
             className="mt-2 inline-block font-medium text-primary underline underline-offset-4"
           >
-            Email info@quickvoice.co
+            Email info@tinkervoice.co
           </a>
         </div>
       )}
@@ -458,7 +458,7 @@ export function ContactForm({
           {!turnstileSiteKey ? (
             <p role="alert" className="mt-2 text-sm text-destructive">
               Contact verification is temporarily unavailable. Please email
-              info@quickvoice.co.
+              info@tinkervoice.co.
             </p>
           ) : null}
         </div>

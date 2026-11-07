@@ -58,7 +58,7 @@ export function TravelHospitalityWhySection() {
         >
           <div className="relative z-10">
             <h2 className="font-geist text-3xl font-normal tracking-tighter text-foreground sm:text-4xl md:text-5xl mb-4">
-              Why QuickVoice for Travel & Hospitality
+              Why TinkerVoice for Travel & Hospitality
             </h2>
             <p className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto">
               Our no-code builder, rapid go-live, and seamless integrations with PMS/CRS/GDS/POS systems enable you to transform your business operations.

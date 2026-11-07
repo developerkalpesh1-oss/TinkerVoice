@@ -26,7 +26,7 @@ class LiveKitHandlerTests(unittest.TestCase):
                 "AWS_SECRET_ACCESS_KEY": "aws-secret",
                 "AWS_SESSION_TOKEN": "aws-session-token",
                 "AWS_REGION": "us-west-2",
-                "S3_BUCKET_NAME": "quickvoice-recordings",
+                "S3_BUCKET_NAME": "tinkervoice-recordings",
                 "ACCESS_KEY": "legacy-access",
                 "SECRET_ACCESS_KEY": "legacy-secret",
                 "REGION": "legacy-region",
@@ -36,7 +36,7 @@ class LiveKitHandlerTests(unittest.TestCase):
             config = get_recording_storage_config()
 
         self.assertEqual(config["region"], "us-west-2")
-        self.assertEqual(config["bucket"], "quickvoice-recordings")
+        self.assertEqual(config["bucket"], "tinkervoice-recordings")
         self.assertEqual(config["access_key"], "aws-access")
         self.assertEqual(config["secret"], "aws-secret")
         self.assertEqual(config["session_token"], "aws-session-token")
@@ -46,14 +46,14 @@ class LiveKitHandlerTests(unittest.TestCase):
             os.environ,
             {
                 "AWS_REGION": "us-west-2",
-                "S3_BUCKET_NAME": "quickvoice-recordings",
+                "S3_BUCKET_NAME": "tinkervoice-recordings",
             },
             clear=True,
         ):
             config = get_recording_storage_config()
 
         self.assertEqual(config["region"], "us-west-2")
-        self.assertEqual(config["bucket"], "quickvoice-recordings")
+        self.assertEqual(config["bucket"], "tinkervoice-recordings")
         self.assertNotIn("access_key", config)
         self.assertNotIn("secret", config)
         self.assertNotIn("session_token", config)
@@ -63,7 +63,7 @@ class LiveKitHandlerTests(unittest.TestCase):
             os.environ,
             {
                 "AWS_REGION": "us-west-2",
-                "S3_BUCKET_NAME": "quickvoice-recordings",
+                "S3_BUCKET_NAME": "tinkervoice-recordings",
                 "AWS_ACCESS_KEY_ID": "aws-access",
             },
             clear=True,
@@ -99,7 +99,7 @@ class LiveKitHandlerTests(unittest.TestCase):
                 "LIVEKIT_API_KEY": "livekit-key",
                 "LIVEKIT_API_SECRET": "livekit-secret",
                 "AWS_REGION": "us-west-2",
-                "S3_BUCKET_NAME": "quickvoice-recordings",
+                "S3_BUCKET_NAME": "tinkervoice-recordings",
                 "AWS_ACCESS_KEY_ID": "aws-access",
                 "AWS_SECRET_ACCESS_KEY": "aws-secret",
                 "AWS_SESSION_TOKEN": "aws-session-token",
@@ -113,7 +113,7 @@ class LiveKitHandlerTests(unittest.TestCase):
 
         self.assertIsNotNone(recording_id)
         s3_upload = FakeLiveKitAPI.instance.egress.request.file_outputs[0].s3
-        self.assertEqual(s3_upload.bucket, "quickvoice-recordings")
+        self.assertEqual(s3_upload.bucket, "tinkervoice-recordings")
         self.assertEqual(s3_upload.region, "us-west-2")
         self.assertEqual(s3_upload.access_key, "aws-access")
         self.assertEqual(s3_upload.secret, "aws-secret")

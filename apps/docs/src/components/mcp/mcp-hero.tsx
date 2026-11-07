@@ -18,7 +18,7 @@ export function McpHero() {
           Powered by MCP Protocol
         </div>
         <h1 className="mcp-reveal mt-7 max-w-5xl text-balance text-5xl font-semibold tracking-[-0.055em] text-slate-950 sm:text-7xl lg:text-8xl">
-          Connect QuickVoice MCP with your AI tools.
+          Connect TinkerVoice MCP with your AI tools.
         </h1>
         <p className="mcp-reveal mt-6 max-w-2xl text-pretty text-lg leading-8 text-[var(--qv-muted)] sm:text-xl">
           Manage agents, launch guarded call workflows, inspect logs, and review widget activity from clients like Cursor, Claude, Codex, and Windsurf.

@@ -37,8 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       modifiedTime: getPostModifiedDate(post),
       authors: [post.author],
       tags: post.tags,
-      url: "https://quickvoice.co/blog/" + slug,
-      siteName: "QuickVoice",
+      url: "https://tinkervoice.co/blog/" + slug,
+      siteName: "TinkerVoice",
       images: [{ url: post.ogImage || "/og-image.png", width: 1200, height: 630, alt: post.metaTitle || post.title }],
     },
     twitter: { card: "summary_large_image", title: post.metaTitle || post.title, description: post.metaDescription, images: [post.ogImage || "/og-image.png"] },
@@ -60,18 +60,18 @@ export default async function BlogPostPage({ params }: Props) {
     headline: post.metaTitle || post.title,
     description: post.metaDescription,
     author: { "@type": "Person", name: post.author },
-    publisher: { "@type": "Organization", name: "QuickVoice", url: "https://quickvoice.co", logo: { "@type": "ImageObject", url: "https://quickvoice.co/logo.svg" } },
+    publisher: { "@type": "Organization", name: "TinkerVoice", url: "https://tinkervoice.co", logo: { "@type": "ImageObject", url: "https://tinkervoice.co/logo.svg" } },
     datePublished: post.date, dateModified: modifiedDate,
-    mainEntityOfPage: { "@type": "WebPage", "@id": "https://quickvoice.co/blog/" + post.slug },
-    image: new URL(post.ogImage || "/og-image.png", "https://quickvoice.co").href,
-    url: "https://quickvoice.co/blog/" + post.slug, keywords: post.tags.join(", "),
+    mainEntityOfPage: { "@type": "WebPage", "@id": "https://tinkervoice.co/blog/" + post.slug },
+    image: new URL(post.ogImage || "/og-image.png", "https://tinkervoice.co").href,
+    url: "https://tinkervoice.co/blog/" + post.slug, keywords: post.tags.join(", "),
   };
   const breadcrumbSchema = {
     "@context": "https://schema.org", "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://quickvoice.co" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://quickvoice.co/blog" },
-      { "@type": "ListItem", position: 3, name: post.title, item: "https://quickvoice.co/blog/" + post.slug },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://tinkervoice.co" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://tinkervoice.co/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: "https://tinkervoice.co/blog/" + post.slug },
     ],
   };
 

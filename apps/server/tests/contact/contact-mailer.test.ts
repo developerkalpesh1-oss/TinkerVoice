@@ -20,7 +20,7 @@ const submission: ContactSubmission = {
   phone: "",
   lookingFor: "Evaluation",
   message: "Please discuss a test evaluation.",
-  source: "quickvoice-web-contact",
+  source: "tinkervoice-web-contact",
   submittedAt: "2026-09-06T12:00:00.000Z",
 };
 
@@ -56,7 +56,7 @@ test("contact SMTP keeps the sender fixed and accepts only its configured recipi
     name: "Console|Quickvoice",
   });
   assert.deepEqual(sent?.to, [
-    { address: "selfhost@example.com", name: "QuickVoice team" },
+    { address: "selfhost@example.com", name: "TinkerVoice team" },
   ]);
   assert.deepEqual(sent?.replyTo, { address: "visitor@example.com" });
   for (const setting of [
@@ -90,7 +90,7 @@ test("invalid configured recipients and Reply-To fail before invoking a mail pro
 test("a resolved SMTP operation with no accepted recipient is a failed delivery", async (t) => {
   setSmtpEnv();
   t.mock.method(nodemailer, "createTransport", (() => ({
-    sendMail: async () => ({ accepted: [], rejected: ["info@quickvoice.co"] }),
+    sendMail: async () => ({ accepted: [], rejected: ["info@tinkervoice.co"] }),
     close: () => {},
   })) as unknown as typeof nodemailer.createTransport);
   await assert.rejects(

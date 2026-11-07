@@ -371,7 +371,7 @@ export const outboundApi = {
       blob: res.data,
       filename:
         filenameFromContentDisposition(res.headers["content-disposition"]) ??
-        `quickvoice-campaign-${campaignId}-results.csv`,
+        `tinkervoice-campaign-${campaignId}-results.csv`,
     };
   },
   cancelBatchCampaign: async (campaignId: string): Promise<BatchCampaign> => {

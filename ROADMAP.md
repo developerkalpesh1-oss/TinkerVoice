@@ -1,6 +1,6 @@
-# QuickVoice Roadmap
+# TinkerVoice Roadmap
 
-QuickVoice is an actively developed, pre-stable open-source project. This roadmap communicates direction; it is not a delivery promise, service-level agreement, or guarantee that a proposed feature will ship.
+TinkerVoice is an actively developed, pre-stable open-source project. This roadmap communicates direction; it is not a delivery promise, service-level agreement, or guarantee that a proposed feature will ship.
 
 ## How To Read This Roadmap
 
@@ -13,18 +13,18 @@ Priorities may change in response to security findings, setup failures, maintain
 
 ## Comprehensive Product Roadmap
 
-The implementation backlog for expanding QuickVoice into a comprehensive AI voice-agent platform is tracked in [roadmap issue #76](https://github.com/allgpt-co/QuickVoice/issues/76). It is organized into eight design epics:
+The implementation backlog for expanding TinkerVoice into a comprehensive AI voice-agent platform is tracked in [roadmap issue #76](https://github.com/allgpt-co/TinkerVoice/issues/76). It is organized into eight design epics:
 
-- [Visual orchestration, versions, and deployment](https://github.com/allgpt-co/QuickVoice/issues/77)
-- [Templates, onboarding, and solution blueprints](https://github.com/allgpt-co/QuickVoice/issues/78)
-- [Customer data and campaigns](https://github.com/allgpt-co/QuickVoice/issues/79)
-- [Analytics, conversation intelligence, evaluations, and experiments](https://github.com/allgpt-co/QuickVoice/issues/80)
-- [API, MCP, integrations, and data portability](https://github.com/allgpt-co/QuickVoice/issues/81)
-- [Telephony, channels, and runtime reliability](https://github.com/allgpt-co/QuickVoice/issues/82)
-- [Enterprise governance, security, privacy, and compliance controls](https://github.com/allgpt-co/QuickVoice/issues/83)
-- [Platform UX, collaboration, commercial operations, and ecosystem](https://github.com/allgpt-co/QuickVoice/issues/84)
+- [Visual orchestration, versions, and deployment](https://github.com/allgpt-co/TinkerVoice/issues/77)
+- [Templates, onboarding, and solution blueprints](https://github.com/allgpt-co/TinkerVoice/issues/78)
+- [Customer data and campaigns](https://github.com/allgpt-co/TinkerVoice/issues/79)
+- [Analytics, conversation intelligence, evaluations, and experiments](https://github.com/allgpt-co/TinkerVoice/issues/80)
+- [API, MCP, integrations, and data portability](https://github.com/allgpt-co/TinkerVoice/issues/81)
+- [Telephony, channels, and runtime reliability](https://github.com/allgpt-co/TinkerVoice/issues/82)
+- [Enterprise governance, security, privacy, and compliance controls](https://github.com/allgpt-co/TinkerVoice/issues/83)
+- [Platform UX, collaboration, commercial operations, and ecosystem](https://github.com/allgpt-co/TinkerVoice/issues/84)
 
-These issues describe proposed outcomes and acceptance criteria. They do not imply that the capabilities have shipped or that QuickVoice holds a compliance certification.
+These issues describe proposed outcomes and acceptance criteria. They do not imply that the capabilities have shipped or that TinkerVoice holds a compliance certification.
 
 ## Release Baseline
 
@@ -54,7 +54,7 @@ These issues describe proposed outcomes and acceptance criteria. They do not imp
 
 ## Explicit Non-Claims
 
-The roadmap does not mean QuickVoice currently provides:
+The roadmap does not mean TinkerVoice currently provides:
 
 - A zero-configuration hosted phone-agent service.
 - Working live calls without provider accounts and credentials.

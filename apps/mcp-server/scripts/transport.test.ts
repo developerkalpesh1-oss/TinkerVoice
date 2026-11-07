@@ -9,12 +9,12 @@ import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/
 test("SDK client works when the optional background SSE stream is declined", { timeout: 10_000 }, async (t) => {
   const previousEnv = {
     PORT: process.env.PORT,
-    QUICKVOICE_API_BASE_URL: process.env.QUICKVOICE_API_BASE_URL,
+    TINKERVOICE_API_BASE_URL: process.env.TINKERVOICE_API_BASE_URL,
     MCP_MAX_SESSIONS_PER_KEY: process.env.MCP_MAX_SESSIONS_PER_KEY,
   };
   Object.assign(process.env, {
     PORT: "0",
-    QUICKVOICE_API_BASE_URL: "https://quickvoice.test/api/v1",
+    TINKERVOICE_API_BASE_URL: "https://tinkervoice.test/api/v1",
     MCP_MAX_SESSIONS_PER_KEY: "1",
   });
   const realFetch = globalThis.fetch;
@@ -48,8 +48,8 @@ test("SDK client works when the optional background SSE stream is declined", { t
     input: string | URL | Request,
     init?: RequestInit,
   ) => {
-    if (String(input).startsWith("https://quickvoice.test/api/v1")) upstreamRequests.push(String(input));
-    if (String(input) === "https://quickvoice.test/api/v1/agents") {
+    if (String(input).startsWith("https://tinkervoice.test/api/v1")) upstreamRequests.push(String(input));
+    if (String(input) === "https://tinkervoice.test/api/v1/agents") {
       if (upstreamStall) {
         upstreamSignal = init?.signal;
         stalledRequests++;
@@ -75,7 +75,7 @@ test("SDK client works when the optional background SSE stream is declined", { t
         },
       );
     }
-    if (String(input).startsWith("https://quickvoice.test/api/v1")) {
+    if (String(input).startsWith("https://tinkervoice.test/api/v1")) {
       return new Response(JSON.stringify({ success: true, data: null }), {
         headers: { "content-type": "application/json" },
       });
@@ -162,9 +162,9 @@ test("SDK client works when the optional background SSE stream is declined", { t
   await client.connect(transport);
   assert.ok(transport.sessionId, "initialization creates a session");
   await t.test("valid initialization key checks use the short cache", async () => {
-    const { validateQuickVoiceApiKey } = await import("../src/api-client.js");
+    const { validateTinkerVoiceApiKey } = await import("../src/api-client.js");
     const before = upstreamRequests.length;
-    assert.equal(await validateQuickVoiceApiKey("transport-test-placeholder"), true);
+    assert.equal(await validateTinkerVoiceApiKey("transport-test-placeholder"), true);
     assert.equal(upstreamRequests.length, before);
   });
   assert.deepEqual(await backgroundGet, { status: 405, allow: "POST, DELETE" });
@@ -175,7 +175,7 @@ test("SDK client works when the optional background SSE stream is declined", { t
     assert.equal(tool?.annotations?.readOnlyHint, false, `${toolName} is marked as a mutation`);
     assert.equal(tool?.annotations?.destructiveHint, true, `${toolName} requires destructive-action handling`);
   }
-  const catalog = await client.readResource({ uri: "quickvoice://api_catalog" });
+  const catalog = await client.readResource({ uri: "tinkervoice://api_catalog" });
   assert.ok(catalog.contents.length > 0, "catalog reads still work");
   assert.deepEqual(clientErrors, [], "the SDK treats GET 405 as supported behavior");
 
@@ -192,7 +192,7 @@ test("SDK client works when the optional background SSE stream is declined", { t
         assert.equal(result.isError, true, `${input.name} must reject ${value}`);
         assert.match(JSON.stringify(result.content), /Invalid path parameter/);
       }
-      await assert.rejects(client.readResource({ uri: `quickvoice://get_call_log/${value}` }));
+      await assert.rejects(client.readResource({ uri: `tinkervoice://get_call_log/${value}` }));
     }
     assert.equal(upstreamRequests.length, requestsBefore, "invalid paths must never reach the API");
   });
@@ -203,10 +203,10 @@ test("SDK client works when the optional background SSE stream is declined", { t
       const result = await client.callTool({ name: "delete_agent", arguments: { agentId } });
       assert.notEqual(result.isError, true);
       assert.equal(upstreamRequests.length, before + 1);
-      assert.equal(upstreamRequests.at(-1), `https://quickvoice.test/api/v1/agents/${encodeURIComponent(agentId)}`);
+      assert.equal(upstreamRequests.at(-1), `https://tinkervoice.test/api/v1/agents/${encodeURIComponent(agentId)}`);
     }
-    await client.readResource({ uri: "quickvoice://get_call_log/call..123" });
-    assert.equal(upstreamRequests.at(-1), "https://quickvoice.test/api/v1/calls/call..123");
+    await client.readResource({ uri: "tinkervoice://get_call_log/call..123" });
+    assert.equal(upstreamRequests.at(-1), "https://tinkervoice.test/api/v1/calls/call..123");
   });
 
   for (const method of ["POST", "DELETE"]) {
@@ -242,13 +242,13 @@ test("SDK client works when the optional background SSE stream is declined", { t
     await t.test(`tool and resource errors hide upstream details (${failure})`, async () => {
       upstreamFailure = failure;
       const safeMessage = failure === "network"
-        ? "QuickVoice API request failed. Please try again."
-        : `QuickVoice API request failed with HTTP ${failure}`;
+        ? "TinkerVoice API request failed. Please try again."
+        : `TinkerVoice API request failed with HTTP ${failure}`;
       const result = await client.callTool({ name: "create_agent", arguments: { body: { name: "Test" } } });
       assert.equal(result.isError, true);
       assert.deepEqual(result.content, [{ type: "text", text: safeMessage }]);
       assert.ok(!JSON.stringify(result).includes(internalDetail));
-      await assert.rejects(client.readResource({ uri: "quickvoice://list_agents" }), (error: Error) => {
+      await assert.rejects(client.readResource({ uri: "tinkervoice://list_agents" }), (error: Error) => {
         assert.ok(error.message.includes(safeMessage));
         assert.ok(!error.message.includes(internalDetail));
         assert.ok(!JSON.stringify(error).includes(internalDetail));
@@ -264,9 +264,9 @@ test("SDK client works when the optional background SSE stream is declined", { t
       const requestsBefore = stalledRequests;
       const result = await client.callTool({ name: "create_agent", arguments: { body: { name: "Test" } } });
       assert.equal(result.isError, true);
-      assert.deepEqual(result.content, [{ type: "text", text: "QuickVoice API request timed out. Check the operation status before retrying." }]);
+      assert.deepEqual(result.content, [{ type: "text", text: "TinkerVoice API request timed out. Check the operation status before retrying." }]);
       assert.equal(upstreamSignal?.aborted, true);
-      await assert.rejects(client.readResource({ uri: "quickvoice://list_agents" }), /QuickVoice API request timed out/);
+      await assert.rejects(client.readResource({ uri: "tinkervoice://list_agents" }), /TinkerVoice API request timed out/);
       assert.equal(upstreamSignal?.aborted, true);
       assert.equal(stalledRequests - requestsBefore, 2, "one upstream request per MCP operation; no retries");
     });
@@ -278,7 +278,7 @@ test("SDK client works when the optional background SSE stream is declined", { t
         const controller = new AbortController();
         const request = operation === "tool"
           ? client.callTool({ name: "create_agent", arguments: { body: { name: "Test" } } }, undefined, { signal: controller.signal })
-          : client.readResource({ uri: "quickvoice://list_agents" }, { signal: controller.signal });
+          : client.readResource({ uri: "tinkervoice://list_agents" }, { signal: controller.signal });
         const rejected = assert.rejects(request);
         await started;
         assert.ok(upstreamSignal, "the upstream fetch receives a cancellation signal");

@@ -8,7 +8,7 @@ export default function SelfHostingPage() {
       <article className="prose prose-qv mx-auto max-w-4xl">
         <h1>Deploying the MCP service on ECS</h1>
         <p>
-          Run QuickVoice MCP as the dedicated <code>apps/mcp-server</code> Node
+          Run TinkerVoice MCP as the dedicated <code>apps/mcp-server</code> Node
           HTTP service. The docs app should stay responsible for the public
           setup UI and API reference; it should not host the production MCP
           runtime.
@@ -20,15 +20,15 @@ export default function SelfHostingPage() {
 
         <h2>Recommended production shape</h2>
         <CodeBlock
-          code={`docs.quickvoice.co        → apps/docs        → documentation and setup UI
-mcp.quickvoice.co/mcp    → apps/mcp-server  → Streamable HTTP MCP endpoint
-api.quickvoice.co/api/v1 → apps/server      → QuickVoice REST APIs`}
+          code={`docs.tinkervoice.co        → apps/docs        → documentation and setup UI
+mcp.tinkervoice.co/mcp    → apps/mcp-server  → Streamable HTTP MCP endpoint
+api.tinkervoice.co/api/v1 → apps/server      → TinkerVoice REST APIs`}
         />
 
         <h2>Container command</h2>
         <CodeBlock
-          code={`pnpm --filter quickvoice-mcp-server build
-pnpm --filter quickvoice-mcp-server start`}
+          code={`pnpm --filter tinkervoice-mcp-server build
+pnpm --filter tinkervoice-mcp-server start`}
         />
 
         <h2>Required environment variables</h2>
@@ -41,7 +41,7 @@ pnpm --filter quickvoice-mcp-server start`}
             <code>/mcp</code>.
           </li>
           <li>
-            <code>QUICKVOICE_API_BASE_URL</code>: internal or public QuickVoice
+            <code>TINKERVOICE_API_BASE_URL</code>: internal or public TinkerVoice
             API URL including <code>/api/v1</code>.
           </li>
           <li>
@@ -51,8 +51,8 @@ pnpm --filter quickvoice-mcp-server start`}
         </ul>
         <p>
           Do not configure a shared upstream API token in the MCP service.
-          Clients send their own QuickVoice API key with <code>x-api-key</code>,
-          and the MCP service forwards that key to the QuickVoice API so
+          Clients send their own TinkerVoice API key with <code>x-api-key</code>,
+          and the MCP service forwards that key to the TinkerVoice API so
           organization permissions remain authoritative.
         </p>
 
@@ -69,12 +69,12 @@ pnpm --filter quickvoice-mcp-server start`}
         <p>
           Check the MCP HTTP listener and run the MCP smoke script after each
           deployment. The smoke script must call the MCP endpoint, not the raw
-          QuickVoice REST API.
+          TinkerVoice REST API.
         </p>
         <CodeBlock
-          code={`QUICKVOICE_API_KEY="YOUR_QUICKVOICE_API_KEY" \
-MCP_URL="https://mcp.quickvoice.co/mcp" \
-pnpm --filter quickvoice-mcp-server test:mcp`}
+          code={`TINKERVOICE_API_KEY="YOUR_TINKERVOICE_API_KEY" \
+MCP_URL="https://mcp.tinkervoice.co/mcp" \
+pnpm --filter tinkervoice-mcp-server test:mcp`}
         />
       </article>
     </DocsShell>

@@ -70,7 +70,7 @@ test("custom MCP form explains endpoint requirements, naming, and follow-up setu
     /Legacy <code>\/sse<\/code>(?:\{" "\})?\s+endpoints are\s+accepted/
   );
   assert.match(source, /Display name/);
-  assert.match(source, /only inside QuickVoice/i);
+  assert.match(source, /only inside TinkerVoice/i);
   assert.match(source, /complete it after connecting/i);
   assert.match(source, /Continue setup/);
   assert.match(source, /type="url"/);

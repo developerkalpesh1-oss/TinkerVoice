@@ -1,10 +1,10 @@
-# Contributing To QuickVoice
+# Contributing To TinkerVoice
 
-Thanks for helping improve QuickVoice. This repo is open source so teams can inspect, self-host, and extend AI phone-agent infrastructure.
+Thanks for helping improve TinkerVoice. This repo is open source so teams can inspect, self-host, and extend AI phone-agent infrastructure.
 
 ## Positioning Guardrails
 
-QuickVoice is the open-source, self-hostable Retell alternative for teams that want more control over AI phone-agent infrastructure. When you touch public copy, docs, examples, or launch material:
+TinkerVoice is the open-source, self-hostable Retell alternative for teams that want more control over AI phone-agent infrastructure. When you touch public copy, docs, examples, or launch material:
 
 - Emphasize control, self-hosting, privacy review, cost visibility, and extensibility.
 - Compare against closed hosted APIs by explaining tradeoffs, not by attacking competitors.
@@ -50,11 +50,11 @@ Do not open competing pull requests for an assigned issue unless a maintainer ex
 
 ## Non-Code Support
 
-If QuickVoice is useful but you are not ready to open an issue or PR, starring the GitHub repo helps surface interest in open voice-agent infrastructure. Setup reports and docs feedback are still more actionable than stars when something is unclear or broken.
+If TinkerVoice is useful but you are not ready to open an issue or PR, starring the GitHub repo helps surface interest in open voice-agent infrastructure. Setup reports and docs feedback are still more actionable than stars when something is unclear or broken.
 
 ## Local Setup
 
-QuickVoice uses `pnpm@9.0.0`, Turborepo, Docker, Postgres, Node.js `^20.19 || ^22.13 || >=24`, and Python for the AI worker. Python 3.12 matches CI and the runtime container.
+TinkerVoice uses `pnpm@9.0.0`, Turborepo, Docker, Postgres, Node.js `^20.19 || ^22.13 || >=24`, and Python for the AI worker. Python 3.12 matches CI and the runtime container.
 
 The root development tasks are Bash-based and require Bash `>=4`. Linux is supported directly. macOS contributors need a modern Bash in `PATH` because the system Bash 3.2 is too old. Windows contributors should use WSL2 with Docker Desktop integration; native PowerShell is not a supported path for `task up:dev`.
 

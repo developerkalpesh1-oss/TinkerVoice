@@ -9,7 +9,7 @@ const testimonials = [
     name: "Sarah Chen",
     role: "Senior AI Engineer",
     image: "/images/company/team-1.png",
-    quote: "Working at QuickVoice has been incredible. I get to work on cutting-edge AI technology that's actually making a difference in how businesses operate. The team is brilliant and collaborative.",
+    quote: "Working at TinkerVoice has been incredible. I get to work on cutting-edge AI technology that's actually making a difference in how businesses operate. The team is brilliant and collaborative.",
     rating: 5,
     tenure: "2 years",
     achievement: "Led development of our flagship voice AI model",
@@ -29,7 +29,7 @@ const testimonials = [
     name: "Priya Patel",
     role: "UX Designer",
     image: "/images/company/team-3.png",
-    quote: "QuickVoice values creativity and innovation. I have the freedom to experiment with new design approaches and the support to make them happen.",
+    quote: "TinkerVoice values creativity and innovation. I have the freedom to experiment with new design approaches and the support to make them happen.",
     rating: 5,
     tenure: "1.5 years",
     achievement: "Designed award-winning voice interfaces",
@@ -67,7 +67,7 @@ export function CareersTestimonialsSection() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-lg leading-8 text-muted-foreground max-w-3xl mx-auto"
           >
-            Discover what it&apos;s really like to work at QuickVoice from the people who know best.
+            Discover what it&apos;s really like to work at TinkerVoice from the people who know best.
           </motion.p>
         </div>
 

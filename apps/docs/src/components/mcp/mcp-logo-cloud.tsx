@@ -7,7 +7,7 @@ export function McpLogoCloud() {
       <McpSectionHeading
         eyebrow="Works with"
         title="Connect the clients your team already uses"
-        description="QuickVoice MCP uses Streamable HTTP, so the same server endpoint can be configured across compatible AI clients."
+        description="TinkerVoice MCP uses Streamable HTTP, so the same server endpoint can be configured across compatible AI clients."
       />
       <div className="mx-auto mt-10 grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {mcpIntegrations.map((integration) => {

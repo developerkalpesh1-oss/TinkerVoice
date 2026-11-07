@@ -56,7 +56,7 @@ export function manualTopUpIdempotencyKey(value?: string | null) {
       key.toLowerCase().startsWith(prefix),
     )
   ) {
-    throw new Error("This Idempotency-Key prefix is reserved for QuickVoice");
+    throw new Error("This Idempotency-Key prefix is reserved for TinkerVoice");
   }
   return key;
 }

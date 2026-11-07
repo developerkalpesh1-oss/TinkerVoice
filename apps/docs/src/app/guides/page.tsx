@@ -5,13 +5,13 @@ import { ArrowRight, BookOpen, KeyRound, ServerCog, ShieldCheck, Wrench } from "
 
 export const metadata: Metadata = {
   title: "Guides",
-  description: "Step-by-step QuickVoice guides for MCP setup, authentication, deployment, troubleshooting, and operations.",
+  description: "Step-by-step TinkerVoice guides for MCP setup, authentication, deployment, troubleshooting, and operations.",
 };
 
 const guides = [
   {
     title: "MCP quickstart",
-    description: "Connect Cursor, Claude, Codex, Windsurf, or another MCP-capable client to QuickVoice over Streamable HTTP.",
+    description: "Connect Cursor, Claude, Codex, Windsurf, or another MCP-capable client to TinkerVoice over Streamable HTTP.",
     href: "/mcp/quickstart",
     icon: BookOpen,
   },
@@ -23,7 +23,7 @@ const guides = [
   },
   {
     title: "API keys and authentication",
-    description: "Configure MCP bearer-token access and upstream QuickVoice API credentials safely.",
+    description: "Configure MCP bearer-token access and upstream TinkerVoice API credentials safely.",
     href: "/mcp/api-keys",
     icon: KeyRound,
   },
@@ -35,7 +35,7 @@ const guides = [
   },
   {
     title: "Deploying on ECS",
-    description: "Run the dedicated MCP service beside existing QuickVoice services with proper environment variables and health checks.",
+    description: "Run the dedicated MCP service beside existing TinkerVoice services with proper environment variables and health checks.",
     href: "/mcp/self-hosting",
     icon: ServerCog,
   },
@@ -52,10 +52,10 @@ export default function GuidesPage() {
     <DocsShell>
       <section className="mx-auto max-w-6xl">
         <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--qv-blue)]">QuickVoice Guides</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--qv-blue)]">TinkerVoice Guides</p>
           <h1 className="mt-5 text-5xl font-semibold tracking-[-0.045em] text-slate-950 md:text-7xl">Step-by-step implementation guides.</h1>
           <p className="mt-6 text-lg leading-8 text-[var(--qv-muted)]">
-            Practical setup and operations guides for QuickVoice MCP, authentication, deployment, and troubleshooting.
+            Practical setup and operations guides for TinkerVoice MCP, authentication, deployment, and troubleshooting.
           </p>
         </div>
 

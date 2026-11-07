@@ -49,7 +49,7 @@ const defaultWidgetTheme = {
   avatarImageUrl: null,
   avatarOrbColor1: "#002FA7",
   avatarOrbColor2: "#00F0FF",
-  brandName: "QuickVoice",
+  brandName: "TinkerVoice",
   actionText: "Talk to us",
   welcomeText: "Talk with our voice agent.",
   startButtonText: "Start call",
@@ -79,7 +79,7 @@ export const widgetThemeSchema = z
     avatarImageUrl: optionalImageUrlSchema.default(null),
     avatarOrbColor1: hexColorSchema.default("#002FA7"),
     avatarOrbColor2: hexColorSchema.default("#00F0FF"),
-    brandName: z.string().trim().min(1).max(80).default("QuickVoice"),
+    brandName: z.string().trim().min(1).max(80).default("TinkerVoice"),
     actionText: z.string().trim().min(1).max(60).default("Talk to us"),
     welcomeText: z
       .string()

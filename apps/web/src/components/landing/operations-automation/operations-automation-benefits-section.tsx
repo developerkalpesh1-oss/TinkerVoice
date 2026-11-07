@@ -69,7 +69,7 @@ export function OperationsAutomationBenefitsSection() {
         >
           <div className="relative z-10">
             <h2 className="mb-6 font-geist text-3xl font-normal tracking-tight text-foreground sm:text-4xl md:text-5xl">
-              Benefits of QuickVoice&apos;s AI-Powered Support
+              Benefits of TinkerVoice&apos;s AI-Powered Support
             </h2>
             <p className="mx-auto max-w-3xl text-xl text-foreground/70">
               Experience the full power of AI-driven customer support with

@@ -60,10 +60,10 @@ const agentTemplateIdSchema = {
 export const swaggerSpec = {
   openapi: "3.0.3",
   info: {
-    title: "QuickVoice Server API",
+    title: "TinkerVoice Server API",
     version: apiVersion,
     description:
-      "Interactive API documentation for the QuickVoice Express server.",
+      "Interactive API documentation for the TinkerVoice Express server.",
   },
   servers: [
     {
@@ -99,7 +99,7 @@ export const swaggerSpec = {
         in: "header",
         name: "x-api-key",
         description:
-          "Read-only organization-scoped QuickVoice API key. Send the raw key in the x-api-key header; do not use Authorization: Bearer. API keys cannot manage billing or phone-number ownership.",
+          "Read-only organization-scoped TinkerVoice API key. Send the raw key in the x-api-key header; do not use Authorization: Bearer. API keys cannot manage billing or phone-number ownership.",
       },
     },
     schemas: {
@@ -504,7 +504,7 @@ export const swaggerSpec = {
           fromNumber: { type: "string", example: "+15551230000" },
           firstMessage: {
             type: "string",
-            example: "Hi, this is QuickVoice calling back.",
+            example: "Hi, this is TinkerVoice calling back.",
           },
           systemPrompt: {
             type: "string",

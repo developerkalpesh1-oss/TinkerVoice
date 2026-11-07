@@ -9,7 +9,7 @@ const testimonials = [
     role: "VP of Sales",
     company: "TechCorp Solutions",
     content:
-      "QuickVoice's AI sales agent has transformed our lead qualification process. We've seen a 40% increase in qualified leads and our sales team can now focus on closing deals instead of initial screening.",
+      "TinkerVoice's AI sales agent has transformed our lead qualification process. We've seen a 40% increase in qualified leads and our sales team can now focus on closing deals instead of initial screening.",
     rating: 5,
     metrics: {
       icon: TrendingUp,

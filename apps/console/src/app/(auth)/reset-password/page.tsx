@@ -70,7 +70,7 @@ function ResetPasswordForm() {
  </div>
  <h1 className="text-2xl font-semibold tracking-tight">Reset password</h1>
  <p className="text-sm text-muted-foreground">
- Choose a new password for your QuickVoice account.
+ Choose a new password for your TinkerVoice account.
  </p>
  </div>
  {invalidToken || !token ? (

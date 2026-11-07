@@ -13,7 +13,7 @@ export function McpFaq() {
       <McpSectionHeading
         eyebrow="FAQ"
         title="Frequently asked questions"
-        description="Answers for teams connecting QuickVoice MCP to their AI development and operations workflows."
+        description="Answers for teams connecting TinkerVoice MCP to their AI development and operations workflows."
       />
       <div className="mx-auto mt-10 max-w-3xl space-y-3">
         {mcpFaq.map((item) => {

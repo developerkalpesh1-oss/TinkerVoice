@@ -117,7 +117,7 @@ class BillingUsageSerializationTests(unittest.TestCase):
             self.assertFalse(hosted_billing_required())
         with patch.dict(
             os.environ,
-            {"NODE_ENV": "production", "QUICKVOICE_BILLING_MODE": "self_hosted"},
+            {"NODE_ENV": "production", "TINKERVOICE_BILLING_MODE": "self_hosted"},
             clear=True,
         ):
             self.assertFalse(hosted_billing_required())
@@ -158,10 +158,10 @@ class BillingUsageReporterTests(unittest.IsolatedAsyncioTestCase):
         )
 
     def make_reporter(self, post_json, **kwargs):
-        kwargs.setdefault("queue_dir", "/var/lib/quickvoice-test-billing-usage")
+        kwargs.setdefault("queue_dir", "/var/lib/tinkervoice-test-billing-usage")
         return BillingUsageReporter(
             identifiers=self.identifiers,
-            server_api_url="https://api.quickvoice.example/api/v1",
+            server_api_url="https://api.tinkervoice.example/api/v1",
             internal_api_key="internal-secret",
             post_json=post_json,
             monotonic=lambda: self.now,
@@ -175,7 +175,7 @@ class BillingUsageReporterTests(unittest.IsolatedAsyncioTestCase):
 
         reporter = BillingUsageReporter(
             identifiers=self.identifiers,
-            server_api_url="https://api.quickvoice.example/api/v1",
+            server_api_url="https://api.tinkervoice.example/api/v1",
             internal_api_key="internal-secret",
             post_json=lambda *_args: {"data": {"action": "continue"}},
             stop_session=lambda reason: stop_reasons.append(reason),
@@ -206,7 +206,7 @@ class BillingUsageReporterTests(unittest.IsolatedAsyncioTestCase):
 
         first_url, first_headers, first_body = requests[0]
         _, second_headers, second_body = requests[1]
-        self.assertEqual(first_url, "https://api.quickvoice.example/api/v1/billing/calls/usage")
+        self.assertEqual(first_url, "https://api.tinkervoice.example/api/v1/billing/calls/usage")
         self.assertEqual(first_headers["Authorization"], "Bearer internal-secret")
         self.assertEqual(first_headers["x-organization-id"], "org-1")
         self.assertEqual(first_headers["x-user-id"], "user-2")
@@ -463,7 +463,7 @@ class BillingUsageReporterTests(unittest.IsolatedAsyncioTestCase):
 
             result = await flush_billing_usage_queue(
                 queue_dir=tmp,
-                server_api_url="https://api.quickvoice.example/api/v1",
+                server_api_url="https://api.tinkervoice.example/api/v1",
                 internal_api_key="replacement-secret",
                 post_json=post_json,
             )
@@ -483,14 +483,14 @@ class BillingUsageReporterTests(unittest.IsolatedAsyncioTestCase):
         )
         reporter = BillingUsageReporter(
             identifiers=identifiers,
-            server_api_url="https://api.quickvoice.example/api/v1",
+            server_api_url="https://api.tinkervoice.example/api/v1",
             internal_api_key="internal-secret",
             post_json=lambda url, headers, body: requests.append(
                 (url, dict(headers), dict(body))
             )
             or {"data": {"action": "continue"}},
             required=True,
-            queue_dir="/var/lib/quickvoice-test-billing-usage",
+            queue_dir="/var/lib/tinkervoice-test-billing-usage",
         )
 
         await reporter.report_now()
@@ -524,7 +524,7 @@ class BillingUsageReporterTests(unittest.IsolatedAsyncioTestCase):
             await asyncio.wait_for(
                 run_billing_usage_queue_consumer(
                     queue_dir=tmp,
-                    server_api_url="https://api.quickvoice.example/api/v1",
+                    server_api_url="https://api.tinkervoice.example/api/v1",
                     internal_api_key="internal-secret",
                     post_json=post_json,
                     poll_seconds=0.01,

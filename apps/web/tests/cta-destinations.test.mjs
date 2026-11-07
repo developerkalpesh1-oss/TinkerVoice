@@ -5,8 +5,8 @@ import {
   matchesAnalyticsDestination,
 } from "../src/lib/cta-destinations.mjs";
 
-const origin = "https://quickvoice.co";
-const booking = "https://tidycal.com/team/quickvoice/demo";
+const origin = "https://tinkervoice.co";
+const booking = "https://tidycal.com/team/tinkervoice/demo";
 
 test("CTA classification requires the correct origin and complete path", () => {
   assert.equal(
@@ -27,20 +27,20 @@ test("CTA classification requires the correct origin and complete path", () => {
   );
   assert.equal(
     matchesAnalyticsDestination(
-      "https://other.example/team/quickvoice/demo",
+      "https://other.example/team/tinkervoice/demo",
       booking,
       origin,
     ),
     false,
   );
   assert.equal(
-    matchesAnalyticsDestination("/team/quickvoice/demo", booking, origin),
+    matchesAnalyticsDestination("/team/tinkervoice/demo", booking, origin),
     false,
   );
   assert.equal(
     matchesAnalyticsDestination(
       "https://other.example/register",
-      "https://app.quickvoice.co/register",
+      "https://app.tinkervoice.co/register",
       origin,
     ),
     false,
@@ -64,7 +64,7 @@ test("analytics destinations omit visitor query and hash values and reject unusa
     "mailto:private@example.com",
     "tel:+123456789",
     "javascript:alert(1)",
-    "https://user:password@quickvoice.co/company/contact",
+    "https://user:password@tinkervoice.co/company/contact",
     "https://[",
   ]) {
     assert.equal(analyticsDestination(value, origin), null);

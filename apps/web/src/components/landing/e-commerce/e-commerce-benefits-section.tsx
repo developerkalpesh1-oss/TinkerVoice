@@ -55,7 +55,7 @@ export function EcommerceBenefitsSection() {
               viewport={{ once: true }}
               className="font-geist mt-4 text-3xl font-normal tracking-tighter text-foreground sm:text-4xl md:text-5xl mb-4"
             >
-              Why Choose QuickVoice for Retail & E-commerce?
+              Why Choose TinkerVoice for Retail & E-commerce?
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -65,7 +65,7 @@ export function EcommerceBenefitsSection() {
               className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto"
             >
               Cut costs, speed up response, and grow revenue without adding headcount.
-              QuickVoice provides everything you need to transform your e-commerce customer experience.
+              TinkerVoice provides everything you need to transform your e-commerce customer experience.
             </motion.p>
           </div>
           <div
@@ -148,7 +148,7 @@ export function EcommerceBenefitsSection() {
                 Enterprise-Grade Security & Compliance
               </h3>
               <p className="text-white/80 text-lg leading-relaxed max-w-3xl mx-auto">
-                Built with enterprise-grade security, QuickVoice ensures your customer data is protected
+                Built with enterprise-grade security, TinkerVoice ensures your customer data is protected
                 with SOC 2 compliance, end-to-end encryption, and GDPR compliance.
               </p>
             </div>

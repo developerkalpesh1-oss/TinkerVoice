@@ -11,7 +11,7 @@ export type McpFeature = {
 export const mcpFeatures: McpFeature[] = [
   {
     title: "Manage agents",
-    description: "Create, inspect, and update QuickVoice AI voice agents from an MCP-capable assistant.",
+    description: "Create, inspect, and update TinkerVoice AI voice agents from an MCP-capable assistant.",
     href: "/mcp/tools#create_agent",
     icon: Bot,
   },
@@ -35,7 +35,7 @@ export const mcpFeatures: McpFeature[] = [
   },
   {
     title: "Secure access",
-    description: "Use bearer-token authentication at the MCP edge before requests touch QuickVoice APIs.",
+    description: "Use bearer-token authentication at the MCP edge before requests touch TinkerVoice APIs.",
     href: "/mcp/api-keys",
     icon: KeyRound,
   },

@@ -72,7 +72,7 @@ export function AutomotiveHeroSection() {
               className="font-geist text-4xl font-light tracking-tighter text-foreground sm:text-5xl lg:text-6xl mb-6 relative z-10"
             >
               Revolutionize Your Automotive Business with{" "}
-              <span className="text-primary">QuickVoice AI Agents</span>
+              <span className="text-primary">TinkerVoice AI Agents</span>
             </motion.h1>
 
             <motion.p
@@ -81,7 +81,7 @@ export function AutomotiveHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
-              Enhance your automotive business with QuickVoice&apos;s AI voice assistant, streamlining customer appointments, leads, and sales processes. Our cutting-edge technology ensures seamless customer experiences, reducing wait times and increasing conversions.
+              Enhance your automotive business with TinkerVoice&apos;s AI voice assistant, streamlining customer appointments, leads, and sales processes. Our cutting-edge technology ensures seamless customer experiences, reducing wait times and increasing conversions.
             </motion.p>
 
             <motion.div

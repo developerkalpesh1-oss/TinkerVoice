@@ -22,7 +22,7 @@ export function AboutUsSolutionsSection() {
               Transform Business Operations with AI Voice Agents
             </h2>
             <p className="text-lg text-foreground/70 max-w-7xl mx-auto leading-relaxed">
-              Reimagine efficiency, engagement, and scalability across every business function with QuickVoice. Our
+              Reimagine efficiency, engagement, and scalability across every business function with TinkerVoice. Our
               intelligent AI voice agents help automate repetitive tasks, streamline workflows, and enhance
               communication — empowering teams to focus on growth and innovation.
             </p>

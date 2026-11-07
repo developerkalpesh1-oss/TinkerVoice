@@ -102,7 +102,7 @@ export function OrderStatusReturnsSecuritySection() {
               Enterprise-Grade Security &amp; Compliance
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-foreground/70">
-              Your data security is our priority. QuickVoice implements
+              Your data security is our priority. TinkerVoice implements
               industry-leading security measures and compliance standards to
               protect your business and customer information.
             </p>

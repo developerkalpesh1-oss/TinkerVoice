@@ -1,10 +1,10 @@
 import { resourceDefinitions, toolDefinitions } from "../src/api-registry.js";
 
 const endpoint = process.env.MCP_URL ?? "http://localhost:8787/mcp";
-const apiKey = process.env.QUICKVOICE_API_KEY;
+const apiKey = process.env.TINKERVOICE_API_KEY;
 
 if (!apiKey) {
-  throw new Error("QUICKVOICE_API_KEY is required for MCP smoke tests");
+  throw new Error("TINKERVOICE_API_KEY is required for MCP smoke tests");
 }
 
 let id = 1;
@@ -72,7 +72,7 @@ function exampleUri(template: string) {
 await rpc("initialize", {
   protocolVersion: "2025-06-18",
   capabilities: {},
-  clientInfo: { name: "quickvoice-mcp-smoke", version: "0.1.0" },
+  clientInfo: { name: "tinkervoice-mcp-smoke", version: "0.1.0" },
 });
 await notify("notifications/initialized");
 
@@ -84,7 +84,7 @@ console.log(`resources/list returned ${resources.resources?.length ?? 0} static 
 // Safe read checks only. Mutation tools are verified by schema/listing here; run them manually with real IDs.
 for (const resource of resourceDefinitions.filter((definition) => definition.params?.length === 0).slice(0, 8)) {
   try {
-    const result = await rpc("resources/read", { uri: `quickvoice://${resource.name}` });
+    const result = await rpc("resources/read", { uri: `tinkervoice://${resource.name}` });
     console.log(`PASS resource ${resource.name}: ${JSON.stringify(result).slice(0, 160)}`);
   } catch (error) {
     console.log(`FAIL resource ${resource.name}: ${error instanceof Error ? error.message : String(error)}`);
@@ -92,7 +92,7 @@ for (const resource of resourceDefinitions.filter((definition) => definition.par
 }
 
 for (const resource of resourceDefinitions.filter((definition) => definition.params?.length).slice(0, 8)) {
-  const uri = exampleUri(`quickvoice://${resource.name}/${resource.params?.map((param) => `{${param}}`).join("/")}`);
+  const uri = exampleUri(`tinkervoice://${resource.name}/${resource.params?.map((param) => `{${param}}`).join("/")}`);
   try {
     const result = await rpc("resources/read", { uri });
     console.log(`PASS resource ${resource.name}: ${JSON.stringify(result).slice(0, 160)}`);

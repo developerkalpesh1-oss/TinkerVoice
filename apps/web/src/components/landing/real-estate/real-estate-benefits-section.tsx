@@ -49,7 +49,7 @@ export function RealEstateBenefitsSection() {
               viewport={{ once: true }}
               className="font-geist mt-4 text-3xl font-normal tracking-tighter text-foreground sm:text-4xl md:text-5xl"
             >
-              Why Choose QuickVoice for Real Estate?
+              Why Choose TinkerVoice for Real Estate?
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}

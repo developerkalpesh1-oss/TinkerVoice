@@ -44,8 +44,8 @@ async function forwardSubmission(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-QuickVoice-Contact-Client": clientFingerprint,
-      ...(secret ? { "X-QuickVoice-Contact-Secret": secret } : {}),
+      "X-TinkerVoice-Contact-Client": clientFingerprint,
+      ...(secret ? { "X-TinkerVoice-Contact-Secret": secret } : {}),
     },
     // Do not carry the shared credential to a redirected destination.
     ...(secret ? { redirect: "error" as const } : {}),
@@ -171,7 +171,7 @@ async function verifyTurnstile(token: unknown, request: NextRequest) {
   const allowedHostnames = new Set(
     (
       process.env.TURNSTILE_EXPECTED_HOSTNAMES ||
-      "quickvoice.co,www.quickvoice.co"
+      "tinkervoice.co,www.tinkervoice.co"
     )
       .split(",")
       .map((hostname) => hostname.trim().toLowerCase())
@@ -217,7 +217,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error:
-          "Contact delivery is temporarily unavailable. Please email info@quickvoice.co directly.",
+          "Contact delivery is temporarily unavailable. Please email info@tinkervoice.co directly.",
       },
       { status: 503 },
     );
@@ -272,7 +272,7 @@ export async function POST(request: NextRequest) {
     await forwardSubmission(
       {
         ...parsed.fields,
-        source: "quickvoice-web-contact",
+        source: "tinkervoice-web-contact",
         submittedAt: new Date().toISOString(),
         ...(extended
           ? {
@@ -291,7 +291,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error:
-          "We could not deliver your request. Please email info@quickvoice.co directly.",
+          "We could not deliver your request. Please email info@tinkervoice.co directly.",
       },
       { status: 502 },
     );
@@ -301,6 +301,6 @@ export async function POST(request: NextRequest) {
     ok: true,
     ...(submissionId ? { submissionId } : {}),
     message:
-      "Thank you. Your inquiry has been submitted to the QuickVoice team.",
+      "Thank you. Your inquiry has been submitted to the TinkerVoice team.",
   });
 }

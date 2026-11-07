@@ -65,7 +65,7 @@ export function SalesLeadGenHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
-              QuickVoice AI Sales Agents handle lead qualification, follow-ups, and customer queries instantly, ensuring no opportunity is missed. With 24/7 availability and personalized conversations, they shorten sales cycles, boost conversions, and free your team to focus on closing high-value deals.
+              TinkerVoice AI Sales Agents handle lead qualification, follow-ups, and customer queries instantly, ensuring no opportunity is missed. With 24/7 availability and personalized conversations, they shorten sales cycles, boost conversions, and free your team to focus on closing high-value deals.
             </motion.p>
 
             <motion.div

@@ -1,6 +1,6 @@
 # `@repo/typescript-config`
 
-Shared TypeScript presets for QuickVoice packages.
+Shared TypeScript presets for TinkerVoice packages.
 
 ## Presets
 

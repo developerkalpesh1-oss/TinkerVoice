@@ -11,7 +11,7 @@ const successStory = {
   location: "UK & EU",
   size: "51-200",
   description:
-    "Medbelle integrated QuickVoice's AI customer service agents to optimize appointment management and minimize patient wait times. By automating scheduling and follow-ups, Medbelle achieved a 60% boost in scheduling efficiency and saw 2.5x more booked appointments—transforming patient experiences and operational productivity.",
+    "Medbelle integrated TinkerVoice's AI customer service agents to optimize appointment management and minimize patient wait times. By automating scheduling and follow-ups, Medbelle achieved a 60% boost in scheduling efficiency and saw 2.5x more booked appointments—transforming patient experiences and operational productivity.",
   useCases: ["Appointment Booking", "Lead Qualification", "Handling FAQ"],
   metrics: [
     { value: "98%", label: "Answered Calls", icon: Phone },

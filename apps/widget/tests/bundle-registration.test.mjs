@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-test("production bundle registers the quickvoice-widget element", async () => {
+test("production bundle registers the tinkervoice-widget element", async () => {
   const registrations = new Map();
   globalThis.document = { currentScript: null };
   globalThis.window = globalThis;
@@ -19,9 +19,9 @@ test("production bundle registers the quickvoice-widget element", async () => {
     },
   };
 
-  await import("../dist/quickvoice-widget.js");
+  await import("../dist/tinkervoice-widget.js");
 
-  assert.equal(typeof registrations.get("quickvoice-widget"), "function");
+  assert.equal(typeof registrations.get("tinkervoice-widget"), "function");
 });
 
 test("style nonces survive every render and an explicit widget nonce overrides the loader", async () => {
@@ -45,7 +45,7 @@ test("style nonces survive every render and an explicit widget nonce overrides t
       get: () => undefined,
       define: (_name, constructor) => { Widget = constructor; },
     };
-    await import(`../dist/quickvoice-widget.js?nonce=${loaderNonce || "none"}`);
+    await import(`../dist/tinkervoice-widget.js?nonce=${loaderNonce || "none"}`);
     const widget = new Widget();
     for (const state of ["loading", "idle", "connecting", "live", "ended", "error"]) {
       widget.state = state;
@@ -79,7 +79,7 @@ test("remote audio survives state changes and the browser unblock control appear
     get: () => undefined,
     define: (_name, constructor) => { Widget = constructor; },
   };
-  await import("../dist/quickvoice-widget.js?audio-retention");
+  await import("../dist/tinkervoice-widget.js?audio-retention");
   const widget = new Widget();
   const audio = {};
   widget.audioContainer.appendChild(audio);

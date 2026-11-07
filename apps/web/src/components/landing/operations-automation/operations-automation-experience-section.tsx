@@ -19,7 +19,7 @@ export function OperationsAutomationExperienceSection() {
           >
             <div className="space-y-6">
               <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">
-                Experience the Power of QuickVoice
+                Experience the Power of TinkerVoice
               </h2>
               <p className="text-xl text-gray-600 dark:text-gray-300">
                 Talk to our AI-powered Support Agent and discover how our human-like AI Voice Agents can transform your customer support.
@@ -86,7 +86,7 @@ export function OperationsAutomationExperienceSection() {
             <div className="relative w-full h-[500px]">
               <Image
                 src="/images/omnichannel-experience.png"
-                alt="QuickVoice AI agent demonstration showing seamless customer interactions across multiple channels"
+                alt="TinkerVoice AI agent demonstration showing seamless customer interactions across multiple channels"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover rounded-2xl shadow-2xl"

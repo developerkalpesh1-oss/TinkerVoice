@@ -19,22 +19,22 @@ const careersFaqs = [
   },
   {
     id: "3",
-    question: "How does QuickVoice support professional development and learning?",
-    answer: "QuickVoice provides comprehensive learning opportunities including level-up coaching, micro-mentorship programs, training workshops, conference attendance, and access to cutting-edge AI research. We encourage continuous learning and provide resources for skill development in voice technology and AI innovation."
+    question: "How does TinkerVoice support professional development and learning?",
+    answer: "TinkerVoice provides comprehensive learning opportunities including level-up coaching, micro-mentorship programs, training workshops, conference attendance, and access to cutting-edge AI research. We encourage continuous learning and provide resources for skill development in voice technology and AI innovation."
   },
   {
     id: "4",
-    question: "What is the work culture like at QuickVoice for remote and hybrid teams?",
-    answer: "QuickVoice offers flexible hybrid work arrangements that balance personal and professional life. Our culture emphasizes collaboration, innovation, and diversity. We host virtual team building events, social hours, and maintain strong communication channels to ensure all team members feel connected and engaged regardless of location."
+    question: "What is the work culture like at TinkerVoice for remote and hybrid teams?",
+    answer: "TinkerVoice offers flexible hybrid work arrangements that balance personal and professional life. Our culture emphasizes collaboration, innovation, and diversity. We host virtual team building events, social hours, and maintain strong communication channels to ensure all team members feel connected and engaged regardless of location."
   },
   {
     id: "5",
-    question: "What benefits and perks does QuickVoice offer to employees?",
-    answer: "QuickVoice provides comprehensive health & wellness benefits, competitive compensation, flexible work schedules, professional development opportunities, team building events, and a collaborative work environment. We also offer unique perks like wellness initiatives, charitable event participation, and access to cutting-edge AI technology."
+    question: "What benefits and perks does TinkerVoice offer to employees?",
+    answer: "TinkerVoice provides comprehensive health & wellness benefits, competitive compensation, flexible work schedules, professional development opportunities, team building events, and a collaborative work environment. We also offer unique perks like wellness initiatives, charitable event participation, and access to cutting-edge AI technology."
   },
   {
     id: "6",
-    question: "How can I apply for positions at QuickVoice and what is the interview process?",
+    question: "How can I apply for positions at TinkerVoice and what is the interview process?",
     answer: "You can apply for positions through our careers page or by contacting our HR team directly. Our interview process typically includes an initial screening, technical assessment, team interviews, and culture fit discussions. We value both technical skills and cultural alignment, looking for passionate individuals who want to shape the future of voice technology."
   }
 ];
@@ -75,7 +75,7 @@ export function CareersFaqSection() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-lg leading-8 text-muted-foreground max-w-3xl mx-auto"
           >
-            Find answers to common questions about careers at QuickVoice and working with AI voice technology.
+            Find answers to common questions about careers at TinkerVoice and working with AI voice technology.
           </motion.p>
         </div>
 

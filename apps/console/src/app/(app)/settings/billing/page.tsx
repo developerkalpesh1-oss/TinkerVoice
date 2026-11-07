@@ -737,7 +737,7 @@ function OrganizationBillingPage({
                   id="top-up-amount-help"
                   className="text-xs text-muted-foreground"
                 >
-                  QuickVoice absorbs card-processing fees. Applicable tax is
+                  TinkerVoice absorbs card-processing fees. Applicable tax is
                   extra.
                 </p>
               )}

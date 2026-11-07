@@ -68,7 +68,7 @@ export function OperationsAutomationHeroSection() {
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
               Automate repetitive queries, resolve tickets in seconds, and deliver
-              consistent customer experiences 24/7 with QuickVoice&apos;s human-like
+              consistent customer experiences 24/7 with TinkerVoice&apos;s human-like
               AI Voice Agents. Our cutting-edge technology drives measurable
               impact, ensuring seamless interactions across all touchpoints.
             </motion.p>

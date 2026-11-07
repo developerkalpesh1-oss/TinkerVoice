@@ -3,7 +3,7 @@ import { ScalarApiReference } from "@/components/api/scalar-api-reference";
 
 export const metadata: Metadata = {
   title: "API Reference",
-  description: "Interactive QuickVoice REST API reference powered by Scalar and OpenAPI.",
+  description: "Interactive TinkerVoice REST API reference powered by Scalar and OpenAPI.",
 };
 
 export default function ApiReferencePage() {

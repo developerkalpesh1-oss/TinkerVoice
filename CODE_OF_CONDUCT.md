@@ -1,6 +1,6 @@
 # Code Of Conduct
 
-QuickVoice should be a useful, direct, and respectful place to collaborate.
+TinkerVoice should be a useful, direct, and respectful place to collaborate.
 
 ## Expected Behavior
 
@@ -24,4 +24,4 @@ QuickVoice should be a useful, direct, and respectful place to collaborate.
 
 Maintainers may remove comments, close issues, reject pull requests, or block contributors whose behavior makes collaboration unsafe or unproductive.
 
-If you need to report conduct concerns, contact the maintainers through the project owner on GitHub or through the contact channels listed on [quickvoice.co](https://quickvoice.co).
+If you need to report conduct concerns, contact the maintainers through the project owner on GitHub or through the contact channels listed on [tinkervoice.co](https://tinkervoice.co).

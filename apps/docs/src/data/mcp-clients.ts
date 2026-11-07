@@ -16,10 +16,10 @@ export const mcpClients: McpClientGuide[] = [
     steps: [
       "Open Cursor settings.",
       "Find MCP servers.",
-      "Paste the QuickVoice configuration block.",
+      "Paste the TinkerVoice configuration block.",
       "Restart the MCP connection.",
     ],
-    verificationPrompt: "List my QuickVoice agents using MCP.",
+    verificationPrompt: "List my TinkerVoice agents using MCP.",
   },
   {
     id: "windsurf",
@@ -32,7 +32,7 @@ export const mcpClients: McpClientGuide[] = [
       "Paste the generated Streamable HTTP config.",
       "Save and reconnect.",
     ],
-    verificationPrompt: "Show my recent QuickVoice call logs.",
+    verificationPrompt: "Show my recent TinkerVoice call logs.",
   },
   {
     id: "claude-desktop",
@@ -42,10 +42,10 @@ export const mcpClients: McpClientGuide[] = [
     steps: [
       "Open Claude Desktop developer settings.",
       "Edit the MCP server configuration.",
-      "Paste the QuickVoice server entry.",
+      "Paste the TinkerVoice server entry.",
       "Restart Claude Desktop.",
     ],
-    verificationPrompt: "What QuickVoice MCP resources are available?",
+    verificationPrompt: "What TinkerVoice MCP resources are available?",
   },
   {
     id: "claude-code",
@@ -54,11 +54,11 @@ export const mcpClients: McpClientGuide[] = [
     configLabel: "Add as remote HTTP MCP server",
     steps: [
       "Open your Claude Code MCP configuration.",
-      "Add a QuickVoice remote server entry.",
-      "Set the x-api-key header to your QuickVoice API key.",
+      "Add a TinkerVoice remote server entry.",
+      "Set the x-api-key header to your TinkerVoice API key.",
       "Reconnect the CLI session.",
     ],
-    verificationPrompt: "Use QuickVoice MCP to summarize active agents.",
+    verificationPrompt: "Use TinkerVoice MCP to summarize active agents.",
   },
   {
     id: "codex",
@@ -67,11 +67,11 @@ export const mcpClients: McpClientGuide[] = [
     configLabel: "Add to Codex MCP settings",
     steps: [
       "Open your Codex MCP configuration.",
-      "Add the QuickVoice Streamable HTTP endpoint.",
-      "Set the x-api-key header to your QuickVoice API key.",
+      "Add the TinkerVoice Streamable HTTP endpoint.",
+      "Set the x-api-key header to your TinkerVoice API key.",
       "Start a new Codex session.",
     ],
-    verificationPrompt: "Read QuickVoice dashboard metrics using MCP.",
+    verificationPrompt: "Read TinkerVoice dashboard metrics using MCP.",
   },
   {
     id: "vscode",
@@ -81,10 +81,10 @@ export const mcpClients: McpClientGuide[] = [
     steps: [
       "Open the extension MCP server settings.",
       "Choose remote HTTP server.",
-      "Paste the generated QuickVoice config.",
+      "Paste the generated TinkerVoice config.",
       "Reload the extension window if needed.",
     ],
-    verificationPrompt: "Which QuickVoice MCP tools can update an agent?",
+    verificationPrompt: "Which TinkerVoice MCP tools can update an agent?",
   },
   {
     id: "copilot",
@@ -93,11 +93,11 @@ export const mcpClients: McpClientGuide[] = [
     configLabel: "Use the client-supported MCP config format",
     steps: [
       "Confirm remote MCP support is enabled.",
-      "Add the QuickVoice URL and x-api-key header.",
+      "Add the TinkerVoice URL and x-api-key header.",
       "Save the configuration.",
       "Open a new assistant chat.",
     ],
-    verificationPrompt: "List available QuickVoice MCP tools.",
+    verificationPrompt: "List available TinkerVoice MCP tools.",
   },
   {
     id: "jetbrains",
@@ -110,7 +110,7 @@ export const mcpClients: McpClientGuide[] = [
       "Add a Streamable HTTP server.",
       "Paste the URL and x-api-key header.",
     ],
-    verificationPrompt: "Show the QuickVoice MCP resource list.",
+    verificationPrompt: "Show the TinkerVoice MCP resource list.",
   },
   {
     id: "openhands",
@@ -119,11 +119,11 @@ export const mcpClients: McpClientGuide[] = [
     configLabel: "Add to OpenHands MCP configuration",
     steps: [
       "Open OpenHands runtime configuration.",
-      "Add QuickVoice as a remote MCP server.",
-      "Set the x-api-key header to your QuickVoice API key.",
+      "Add TinkerVoice as a remote MCP server.",
+      "Set the x-api-key header to your TinkerVoice API key.",
       "Restart the runtime.",
     ],
-    verificationPrompt: "Fetch QuickVoice MCP reference stats.",
+    verificationPrompt: "Fetch TinkerVoice MCP reference stats.",
   },
   {
     id: "other",
@@ -132,10 +132,10 @@ export const mcpClients: McpClientGuide[] = [
     configLabel: "Use the generic MCP server block",
     steps: [
       "Confirm the client supports Streamable HTTP.",
-      "Set the server URL to the QuickVoice MCP endpoint.",
-      "Send x-api-key with a QuickVoice API key.",
+      "Set the server URL to the TinkerVoice MCP endpoint.",
+      "Send x-api-key with a TinkerVoice API key.",
       "Run a tools/list or resources/list request.",
     ],
-    verificationPrompt: "List QuickVoice MCP tools and resources.",
+    verificationPrompt: "List TinkerVoice MCP tools and resources.",
   },
 ];

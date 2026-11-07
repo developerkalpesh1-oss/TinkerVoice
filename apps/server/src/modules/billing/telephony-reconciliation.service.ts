@@ -241,7 +241,7 @@ async function reconcileTelnyxSessions(
         : await dependencies.createTelnyxReport({
             startTime: report.periodStart,
             endTime: report.periodEnd,
-            reportName: `quickvoice-${report.telephonyCostReportId}-${report.attempts + 1}`,
+            reportName: `tinkervoice-${report.telephonyCostReportId}-${report.attempts + 1}`,
           });
       if (!remote.id) throw new Error("Telnyx did not return a CDR report ID");
 

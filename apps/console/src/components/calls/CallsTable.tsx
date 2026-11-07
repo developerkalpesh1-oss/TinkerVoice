@@ -203,7 +203,7 @@ export function CallsTable({
     agents?.find((a) => a.agentId === id)?.name ?? "—";
 
   function exportCalls() {
-    downloadRowsAsCsv("quickvoice-call-history.csv", calls, [
+    downloadRowsAsCsv("tinkervoice-call-history.csv", calls, [
       { header: "Start time", value: (call) => call.startTime ?? "" },
       { header: "Number", value: (call) => call.callerId ?? "" },
       { header: "Agent", value: (call) => agentName(call.agentId) },

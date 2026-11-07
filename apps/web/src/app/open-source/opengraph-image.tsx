@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "QuickVoice open-source AI phone-agent stack with console, API, LiveKit worker, and telephony integrations";
+  "TinkerVoice open-source AI phone-agent stack with console, API, LiveKit worker, and telephony integrations";
 
 export const size = {
   width: 1200,
@@ -107,7 +107,7 @@ export default function Image() {
             letterSpacing: "-1px",
           }}
         >
-          QuickVoice
+          TinkerVoice
         </div>
         <div
           style={{
@@ -176,7 +176,7 @@ export default function Image() {
         {[
           ["INCLUDED", "Console, Express API, LiveKit worker"],
           ["TELEPHONY", "Twilio or Telnyx"],
-          ["SOURCE", "github.com/allgpt-co/QuickVoice"],
+          ["SOURCE", "github.com/allgpt-co/TinkerVoice"],
         ].map(([label, value], index) => (
           <div
             key={label}
@@ -230,7 +230,7 @@ export default function Image() {
           letterSpacing: "0.5px",
         }}
       >
-        quickvoice.co/open-source
+        tinkervoice.co/open-source
       </div>
     </div>,
     size,

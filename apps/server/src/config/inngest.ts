@@ -1,7 +1,7 @@
 import { Inngest } from "inngest";
 import { serverBaseUrl } from "./origins.js";
 
-export const inngest = new Inngest({ id: "quickvoice" });
+export const inngest = new Inngest({ id: "tinkervoice" });
 
 // Registration must not depend on Host/X-Forwarded-Proto or proxy trust changes.
 export function getInngestServeOptions(

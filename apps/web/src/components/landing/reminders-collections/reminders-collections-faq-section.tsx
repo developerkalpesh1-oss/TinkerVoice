@@ -9,33 +9,33 @@ import { cn } from "@/lib/utils";
 const faqs = [
   {
     question:
-      "How does QuickVoice ensure personalized reminders for different customer segments?",
+      "How does TinkerVoice ensure personalized reminders for different customer segments?",
     answer:
-      "QuickVoice uses advanced AI to analyze customer data and behavior patterns, automatically personalizing reminder content, timing, and delivery method for each individual. The system can segment customers based on payment history, preferences, and demographics to deliver the most effective reminders that drive action.",
+      "TinkerVoice uses advanced AI to analyze customer data and behavior patterns, automatically personalizing reminder content, timing, and delivery method for each individual. The system can segment customers based on payment history, preferences, and demographics to deliver the most effective reminders that drive action.",
   },
   {
     question:
-      "Can QuickVoice handle complex collection scenarios like payment plans and negotiations?",
+      "Can TinkerVoice handle complex collection scenarios like payment plans and negotiations?",
     answer:
-      "Yes, QuickVoice is equipped with sophisticated conversation flows that can handle payment plan discussions, negotiate payment terms, and escalate to human agents when needed. The AI can process payment arrangements, confirm new due dates, and automatically update your systems with agreed-upon terms.",
+      "Yes, TinkerVoice is equipped with sophisticated conversation flows that can handle payment plan discussions, negotiate payment terms, and escalate to human agents when needed. The AI can process payment arrangements, confirm new due dates, and automatically update your systems with agreed-upon terms.",
   },
   {
     question:
       "What compliance measures are in place for debt collection and reminder calls?",
     answer:
-      "QuickVoice is fully compliant with FDCPA, TCPA, and other relevant regulations. The system maintains detailed call logs, respects opt-out requests, adheres to calling time restrictions, and includes required disclosures. All interactions are recorded and auditable for compliance reporting.",
+      "TinkerVoice is fully compliant with FDCPA, TCPA, and other relevant regulations. The system maintains detailed call logs, respects opt-out requests, adheres to calling time restrictions, and includes required disclosures. All interactions are recorded and auditable for compliance reporting.",
   },
   {
     question:
       "How does the AI voice agent integrate with existing CRM and billing systems?",
     answer:
-      "QuickVoice offers seamless integration with popular CRM platforms, billing systems, and payment processors through APIs and webhooks. The system can automatically pull customer data, update payment statuses, schedule follow-ups, and sync all interaction history back to your existing systems in real-time.",
+      "TinkerVoice offers seamless integration with popular CRM platforms, billing systems, and payment processors through APIs and webhooks. The system can automatically pull customer data, update payment statuses, schedule follow-ups, and sync all interaction history back to your existing systems in real-time.",
   },
   {
     question:
       "What happens if a customer has questions the AI cannot answer during a reminder call?",
     answer:
-      "When QuickVoice encounters complex queries beyond its knowledge base, it can seamlessly transfer the call to a human agent with full context of the conversation. The system can also schedule callbacks, take messages, or direct customers to appropriate self-service options while maintaining a smooth customer experience.",
+      "When TinkerVoice encounters complex queries beyond its knowledge base, it can seamlessly transfer the call to a human agent with full context of the conversation. The system can also schedule callbacks, take messages, or direct customers to appropriate self-service options while maintaining a smooth customer experience.",
   },
   {
     question:

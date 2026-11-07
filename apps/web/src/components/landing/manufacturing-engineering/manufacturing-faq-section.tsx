@@ -12,28 +12,28 @@ export function ManufacturingFaqSection() {
 
   const faqs = [
     {
-      question: "How does QuickVoice integrate with existing ERP and MES systems in manufacturing environments?",
-      answer: "QuickVoice offers seamless integration with leading ERP systems (SAP, Oracle, Microsoft Dynamics) and MES platforms through our robust API framework. Our AI agents can access real-time production data, inventory levels, work orders, and quality metrics to provide accurate responses and automate workflows. The integration typically takes 2-4 weeks and includes data synchronization, workflow mapping, and staff training."
+      question: "How does TinkerVoice integrate with existing ERP and MES systems in manufacturing environments?",
+      answer: "TinkerVoice offers seamless integration with leading ERP systems (SAP, Oracle, Microsoft Dynamics) and MES platforms through our robust API framework. Our AI agents can access real-time production data, inventory levels, work orders, and quality metrics to provide accurate responses and automate workflows. The integration typically takes 2-4 weeks and includes data synchronization, workflow mapping, and staff training."
     },
     {
       question: "Can AI voice agents handle complex technical inquiries about manufacturing processes and equipment?",
-      answer: "Yes, QuickVoice's AI is specifically trained on manufacturing terminology, processes, and technical documentation. Our agents can handle inquiries about equipment specifications, troubleshooting procedures, maintenance schedules, quality standards, and safety protocols. The system continuously learns from your technical documentation, SOPs, and expert knowledge to provide increasingly accurate responses."
+      answer: "Yes, TinkerVoice's AI is specifically trained on manufacturing terminology, processes, and technical documentation. Our agents can handle inquiries about equipment specifications, troubleshooting procedures, maintenance schedules, quality standards, and safety protocols. The system continuously learns from your technical documentation, SOPs, and expert knowledge to provide increasingly accurate responses."
     },
     {
-      question: "How does QuickVoice ensure compliance with manufacturing industry regulations and quality standards?",
-      answer: "QuickVoice is designed with compliance at its core, supporting ISO 9001, ISO 14001, FDA regulations, and other industry-specific standards. Our system maintains detailed audit trails, ensures data integrity, and can automatically generate compliance reports. All interactions are logged and can be reviewed for quality assurance, regulatory audits, and continuous improvement initiatives."
+      question: "How does TinkerVoice ensure compliance with manufacturing industry regulations and quality standards?",
+      answer: "TinkerVoice is designed with compliance at its core, supporting ISO 9001, ISO 14001, FDA regulations, and other industry-specific standards. Our system maintains detailed audit trails, ensures data integrity, and can automatically generate compliance reports. All interactions are logged and can be reviewed for quality assurance, regulatory audits, and continuous improvement initiatives."
     },
     {
       question: "What security measures are in place to protect sensitive manufacturing data and intellectual property?",
-      answer: "QuickVoice employs enterprise-grade security including end-to-end encryption, role-based access controls, and compliance with SOC 2 Type II, ISO 27001, and GDPR standards. All data is processed in secure, isolated environments with regular security audits. We offer on-premises deployment options for organizations with strict data sovereignty requirements."
+      answer: "TinkerVoice employs enterprise-grade security including end-to-end encryption, role-based access controls, and compliance with SOC 2 Type II, ISO 27001, and GDPR standards. All data is processed in secure, isolated environments with regular security audits. We offer on-premises deployment options for organizations with strict data sovereignty requirements."
     },
     {
-      question: "How quickly can QuickVoice be deployed across multiple manufacturing facilities and production lines?",
-      answer: "QuickVoice supports rapid, scalable deployment across multiple facilities. Our cloud-native architecture allows for quick provisioning of new instances, while our configuration management tools enable consistent setup across locations. Typically, a single facility can be operational within 1-2 weeks, with additional facilities added incrementally based on your rollout timeline and change management requirements."
+      question: "How quickly can TinkerVoice be deployed across multiple manufacturing facilities and production lines?",
+      answer: "TinkerVoice supports rapid, scalable deployment across multiple facilities. Our cloud-native architecture allows for quick provisioning of new instances, while our configuration management tools enable consistent setup across locations. Typically, a single facility can be operational within 1-2 weeks, with additional facilities added incrementally based on your rollout timeline and change management requirements."
     },
     {
-      question: "Can QuickVoice handle multilingual support for global manufacturing operations with diverse workforces?",
-      answer: "Absolutely. QuickVoice supports over 100 languages and dialects, making it ideal for global manufacturing operations. The AI can automatically detect worker language preferences, provide culturally appropriate responses, and ensure accurate translation of technical terms and safety instructions. This capability is essential for multinational manufacturers with diverse teams and global supply chains."
+      question: "Can TinkerVoice handle multilingual support for global manufacturing operations with diverse workforces?",
+      answer: "Absolutely. TinkerVoice supports over 100 languages and dialects, making it ideal for global manufacturing operations. The AI can automatically detect worker language preferences, provide culturally appropriate responses, and ensure accurate translation of technical terms and safety instructions. This capability is essential for multinational manufacturers with diverse teams and global supply chains."
     }
   ];
 
@@ -63,7 +63,7 @@ export function ManufacturingFaqSection() {
           </h2>
 
           <p className="text-muted-foreground max-w-2xl text-center">
-            Get answers to everything you need to know about QuickVoice&apos;s AI Voice Agents
+            Get answers to everything you need to know about TinkerVoice&apos;s AI Voice Agents
             and how they can revolutionize your manufacturing operations.
           </p>
         </motion.div>

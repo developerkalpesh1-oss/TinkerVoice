@@ -55,7 +55,7 @@ export function FinancialServicesBenefitsSection() {
               viewport={{ once: true }}
               className="font-geist text-muted-foreground mt-3 max-w-3xl mx-auto"
             >
-              QuickVoice transforms every aspect of financial services operations, from customer support to
+              TinkerVoice transforms every aspect of financial services operations, from customer support to
               sales and compliance, delivering measurable results across your organization.
             </motion.p>
           </div>
@@ -125,7 +125,7 @@ export function FinancialServicesBenefitsSection() {
           </motion.div>
         </div>
 
-        {/* Why QuickVoice Section */}
+        {/* Why TinkerVoice Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -135,10 +135,10 @@ export function FinancialServicesBenefitsSection() {
           >
             <div className="text-center mb-12">
               <h3 className="font-geist text-3xl font-bold tracking-tighter text-foreground mb-4">
-                Why QuickVoice for Financial Services
+                Why TinkerVoice for Financial Services
               </h3>
               <p className="font-geist text-lg text-muted-foreground max-w-4xl mx-auto">
-                QuickVoice offers a no-code builder, rapid go-live, and seamless integrations with core/LOS/LMS/CRM systems.
+                TinkerVoice offers a no-code builder, rapid go-live, and seamless integrations with core/LOS/LMS/CRM systems.
                 Our solutions support local languages and provide analytics out of the box, ensuring compliance with regulatory
                 requirements, including consent and DNC/TCPA management, PCI-aware call flows, and SOC 2/ISO 27001 alignment.
               </p>

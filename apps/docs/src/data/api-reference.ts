@@ -20,7 +20,7 @@ export type ApiGroup = {
   endpoints: ApiEndpoint[];
 };
 
-export const apiBaseUrl = "https://api.quickvoice.co/api/v1";
+export const apiBaseUrl = "https://api.tinkervoice.co/api/v1";
 
 export const apiAuthNotes = [
   "Most console and product APIs accept either a Better Auth session cookie or an organization-scoped API key.",
@@ -1029,11 +1029,11 @@ export const apiEndpointCount = apiGroups.reduce(
 );
 
 export const sampleCurl = `curl --request GET '${apiBaseUrl}/agents' \\
-  --header 'x-api-key: YOUR_QUICKVOICE_API_KEY' \\
+  --header 'x-api-key: YOUR_TINKERVOICE_API_KEY' \\
   --header 'Content-Type: application/json'`;
 
 export const sampleAgentCreate = `curl --request POST '${apiBaseUrl}/agents' \\
-  --header 'x-api-key: YOUR_QUICKVOICE_API_KEY' \\
+  --header 'x-api-key: YOUR_TINKERVOICE_API_KEY' \\
   --header 'Content-Type: application/json' \\
   --data '{
     "name": "Support Agent",

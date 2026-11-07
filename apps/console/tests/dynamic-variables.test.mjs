@@ -53,7 +53,7 @@ test("quick outbound calls submit and dispatch dynamic variable values", async (
   const outboundService = await text("apps/server/src/modules/outbound/outbound-call.service.ts");
 
   assert.match(quickCallForm, /<DynamicVariableInputs[\s\S]*title="Call variables"/);
-  assert.match(quickCallForm, /dynamicVariables:\s*dynamicVariablePayload\(/);
+  assert.match(quickCallForm, /dynamicVariables:\s*\{[\s\S]*\.\.\.dynamicVariablePayload\(/);
   assert.match(quickCallModel, /dynamicVariables:\s*z\.record\(z\.string\(\),\s*z\.string\(\)\)\.optional\(\)/);
   assert.match(outboundSchema, /dynamicVariables:\s*z\.record\(z\.string\(\),\s*z\.string\(\)\)\.optional\(\)/);
   assert.match(outboundService, /optionalData:[\s\S]*\.\.\.dynamicVariableData/);

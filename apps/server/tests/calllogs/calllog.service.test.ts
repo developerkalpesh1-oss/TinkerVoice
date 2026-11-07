@@ -33,12 +33,12 @@ test("signCallRecordingUrl replaces a stored S3 key with a signed playback URL",
   };
 
   const signed = await signCallRecordingUrl(call, async (key) => {
-    return `https://recordings.quickvoice.test/${encodeURIComponent(key)}?signature=test`;
+    return `https://recordings.tinkervoice.test/${encodeURIComponent(key)}?signature=test`;
   });
 
   assert.equal(
     signed.audioRecordingPath,
-    "https://recordings.quickvoice.test/Voice-agents%2FRecordings%2Frecording-123.ogg?signature=test"
+    "https://recordings.tinkervoice.test/Voice-agents%2FRecordings%2Frecording-123.ogg?signature=test"
   );
   assert.equal(call.audioRecordingPath, "Voice-agents/Recordings/recording-123.ogg");
 });
@@ -55,7 +55,7 @@ test("signCallRecordingUrl leaves missing recordings and existing URLs unchanged
   const existingUrl = await signCallRecordingUrl(
     {
       callId: "SCL_url_recording",
-      audioRecordingPath: "https://cdn.quickvoice.test/recording.ogg",
+      audioRecordingPath: "https://cdn.tinkervoice.test/recording.ogg",
     },
     async () => {
       throw new Error("should not sign existing URL");
@@ -63,7 +63,7 @@ test("signCallRecordingUrl leaves missing recordings and existing URLs unchanged
   );
   assert.equal(
     existingUrl.audioRecordingPath,
-    "https://cdn.quickvoice.test/recording.ogg"
+    "https://cdn.tinkervoice.test/recording.ogg"
   );
 });
 

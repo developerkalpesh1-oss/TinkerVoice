@@ -68,7 +68,7 @@ export function CustomerSupportFaqSection() {
           </h2>
 
           <p className="text-muted-foreground max-w-2xl text-center">
-            Find answers to everything you need to know about QuickVoice&apos;s AI Customer Service solution.
+            Find answers to everything you need to know about TinkerVoice&apos;s AI Customer Service solution.
           </p>
         </motion.div>
 

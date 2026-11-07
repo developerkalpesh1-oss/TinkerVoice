@@ -17,7 +17,7 @@ from utils.runtime_readiness import (  # noqa: E402
 class RuntimeConfigTests(unittest.TestCase):
     def test_hosted_mode_requires_server_key_and_durable_queue(self):
         result = evaluate_local_runtime_config(
-            {"QUICKVOICE_BILLING_MODE": "hosted"},
+            {"TINKERVOICE_BILLING_MODE": "hosted"},
         )
 
         self.assertFalse(result["ok"])
@@ -37,11 +37,11 @@ class RuntimeConfigTests(unittest.TestCase):
 
     def test_hosted_queue_must_be_absolute_non_temporary_and_writable(self):
         base_env = {
-            "QUICKVOICE_BILLING_MODE": "hosted",
-            "SERVER_API_URL": "https://api.quickvoice.example/api/v1",
+            "TINKERVOICE_BILLING_MODE": "hosted",
+            "SERVER_API_URL": "https://api.tinkervoice.example/api/v1",
             "INTERNAL_API_KEY": "internal-secret",
-            "AI_CALL_LOG_QUEUE_DIR": "/var/lib/quickvoice/call-logs",
-            "AI_POST_CALL_WEBHOOK_QUEUE_DIR": "/var/lib/quickvoice/post-call-webhooks",
+            "AI_CALL_LOG_QUEUE_DIR": "/var/lib/tinkervoice/call-logs",
+            "AI_POST_CALL_WEBHOOK_QUEUE_DIR": "/var/lib/tinkervoice/post-call-webhooks",
         }
 
         relative = evaluate_local_runtime_config(
@@ -53,9 +53,9 @@ class RuntimeConfigTests(unittest.TestCase):
         unwritable = evaluate_local_runtime_config(
             {
                 **base_env,
-                "AI_BILLING_USAGE_QUEUE_DIR": "/var/lib/quickvoice/billing-queue",
-                "AI_CALL_LOG_QUEUE_DIR": "/var/lib/quickvoice/call-logs",
-                "AI_POST_CALL_WEBHOOK_QUEUE_DIR": "/var/lib/quickvoice/post-call-webhooks",
+                "AI_BILLING_USAGE_QUEUE_DIR": "/var/lib/tinkervoice/billing-queue",
+                "AI_CALL_LOG_QUEUE_DIR": "/var/lib/tinkervoice/call-logs",
+                "AI_POST_CALL_WEBHOOK_QUEUE_DIR": "/var/lib/tinkervoice/post-call-webhooks",
             },
             queue_probe=lambda _path: "AI_BILLING_USAGE_QUEUE_DIR is not writable",
         )
@@ -88,21 +88,21 @@ class RuntimeHandshakeTests(unittest.IsolatedAsyncioTestCase):
 
         result = await get_runtime_readiness(
             {
-                "QUICKVOICE_BILLING_MODE": "hosted",
-                "SERVER_API_URL": "https://api.quickvoice.example/api/v1",
+                "TINKERVOICE_BILLING_MODE": "hosted",
+                "SERVER_API_URL": "https://api.tinkervoice.example/api/v1",
                 "INTERNAL_API_KEY": "internal-secret",
-                "AI_BILLING_USAGE_QUEUE_DIR": "/var/lib/quickvoice/billing-queue",
-                "AI_CALL_LOG_QUEUE_DIR": "/var/lib/quickvoice/call-logs",
-                "AI_POST_CALL_WEBHOOK_QUEUE_DIR": "/var/lib/quickvoice/post-call-webhooks",
+                "AI_BILLING_USAGE_QUEUE_DIR": "/var/lib/tinkervoice/billing-queue",
+                "AI_CALL_LOG_QUEUE_DIR": "/var/lib/tinkervoice/call-logs",
+                "AI_POST_CALL_WEBHOOK_QUEUE_DIR": "/var/lib/tinkervoice/post-call-webhooks",
             },
             get_json=get_json,
             queue_probe=lambda path: (
                 None
                 if path
                 in {
-                    Path("/var/lib/quickvoice/billing-queue"),
-                    Path("/var/lib/quickvoice/call-logs"),
-                    Path("/var/lib/quickvoice/post-call-webhooks"),
+                    Path("/var/lib/tinkervoice/billing-queue"),
+                    Path("/var/lib/tinkervoice/call-logs"),
+                    Path("/var/lib/tinkervoice/post-call-webhooks"),
                 }
                 else "unexpected path"
             ),
@@ -114,7 +114,7 @@ class RuntimeHandshakeTests(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual(
             requests[0][0],
-            "https://api.quickvoice.example/api/v1/system/runtime-mode",
+            "https://api.tinkervoice.example/api/v1/system/runtime-mode",
         )
         self.assertEqual(
             requests[0][1]["Authorization"], "Bearer internal-secret"
@@ -131,8 +131,8 @@ class RuntimeHandshakeTests(unittest.IsolatedAsyncioTestCase):
 
         result = await get_runtime_readiness(
             {
-                "QUICKVOICE_BILLING_MODE": "self_hosted",
-                "SERVER_API_URL": "https://api.quickvoice.example/api/v1",
+                "TINKERVOICE_BILLING_MODE": "self_hosted",
+                "SERVER_API_URL": "https://api.tinkervoice.example/api/v1",
                 "INTERNAL_API_KEY": "internal-secret",
             },
             get_json=get_json,

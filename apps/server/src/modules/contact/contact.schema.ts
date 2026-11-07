@@ -17,7 +17,7 @@ export const contactSubmissionSchema = z.strictObject({
     ),
   lookingFor: z.string().trim().min(1).max(120),
   message: z.string().trim().min(10).max(5000),
-  source: z.literal("quickvoice-web-contact"),
+  source: z.literal("tinkervoice-web-contact"),
   submittedAt: z.iso.datetime(),
   // Optional for API-first rollout; legacy web deployments remain compatible.
   submissionId: z.uuid({ version: "v4" }).optional(),

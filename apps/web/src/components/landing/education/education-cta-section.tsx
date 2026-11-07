@@ -47,7 +47,7 @@ export function EducationCtaSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-6 max-w-md text-base text-white sm:text-lg md:mb-8"
           >
-            Join hundreds of educational institutions already using QuickVoice to enhance student support, streamline admissions, and improve parent communication.
+            Join hundreds of educational institutions already using TinkerVoice to enhance student support, streamline admissions, and improve parent communication.
           </motion.p>
 
           <motion.div

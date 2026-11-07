@@ -15,7 +15,7 @@ const submission = {
   lookingFor: "Pilot evaluation",
   message:
     "Please review <img src=x onerror=alert(1)> as plain text.\nSecond line.",
-  source: "quickvoice-web-contact",
+  source: "tinkervoice-web-contact",
   submittedAt: "2026-09-06T12:00:00.000Z",
 };
 let server: Server;
@@ -58,9 +58,9 @@ function post(
       "Content-Type": "application/json",
       ...(suppliedSecret === undefined
         ? {}
-        : { "X-QuickVoice-Contact-Secret": suppliedSecret }),
+        : { "X-TinkerVoice-Contact-Secret": suppliedSecret }),
       ...(clientFingerprint
-        ? { "X-QuickVoice-Contact-Client": clientFingerprint }
+        ? { "X-TinkerVoice-Contact-Client": clientFingerprint }
         : {}),
     },
     body: JSON.stringify(body),
@@ -153,7 +153,7 @@ test("contact JSON parsing is bounded and happens only after authentication", as
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(supplied ? { "X-QuickVoice-Contact-Secret": supplied } : {}),
+          ...(supplied ? { "X-TinkerVoice-Contact-Secret": supplied } : {}),
         },
         body,
       });
@@ -177,12 +177,12 @@ test("authenticated contact uses the fixed recipient, verified sender, Reply-To 
   const message = JSON.parse(init.body as string);
   assert.deepEqual(message.to, [
     {
-      email_address: { address: "info@quickvoice.co", name: "QuickVoice team" },
+      email_address: { address: "info@tinkervoice.co", name: "TinkerVoice team" },
     },
   ]);
   assert.equal(message.from.address, "verified@example.com");
   assert.deepEqual(message.reply_to, [{ address: submission.email }]);
-  assert.equal(message.subject, "New QuickVoice website enquiry");
+  assert.equal(message.subject, "New TinkerVoice website enquiry");
   assert.ok(message.textbody.includes(submission.message));
   assert.match(message.htmlbody, /&lt;img src=x onerror=alert\(1\)&gt;/);
   assert.match(message.htmlbody, /A &amp; B/);

@@ -33,7 +33,7 @@ def _client():
 
 
 def _key(namespace):
-    return "quickvoice:kb:index:" + hashlib.sha256(namespace.encode()).hexdigest()
+    return "tinkervoice:kb:index:" + hashlib.sha256(namespace.encode()).hexdigest()
 
 
 # ponytail: the manifest/filter grows with source history; compact tombstones

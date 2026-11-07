@@ -15,7 +15,7 @@ except ImportError:  # Tests and deployments without the optional live feature.
     redis_asyncio = None
 
 
-LIVE_TRANSCRIPT_CHANNEL = "quickvoice:live:events"
+LIVE_TRANSCRIPT_CHANNEL = "tinkervoice:live:events"
 LIVE_TRANSCRIPT_VERSION = 1
 DEFAULT_TTL_SECONDS = 60 * 60
 DEFAULT_QUEUE_SIZE = 256
@@ -329,19 +329,19 @@ class LiveTranscriptPublisher:
 
     @property
     def _stream_key(self) -> str:
-        return f"quickvoice:live:stream:{self._organization_id}:{self._call_id}"
+        return f"tinkervoice:live:stream:{self._organization_id}:{self._call_id}"
 
     @property
     def _metadata_key(self) -> str:
-        return f"quickvoice:live:metadata:{self._organization_id}:{self._call_id}"
+        return f"tinkervoice:live:metadata:{self._organization_id}:{self._call_id}"
 
     @property
     def _active_key(self) -> str:
-        return f"quickvoice:live:active:{self._organization_id}"
+        return f"tinkervoice:live:active:{self._organization_id}"
 
     @property
     def _dedup_key(self) -> str:
-        return f"quickvoice:live:dedup:{self._organization_id}:{self._call_id}"
+        return f"tinkervoice:live:dedup:{self._organization_id}:{self._call_id}"
 
     async def _close_redis(self) -> None:
         if self._redis is None or not self._owns_redis:

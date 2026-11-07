@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 process.env.DATABASE_URL ??=
-  "postgresql://postgres:postgres@localhost:5432/quickvoice";
+  "postgresql://postgres:postgres@localhost:5432/tinkervoice";
 
 const { ForbiddenError } = await import("../../src/common/errors/forbidden.js");
 const { requireBuiltInBillingManager } =

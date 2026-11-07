@@ -8,7 +8,7 @@ export const industryWorkflows: Record<string, WorkflowPageContent> = {
     description:
       "Plan candidate enquiries, interview availability and HR callback requests with approved information, human decisions and tested system connections.",
     introduction:
-      "Start with administrative calls: explain a published role, collect interview availability or record a question for HR. Configure QuickVoice with approved information and a staff follow-up process. Keep candidate evaluation and employment decisions with accountable people.",
+      "Start with administrative calls: explain a published role, collect interview availability or record a question for HR. Configure TinkerVoice with approved information and a staff follow-up process. Keep candidate evaluation and employment decisions with accountable people.",
     steps: [
       {
         title: "Define the information callers need",
@@ -143,7 +143,7 @@ export const industryWorkflows: Record<string, WorkflowPageContent> = {
     description:
       "Plan dealership phone intake for service enquiries, test-drive requests and staff callbacks, with verified vehicle information and scheduling boundaries.",
     introduction:
-      "Define which calls belong with service, sales or the parts desk. QuickVoice can support a configured intake workflow using approved information; dealership records, appointment systems and follow-up actions need an implementation owner and a verified connection.",
+      "Define which calls belong with service, sales or the parts desk. TinkerVoice can support a configured intake workflow using approved information; dealership records, appointment systems and follow-up actions need an implementation owner and a verified connection.",
     steps: [
       {
         title: "Clarify the reason for calling",

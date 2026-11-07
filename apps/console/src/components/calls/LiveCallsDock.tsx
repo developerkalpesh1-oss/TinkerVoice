@@ -443,7 +443,7 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
   const liveCalls = useLiveCalls(true);
   const canEndCall = useCanEndLiveCalls(organizationId);
   const now = useClock(true);
-  const storageKey = `quickvoice:live-call:${organizationId}`;
+  const storageKey = `tinkervoice:live-call:${organizationId}`;
 
   const sortedCalls = useMemo(
     () =>

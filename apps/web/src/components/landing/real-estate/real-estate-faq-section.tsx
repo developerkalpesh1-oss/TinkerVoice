@@ -8,28 +8,28 @@ import { cn } from "@/lib/utils";
 
 const faqs = [
   {
-    question: "How does QuickVoice integrate with MLS systems and real estate CRMs?",
-    answer: "QuickVoice offers seamless integration with leading MLS systems, real estate CRMs, and property management software. Our API-first approach allows real-time data synchronization for listings, customer information, appointment scheduling, and lead management, ensuring all your systems work together seamlessly."
+    question: "How does TinkerVoice integrate with MLS systems and real estate CRMs?",
+    answer: "TinkerVoice offers seamless integration with leading MLS systems, real estate CRMs, and property management software. Our API-first approach allows real-time data synchronization for listings, customer information, appointment scheduling, and lead management, ensuring all your systems work together seamlessly."
   },
   {
-    question: "Can QuickVoice handle complex real estate inquiries and property-specific questions?",
-    answer: "Yes, QuickVoice uses advanced AI trained specifically on real estate terminology and processes. The system can handle complex inquiries about property details, pricing, neighborhood information, financing options, and transaction processes, providing accurate and helpful responses to potential buyers and sellers."
+    question: "Can TinkerVoice handle complex real estate inquiries and property-specific questions?",
+    answer: "Yes, TinkerVoice uses advanced AI trained specifically on real estate terminology and processes. The system can handle complex inquiries about property details, pricing, neighborhood information, financing options, and transaction processes, providing accurate and helpful responses to potential buyers and sellers."
   },
   {
     question: "How does the AI-powered lead qualification work for real estate leads?",
-    answer: "QuickVoice's AI automatically qualifies leads by analyzing budget, location preferences, timeline, financing status, and property requirements. The system can instantly respond to leads, schedule property tours, and route qualified prospects to the appropriate agents, significantly improving conversion rates and reducing response time."
+    answer: "TinkerVoice's AI automatically qualifies leads by analyzing budget, location preferences, timeline, financing status, and property requirements. The system can instantly respond to leads, schedule property tours, and route qualified prospects to the appropriate agents, significantly improving conversion rates and reducing response time."
   },
   {
-    question: "Is QuickVoice compliant with real estate regulations and TCPA requirements?",
-    answer: "Absolutely. QuickVoice is fully TCPA compliant with built-in consent capture, DNC list management, and proper call recording notifications. We also ensure compliance with real estate regulations including fair housing laws, disclosure requirements, and state-specific real estate practices."
+    question: "Is TinkerVoice compliant with real estate regulations and TCPA requirements?",
+    answer: "Absolutely. TinkerVoice is fully TCPA compliant with built-in consent capture, DNC list management, and proper call recording notifications. We also ensure compliance with real estate regulations including fair housing laws, disclosure requirements, and state-specific real estate practices."
   },
   {
-    question: "How quickly can we implement QuickVoice in our real estate agency?",
-    answer: "QuickVoice offers rapid deployment with our no-code platform. Most real estate agencies can be up and running within 1-2 weeks, including MLS integration, CRM setup, staff training, and workflow optimization. Our dedicated real estate implementation team ensures smooth transition with minimal disruption to daily operations."
+    question: "How quickly can we implement TinkerVoice in our real estate agency?",
+    answer: "TinkerVoice offers rapid deployment with our no-code platform. Most real estate agencies can be up and running within 1-2 weeks, including MLS integration, CRM setup, staff training, and workflow optimization. Our dedicated real estate implementation team ensures smooth transition with minimal disruption to daily operations."
   },
   {
-    question: "Does QuickVoice support multilingual communication for diverse real estate markets?",
-    answer: "Yes, QuickVoice supports over 100 languages and dialects, making it ideal for diverse real estate markets. The AI can automatically detect customer language preferences, provide culturally appropriate responses, and ensure accurate translation of complex real estate terminology for better customer understanding and service delivery."
+    question: "Does TinkerVoice support multilingual communication for diverse real estate markets?",
+    answer: "Yes, TinkerVoice supports over 100 languages and dialects, making it ideal for diverse real estate markets. The AI can automatically detect customer language preferences, provide culturally appropriate responses, and ensure accurate translation of complex real estate terminology for better customer understanding and service delivery."
   }
 ];
 

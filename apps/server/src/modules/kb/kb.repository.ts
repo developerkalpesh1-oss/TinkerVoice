@@ -284,7 +284,7 @@ export const markRetrying = async (
 const FALLBACK_PROCESSING_FAILURE: Omit<KbProcessingFailure, "kbId"> = {
   code: "KB_PROCESSING_FAILED",
   userMessage:
-    "QuickVoice could not process this document. Try uploading it again. If it still fails, contact your workspace administrator.",
+    "TinkerVoice could not process this document. Try uploading it again. If it still fails, contact your workspace administrator.",
   retryable: true,
 };
 

@@ -77,7 +77,7 @@ export function summarizeKbProcessing(
       kbId,
       code: "KB_PROCESSING_RESULT_MISSING",
       userMessage:
-        "QuickVoice did not receive a processing result for this document. Try uploading it again.",
+        "TinkerVoice did not receive a processing result for this document. Try uploading it again.",
       retryable: true,
     });
   }
@@ -115,7 +115,7 @@ function toFailure(item: KbProcessingItem): KbProcessingFailure {
         ? item.userMessage
         : typeof item.error === "string" && item.error.length > 0
           ? item.error
-          : "QuickVoice could not process this knowledge source. Try again later.",
+          : "TinkerVoice could not process this knowledge source. Try again later.",
     ),
     retryable: item.retryable !== false,
   };

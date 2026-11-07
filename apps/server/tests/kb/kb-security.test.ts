@@ -24,7 +24,7 @@ test("createKbApiSchema accepts authenticated-context payloads without caller-su
       {
         name: "Pricing",
         sourceType: "URL",
-        url: "https://docs.quickvoice.test/pricing",
+        url: "https://docs.tinkervoice.test/pricing",
       },
     ],
   });
@@ -59,7 +59,7 @@ test("createKnowledgeSources verifies the target agent belongs to the active org
         {
           name: "Pricing",
           sourceType: "URL",
-          url: "https://docs.quickvoice.test/pricing",
+          url: "https://docs.tinkervoice.test/pricing",
         },
       ],
     }),
@@ -72,7 +72,7 @@ test("updateKbApiSchema accepts editable fields and strips tenant identifiers", 
   const parsed = updateKbApiSchema.parse({
     name: "Updated pricing",
     agentId: "8d55565f-1111-4111-8111-f95fd03f0df2",
-    url: "https://docs.quickvoice.test/new-pricing",
+    url: "https://docs.tinkervoice.test/new-pricing",
     organizationId: "attacker_org",
     userId: "attacker_user",
   });
@@ -114,7 +114,7 @@ test("prepareKnowledgeSourceUpdate rejects agents outside the active organizatio
       organizationId: "org_123",
       name: "Updated pricing",
       agentId: "8d55565f-1111-4111-8111-f95fd03f0df2",
-      storagePath: "https://docs.quickvoice.test/new-pricing",
+      storagePath: "https://docs.tinkervoice.test/new-pricing",
     }),
     BadRequestError,
   );

@@ -39,7 +39,7 @@ export function FinancialServicesCtaSection() {
             transition={{ duration: 0.6 }}
             className="mb-3 text-3xl font-bold text-white sm:text-4xl md:mb-4 md:text-5xl"
           >
-            Discover How QuickVoice Can Transform Your Financial Services
+            Discover How TinkerVoice Can Transform Your Financial Services
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

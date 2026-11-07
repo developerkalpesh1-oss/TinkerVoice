@@ -60,7 +60,7 @@ export function ManufacturingHeroSection() {
               className="font-geist text-4xl font-light tracking-tighter text-foreground sm:text-5xl lg:text-6xl mb-6 relative z-10"
             >
               Unlock Manufacturing Efficiency with{" "}
-              <span className="text-primary">QuickVoice AI</span>
+              <span className="text-primary">TinkerVoice AI</span>
             </motion.h1>
 
             <motion.p

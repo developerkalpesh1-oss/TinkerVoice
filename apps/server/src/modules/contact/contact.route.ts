@@ -23,7 +23,7 @@ const contactDeliveryRateLimit = rateLimit({
   },
   store: rateLimitStore("contact-delivery"),
   keyGenerator: (req) => {
-    const fingerprint = req.get("X-QuickVoice-Contact-Client")?.trim();
+    const fingerprint = req.get("X-TinkerVoice-Contact-Client")?.trim();
     return fingerprint && /^[0-9a-f]{64}$/i.test(fingerprint)
       ? `client:${fingerprint.toLowerCase()}`
       : `ip:${ipKeyGenerator(req.ip || "")}`;
@@ -42,7 +42,7 @@ const authenticateContact: RequestHandler = (req, res, next) => {
     return;
   }
 
-  const supplied = req.get("X-QuickVoice-Contact-Secret") || "";
+  const supplied = req.get("X-TinkerVoice-Contact-Secret") || "";
   // Fixed-size digests permit constant-time comparison even for unequal lengths.
   const digest = (value: string) => createHash("sha256").update(value).digest();
   if (!timingSafeEqual(digest(supplied), digest(secret))) {

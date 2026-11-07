@@ -63,7 +63,7 @@ export function ContactUsWhySection() {
               }}
             />
             <h2 className="relative z-10 font-geist text-3xl font-light tracking-tighter text-foreground sm:text-4xl lg:text-5xl mb-6">
-              Why Contact QuickVoice?
+              Why Contact TinkerVoice?
             </h2>
           </motion.div>
           <motion.p

@@ -1,4 +1,4 @@
-export const CONSENT_KEY = "quickvoice.analytics-consent.v1";
+export const CONSENT_KEY = "tinkervoice.analytics-consent.v1";
 
 export function normalizeConsent(value) {
   return value === "granted" || value === "denied" ? value : "unknown";
@@ -12,8 +12,8 @@ export function readConsent(browser) {
 /** Preference only: no identifiers, contact fields or browsing history. */
 export function applyConsent(browser, choice) {
   const value = normalizeConsent(choice);
-  browser.quickvoiceAnalyticsConsent = value;
-  const measurementId = browser.quickvoiceAnalyticsMeasurementId;
+  browser.tinkervoiceAnalyticsConsent = value;
+  const measurementId = browser.tinkervoiceAnalyticsMeasurementId;
   if (measurementId) {
     // Disable collection before revoking consent, including automatic history views.
     browser[`ga-disable-${measurementId}`] = value !== "granted";
@@ -23,11 +23,11 @@ export function applyConsent(browser, choice) {
     });
   }
   // Unanswered consent disables collection but is not a request to delete
-  // shared-domain cookies created by another QuickVoice site.
+  // shared-domain cookies created by another TinkerVoice site.
   if (value === "denied") {
     const host = browser.location.hostname;
     const domains = ["", host, `.${host}`];
-    if (host === "quickvoice.co" || host.endsWith(".quickvoice.co")) domains.push(".quickvoice.co");
+    if (host === "tinkervoice.co" || host.endsWith(".tinkervoice.co")) domains.push(".tinkervoice.co");
     for (const cookie of browser.document.cookie.split(";")) {
       const name = cookie.trim().split("=")[0];
       if (!/^(_ga($|_)|_gid$|_gat($|_))/.test(name)) continue;
@@ -43,7 +43,7 @@ const listeners = new Set();
 let initialized = false;
 
 export function getConsentSnapshot() {
-  return typeof window === "undefined" ? "unknown" : normalizeConsent(window.quickvoiceAnalyticsConsent);
+  return typeof window === "undefined" ? "unknown" : normalizeConsent(window.tinkervoiceAnalyticsConsent);
 }
 export function getServerConsentSnapshot() { return "unknown"; }
 

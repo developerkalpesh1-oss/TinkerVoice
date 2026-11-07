@@ -69,7 +69,7 @@ for (const [label, normalize] of [["widget", widget.normalizeTheme], ["server", 
 
 test("normalized widget fields render safely and still escape HTML", () => {
   const theme = widget.normalizeTheme({ brandName: null, actionText: {}, position: null });
-  assert.equal(widget.escapeHtml(theme.brandName), "QuickVoice");
+  assert.equal(widget.escapeHtml(theme.brandName), "TinkerVoice");
   assert.equal(widget.escapeHtml(theme.actionText), "Talk to us");
   assert.equal(widget.positionStyles(theme.position).vertical, "bottom");
   assert.equal(widget.escapeHtml(widget.normalizeTheme({ brandName: '<b>&"\'' }).brandName),

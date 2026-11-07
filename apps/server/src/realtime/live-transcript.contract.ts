@@ -1,17 +1,17 @@
-export const LIVE_TRANSCRIPT_CHANNEL = "quickvoice:live:events";
+export const LIVE_TRANSCRIPT_CHANNEL = "tinkervoice:live:events";
 export const LIVE_TRANSCRIPT_VERSION = 1 as const;
 
 export const activeCallsKey = (organizationId: string) =>
-  `quickvoice:live:active:${organizationId}`;
+  `tinkervoice:live:active:${organizationId}`;
 
 export const callMetadataKey = (organizationId: string, callId: string) =>
-  `quickvoice:live:metadata:${organizationId}:${callId}`;
+  `tinkervoice:live:metadata:${organizationId}:${callId}`;
 
 export const callStreamKey = (organizationId: string, callId: string) =>
-  `quickvoice:live:stream:${organizationId}:${callId}`;
+  `tinkervoice:live:stream:${organizationId}:${callId}`;
 
 export const callDedupKey = (organizationId: string, callId: string) =>
-  `quickvoice:live:dedup:${organizationId}:${callId}`;
+  `tinkervoice:live:dedup:${organizationId}:${callId}`;
 
 export type CallDirection = "inbound" | "outbound";
 export type TranscriptSpeaker = "user" | "agent";

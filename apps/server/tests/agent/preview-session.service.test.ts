@@ -89,7 +89,7 @@ test("requestAgentPreviewSession calls AI sessions with internal auth and maps r
         ttl_seconds: 10800,
       },
       agent: {
-        name: "quickvoice-voice-agent",
+        name: "tinkervoice-voice-agent",
         dispatch_id: "AD_123",
       },
     });

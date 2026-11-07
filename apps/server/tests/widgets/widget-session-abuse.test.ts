@@ -52,7 +52,7 @@ test("one source cannot consume the widget-wide concurrent session pool", () => 
 test("widget rate-limit increment and expiry execute atomically and repair missing TTLs", async () => {
   let invocation: unknown[] | undefined;
   const count = await incrementWidgetRateLimit(
-    "quickvoice:widget:rate:test",
+    "tinkervoice:widget:rate:test",
     900,
     {
       eval: async (...args: unknown[]) => {
@@ -64,7 +64,7 @@ test("widget rate-limit increment and expiry execute atomically and repair missi
 
   assert.equal(count, 2);
   assert.equal(invocation?.[1], 1);
-  assert.equal(invocation?.[2], "quickvoice:widget:rate:test");
+  assert.equal(invocation?.[2], "tinkervoice:widget:rate:test");
   assert.equal(invocation?.[3], 900);
   const script = String(invocation?.[0]);
   assert.match(script, /redis\.call\("SET", KEYS\[1\], "1", "EX", ARGV\[1\]\)/);

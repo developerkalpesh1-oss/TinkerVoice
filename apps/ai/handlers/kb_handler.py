@@ -92,7 +92,7 @@ KB_JOB_PAYLOAD_TTL_SECONDS = max(
         int(os.environ.get("KB_JOB_PAYLOAD_TTL_SECONDS", "900")),
     ),
 )
-KB_JOB_KEY_PREFIX = "quickvoice:kb:job:"
+KB_JOB_KEY_PREFIX = "tinkervoice:kb:job:"
 _KB_REDIS_CLIENT = None
 
 
@@ -576,7 +576,7 @@ def _document_error_fields(exc: Exception, *, budget: dict) -> dict:
         user_message = "Add a URL for this knowledge source and try again."
     elif "presignedUrl is required for file source types" in message:
         code = "KB_FILE_URL_REQUIRED"
-        user_message = "Upload the file again so QuickVoice can read it."
+        user_message = "Upload the file again so TinkerVoice can read it."
         retryable = True
     elif "Only http and https URLs are allowed" in message:
         code = "KB_URL_UNSUPPORTED_SCHEME"
@@ -595,7 +595,7 @@ def _document_error_fields(exc: Exception, *, budget: dict) -> dict:
         user_message = "This URL host is not allowed for knowledge ingestion."
     elif "URL host could not be resolved" in message:
         code = "KB_URL_HOST_UNRESOLVED"
-        user_message = "QuickVoice could not reach this URL host. Check the URL and try again."
+        user_message = "TinkerVoice could not reach this URL host. Check the URL and try again."
         retryable = True
     elif "download exceeds" in message:
         code = "KB_DOWNLOAD_TOO_LARGE"
@@ -637,7 +637,7 @@ def _document_error_fields(exc: Exception, *, budget: dict) -> dict:
         user_message = "Knowledge processing requires QDRANT_URL in the AI service environment."
     else:
         code = "KB_PROCESSING_FAILED"
-        user_message = "QuickVoice could not process this knowledge source. Try again later."
+        user_message = "TinkerVoice could not process this knowledge source. Try again later."
         retryable = True
 
     return {
@@ -747,7 +747,7 @@ def _download_bytes_pinned(url: str, max_bytes: int, expected_content: str | Non
             path = parsed.path or "/"
             if parsed.query:
                 path += f"?{parsed.query}"
-            connection.request("GET", path, headers={"Host": parsed.netloc, "User-Agent": "QuickVoice-KB/1.0", "Accept-Encoding": "identity"})
+            connection.request("GET", path, headers={"Host": parsed.netloc, "User-Agent": "TinkerVoice-KB/1.0", "Accept-Encoding": "identity"})
             _bound_socket_timeout(connection, deadline)
             response = connection.getresponse()
             if response.status in {301, 302, 303, 307, 308}:

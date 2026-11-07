@@ -15,26 +15,26 @@ import {
 export const metadata: Metadata = {
   title: "Healthcare Data & HIPAA Deployment Considerations",
   description:
-    "A practical review checklist for teams evaluating QuickVoice in healthcare. Compliance depends on deployment, contracts, controls, providers, operations, and legal review.",
+    "A practical review checklist for teams evaluating TinkerVoice in healthcare. Compliance depends on deployment, contracts, controls, providers, operations, and legal review.",
   alternates: {
-    canonical: "https://quickvoice.co/compliance/hipaa",
+    canonical: "https://tinkervoice.co/compliance/hipaa",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Healthcare Deployment Review | QuickVoice",
+    title: "Healthcare Deployment Review | TinkerVoice",
     description:
       "Review healthcare data, provider agreements and operating controls for the exact deployment. This checklist is not a certification.",
     images: ["/og-image.png"],
   },
   openGraph: {
-    title: "QuickVoice Healthcare Deployment Review",
+    title: "TinkerVoice Healthcare Deployment Review",
     description:
       "Inspect the code and evaluate the controls, provider agreements, retention choices, and operating processes required for a healthcare deployment.",
     type: "website",
-    url: "https://quickvoice.co/compliance/hipaa",
-    siteName: "QuickVoice",
+    url: "https://tinkervoice.co/compliance/hipaa",
+    siteName: "TinkerVoice",
     images: [
-      { url: "https://quickvoice.co/og-image.png", width: 1200, height: 630 },
+      { url: "https://tinkervoice.co/og-image.png", width: 1200, height: 630 },
     ],
   },
 };
@@ -80,7 +80,7 @@ const reviewAreas = [
 
 const deploymentChecklist = [
   "Classify the data each call flow can collect, infer, store, or disclose.",
-  "Document the exact QuickVoice commit, configuration, providers, regions, and subprocessors in scope.",
+  "Document the exact TinkerVoice commit, configuration, providers, regions, and subprocessors in scope.",
   "Obtain and review required provider agreements before processing regulated data.",
   "Configure authentication, authorization, network boundaries, encryption, logging, backups, and key rotation.",
   "Set retention and deletion rules for transcripts, recordings, logs, knowledge sources, exports, and backups.",
@@ -91,7 +91,7 @@ const deploymentChecklist = [
 
 const responsibilityRows = [
   {
-    layer: "QuickVoice source",
+    layer: "TinkerVoice source",
     review:
       "Code paths, defaults, data models, permissions, logs, retention jobs, integrations, and update process.",
   },
@@ -124,7 +124,7 @@ export default function HealthcareDeploymentReviewPage() {
             Review the complete healthcare deployment
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground">
-            QuickVoice makes privacy-sensitive voice infrastructure inspectable.
+            TinkerVoice makes privacy-sensitive voice infrastructure inspectable.
             Your compliance posture still depends on how you deploy and operate
             it, which providers process data, which agreements are in place, and
             whether the full system passes security, privacy, operational, and
@@ -270,7 +270,7 @@ export default function HealthcareDeploymentReviewPage() {
             </p>
           </div>
           <Link
-            href="https://github.com/allgpt-co/QuickVoice"
+            href="https://github.com/allgpt-co/TinkerVoice"
             className="inline-flex shrink-0 items-center gap-2 rounded-[10px] bg-primary px-6 py-3 font-medium text-primary-foreground transition hover:bg-primary-hover"
           >
             View source on GitHub

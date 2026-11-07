@@ -23,7 +23,7 @@ export const livekitRoomServiceClient = new RoomServiceClient(
   process.env.LIVEKIT_API_SECRET
 );
 
-export const DEFAULT_LIVEKIT_AGENT_NAME = "quickvoice-voice-agent";
+export const DEFAULT_LIVEKIT_AGENT_NAME = "tinkervoice-voice-agent";
 export const LIVEKIT_AGENT_NAME = process.env.LIVEKIT_AGENT_NAME ?? DEFAULT_LIVEKIT_AGENT_NAME;
 
 // Singleton trunk IDs — provisioned manually in LiveKit and pinned in env.

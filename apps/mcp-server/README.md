@@ -1,14 +1,14 @@
-# QuickVoice MCP Server
+# TinkerVoice MCP Server
 
-Remote MCP server exposing verified QuickVoice organization APIs as MCP tools/resources over Streamable HTTP.
+Remote MCP server exposing verified TinkerVoice organization APIs as MCP tools/resources over Streamable HTTP.
 
 ## SDK choice
 
-This app uses the official TypeScript SDK `@modelcontextprotocol/sdk` because QuickVoice is a Node/TypeScript monorepo for the main API server, and the SDK provides first-class Streamable HTTP transport support.
+This app uses the official TypeScript SDK `@modelcontextprotocol/sdk` because TinkerVoice is a Node/TypeScript monorepo for the main API server, and the SDK provides first-class Streamable HTTP transport support.
 
 ## Authentication
 
-The MCP endpoint is remote and is not public. Clients must authenticate every request with a QuickVoice API key:
+The MCP endpoint is remote and is not public. Clients must authenticate every request with a TinkerVoice API key:
 
 ```http
 x-api-key: qv_...
@@ -20,7 +20,7 @@ or:
 Authorization: Bearer qv_...
 ```
 
-The MCP server forwards that API key to the existing QuickVoice API, so existing organization permissions continue to apply. No business logic is duplicated in the MCP server.
+The MCP server forwards that API key to the existing TinkerVoice API, so existing organization permissions continue to apply. No business logic is duplicated in the MCP server.
 
 API keys are validated before an MCP session is allocated. Sessions are bound
 to the key that created them, expire after 15 minutes idle or 24 hours total,
@@ -46,17 +46,17 @@ enforce this check; no database migration or credential change is required.
 ## Run locally
 
 ```bash
-pnpm --filter quickvoice-mcp-server build
+pnpm --filter tinkervoice-mcp-server build
 PORT=8787 \
-QUICKVOICE_API_BASE_URL=http://localhost:5000/api/v1 \
-pnpm --filter quickvoice-mcp-server start
+TINKERVOICE_API_BASE_URL=http://localhost:5000/api/v1 \
+pnpm --filter tinkervoice-mcp-server start
 ```
 
 ## Required env vars
 
 | Env var | Required | Description |
 |---|---:|---|
-| `QUICKVOICE_API_BASE_URL` | Yes | Base URL of the existing QuickVoice API, e.g. `https://api.quickvoice.co/api/v1`. |
+| `TINKERVOICE_API_BASE_URL` | Yes | Base URL of the existing TinkerVoice API, e.g. `https://api.tinkervoice.co/api/v1`. |
 | `PORT` or `MCP_PORT` | No | HTTP port. Default `8787`. |
 | `MCP_ENDPOINT_PATH` | No | MCP path. Default `/mcp`. |
 | `MCP_CORS_ORIGINS` | No | Comma-separated browser client origins allowed to call the MCP endpoint. |
@@ -67,17 +67,17 @@ Configure an MCP Streamable HTTP client with:
 
 ```json
 {
-  "name": "quickvoice",
+  "name": "tinkervoice",
   "url": "https://YOUR_MCP_HOST/mcp",
   "headers": {
-    "x-api-key": "YOUR_QUICKVOICE_API_KEY"
+    "x-api-key": "YOUR_TINKERVOICE_API_KEY"
   }
 }
 ```
 
 The server exposes:
 
-- `quickvoice://api_catalog` resource with the full API inventory.
+- `tinkervoice://api_catalog` resource with the full API inventory.
 - One MCP resource template per read-only verified API.
 - One MCP tool per mutation/action verified API.
 
@@ -90,7 +90,7 @@ out behind proxies such as Cloudflare. A `405` from this GET probe is expected.
 ## Transport regression test
 
 ```bash
-pnpm --filter quickvoice-mcp-server test:transport
+pnpm --filter tinkervoice-mcp-server test:transport
 ```
 
 This starts a local server on an available port and checks the API-key requirement,
@@ -104,9 +104,9 @@ the test needs no real API key and does not contact production services.
 Start the MCP server, then run:
 
 ```bash
-QUICKVOICE_API_KEY=qv_... \
+TINKERVOICE_API_KEY=qv_... \
 MCP_URL=http://localhost:8787/mcp \
-pnpm --filter quickvoice-mcp-server test:mcp
+pnpm --filter tinkervoice-mcp-server test:mcp
 ```
 
 For resource templates that require IDs, optionally provide:

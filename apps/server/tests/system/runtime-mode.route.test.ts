@@ -9,7 +9,7 @@ let server: Server;
 let baseUrl: string;
 
 before(async () => {
-  process.env.QUICKVOICE_BILLING_MODE = "hosted";
+  process.env.TINKERVOICE_BILLING_MODE = "hosted";
   process.env.INTERNAL_API_KEY = "runtime-mode-test-secret";
   process.env.STRIPE_SECRET_KEY ||= "sk_test_placeholder";
   process.env.BETTER_AUTH_URL ||= "http://localhost:5000";

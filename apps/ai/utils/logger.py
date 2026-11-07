@@ -77,7 +77,7 @@ def _is_sensitive_key(key: str) -> bool:
 
 class _StdlibLogger:
     def __init__(self):
-        self._logger = logging.getLogger("quickvoice.ai")
+        self._logger = logging.getLogger("tinkervoice.ai")
         if not self._logger.handlers:
             handler = logging.StreamHandler(sys.stderr)
             handler.setFormatter(

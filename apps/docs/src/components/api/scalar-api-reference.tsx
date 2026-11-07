@@ -27,7 +27,7 @@ declare global {
   }
 }
 
-const containerId = "quickvoice-scalar-api-reference";
+const containerId = "tinkervoice-scalar-api-reference";
 const scalarScript =
   "https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.72.3/dist/browser/standalone.js";
 const scalarIntegrity =
@@ -57,9 +57,9 @@ export function ScalarApiReference() {
       withDefaultFonts: false,
       theme: theme === "dark" ? "moon" : "default",
       metaData: {
-        title: "QuickVoice REST API reference",
+        title: "TinkerVoice REST API reference",
         description:
-          "QuickVoice endpoint reference. In Ask AI, explain the selected operation first, including its method, path, use case, auth, request fields, response, and side effects.",
+          "TinkerVoice endpoint reference. In Ask AI, explain the selected operation first, including its method, path, use case, auth, request fields, response, and side effects.",
       },
     });
   }, [theme]);
@@ -102,7 +102,7 @@ export function ScalarApiReference() {
               API reference
             </p>
             <h1 className="mt-1 text-2xl font-semibold tracking-[-0.035em] text-[var(--qv-ink)]">
-              QuickVoice REST API
+              TinkerVoice REST API
             </h1>
           </div>
           <a

@@ -67,7 +67,7 @@ export function RemindersCollectionsHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg leading-8 text-muted-foreground mb-10"
             >
-              Simplify reminders and collections across industries with QuickVoice, a cutting-edge AI-powered voice agent solution.
+              Simplify reminders and collections across industries with TinkerVoice, a cutting-edge AI-powered voice agent solution.
               Our innovative technology enables businesses to create custom voice agents that automate timely, personalized follow-ups,
               ensuring consistent engagement and faster cash flow.
             </motion.p>

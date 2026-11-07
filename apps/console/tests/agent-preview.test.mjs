@@ -59,7 +59,7 @@ test("agent preview renders a conversation view with LiveKit transcript hooks", 
   assert.match(panel, /conversationMessages/);
   assert.doesNotMatch(panel, /SpeechRecognition/);
   assert.doesNotMatch(panel, /webkitSpeechRecognition/);
-  assert.doesNotMatch(panel, /quickvoice\.preview\.transcript/);
+  assert.doesNotMatch(panel, /tinkervoice\.preview\.transcript/);
   assert.doesNotMatch(panel, /preview_user_transcript/);
   assert.doesNotMatch(panel, /lk\.chat/);
   assert.match(panel, /handleLiveKitTranscript/);
