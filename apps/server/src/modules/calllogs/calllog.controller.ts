@@ -111,6 +111,23 @@ export const getCallRecordingDownloadUrl = authorized(async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true, data: { url } });
 });
 
+export const streamCallRecording = authorized(async (req, res) => {
+  const callId = req.params.callId;
+  if (typeof callId !== "string" || callId.length === 0) {
+    throw new BadRequestError("Call id is required");
+  }
+  const disposition =
+    typeof req.query.disposition === "string" && req.query.disposition === "attachment"
+      ? "attachment"
+      : "inline";
+  await calllogService.streamCallRecording(
+    req.auth.activeOrganizationId,
+    callId,
+    res,
+    { disposition },
+  );
+});
+
 export const getTranscripts = authorized(async (req, res) => {
   const callId = req.params.callId;
   if (typeof callId !== "string" || callId.length === 0) {

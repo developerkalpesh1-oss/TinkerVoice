@@ -11,7 +11,12 @@ from livekit import api
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from handlers.billing_usage_reporter import BillingUsageIdentifiers, BillingUsageReporter
-from handlers.worker_handler import attach_call_limits, delete_call_room, wait_for_sip_answer
+from handlers.worker_handler import (
+    attach_call_limits,
+    delete_call_room,
+    silence_follow_up_message,
+    wait_for_sip_answer,
+)
 
 
 class Events:
@@ -75,7 +80,13 @@ class CallLimitTests(unittest.IsolatedAsyncioTestCase):
                 session.emit("user_state_changed", SimpleNamespace(new_state=state))
             await asyncio.wait_for(ended.wait(), 1)
             self.assertEqual(reasons, ["silence_timeout"])
-            self.assertEqual(session.messages, ["Are you still there?"])
+            self.assertEqual(
+                session.messages,
+                [
+                    silence_follow_up_message("en", 0),
+                    silence_follow_up_message("en", 1),
+                ],
+            )
         finally:
             guard.close()
 
@@ -98,19 +109,28 @@ class CallLimitTests(unittest.IsolatedAsyncioTestCase):
             )
             try:
                 session.emit("agent_state_changed", SimpleNamespace(new_state="listening"))
-                previous_warning, previous_hangup = handles[-2:]
+                previous_first, previous_second, previous_hangup = handles[-3:]
                 guard.record_user_activity("transcript")
-                previous_warning.cancel.assert_called_once()
+                previous_first.cancel.assert_called_once()
+                previous_second.cancel.assert_called_once()
                 previous_hangup.cancel.assert_called_once()
-                warning, hangup = timer.call_args_list[-2:]
-                self.assertEqual(warning.args[0], 20)
+                first, second, hangup = timer.call_args_list[-3:]
+                self.assertEqual(first.args[0], 12)
+                self.assertEqual(second.args[0], 21)
                 self.assertEqual(hangup.args[0], 30)
                 self.assertEqual(session.messages, [])
                 stop.assert_not_called()
-                warning.args[1]()
+                first.args[1](*first.args[2:])
+                second.args[1](*second.args[2:])
                 hangup.args[1](*hangup.args[2:])
                 await asyncio.sleep(0)
-                self.assertEqual(session.messages, ["Are you still there?"])
+                self.assertEqual(
+                    session.messages,
+                    [
+                        silence_follow_up_message("en", 0),
+                        silence_follow_up_message("en", 1),
+                    ],
+                )
                 stop.assert_awaited_once_with("silence_timeout")
             finally:
                 guard.close()
@@ -165,7 +185,13 @@ class CallLimitTests(unittest.IsolatedAsyncioTestCase):
                 session.emit("agent_state_changed", SimpleNamespace(new_state="listening"))
             await asyncio.wait_for(ended.wait(), 0.2)
             self.assertEqual(reasons, ["silence_timeout"])
-            self.assertEqual(session.messages, ["Are you still there?"])
+            self.assertEqual(
+                session.messages,
+                [
+                    silence_follow_up_message("en", 0),
+                    silence_follow_up_message("en", 1),
+                ],
+            )
         finally:
             guard.close()
 
@@ -196,7 +222,42 @@ class CallLimitTests(unittest.IsolatedAsyncioTestCase):
             session.emit("agent_state_changed", SimpleNamespace(new_state="listening"))
             await asyncio.wait_for(ended.wait(), 1)
             self.assertEqual(reasons, ["silence_timeout"])
-            self.assertEqual(session.messages, ["Are you still there?"])
+            self.assertEqual(
+                session.messages,
+                [
+                    silence_follow_up_message("en", 0),
+                    silence_follow_up_message("en", 1),
+                ],
+            )
+        finally:
+            guard.close()
+
+    async def test_silence_follow_ups_match_reply_language(self):
+        session = Events()
+        ended = asyncio.Event()
+
+        async def stop(_reason):
+            ended.set()
+
+        guard = attach_call_limits(
+            session,
+            silence_timeout_seconds=0.09,
+            max_duration_seconds=600,
+            connected_at_monotonic=time.monotonic(),
+            stop_session=stop,
+            reply_language="hi",
+        )
+        try:
+            guard.set_reply_language("mr")
+            session.emit("agent_state_changed", SimpleNamespace(new_state="listening"))
+            await asyncio.wait_for(ended.wait(), 1)
+            self.assertEqual(
+                session.messages,
+                [
+                    silence_follow_up_message("mr", 0),
+                    silence_follow_up_message("mr", 1),
+                ],
+            )
         finally:
             guard.close()
 
@@ -225,7 +286,7 @@ class CallLimitTests(unittest.IsolatedAsyncioTestCase):
                 SimpleNamespace(participant=SimpleNamespace(identity="other")),
             )
             await asyncio.sleep(0.03)
-            self.assertEqual(session.messages, ["Are you still there?"])
+            self.assertIn(silence_follow_up_message("en", 0), session.messages)
             room.emit(
                 "sip_dtmf_received",
                 SimpleNamespace(participant=SimpleNamespace(identity="caller")),

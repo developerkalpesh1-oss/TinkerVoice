@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import unittest
 import asyncio
 from unittest.mock import AsyncMock, patch
@@ -19,9 +20,11 @@ from handlers.worker_handler import (
     configure_tinkerism_conversation,
     consume_preview_user_transcript_stream,
     is_tinkerism_call,
+    should_update_tinkerism_reply_language,
     tinkerism_reply_language,
     resolve_webhook_dynamic_variables,
     speak_first_message,
+    speak_outbound_first_message,
     value_at_json_path,
     webhook_body_values,
 )
@@ -369,6 +372,15 @@ class WorkerHandlerTests(unittest.TestCase):
 
         self.assertEqual(set(kwargs.keys()), {"stt", "llm", "tts"})
 
+    def test_build_room_options_binds_outbound_sip_participant_for_audio_publish(self):
+        sip = SimpleNamespace(
+            identity="outbound-1",
+            kind=rtc.ParticipantKind.PARTICIPANT_KIND_SIP,
+        )
+        options = build_room_options(sip)
+        self.assertEqual(options.participant_identity, "outbound-1")
+        self.assertEqual(options.participant_kinds, [rtc.ParticipantKind.PARTICIPANT_KIND_SIP])
+
     def test_build_room_options_emits_text_before_audio_sync_and_keeps_noise_filter_off_by_default(self):
         from unittest.mock import patch
 
@@ -564,6 +576,38 @@ class WorkerHandlerTests(unittest.TestCase):
         self.assertEqual(result, "speech-handle")
         self.assertEqual(session.calls, [("Hello caller.", {"allow_interruptions": True})])
 
+    def test_outbound_opening_waits_for_sip_media_before_speaking(self):
+        class FakeHandle:
+            def __init__(self):
+                self.played = False
+
+            async def wait_for_playout(self):
+                self.played = True
+
+        class FakeSession:
+            def __init__(self):
+                self.handle = FakeHandle()
+
+            def say(self, text, **kwargs):
+                self.text = text
+                return self.handle
+
+        session = FakeSession()
+        participant = SimpleNamespace(attributes={"sip.callStatus": "active"})
+        started = time.monotonic()
+        result = asyncio.run(
+            speak_outbound_first_message(
+                session,
+                {"first_message": "Campaign greeting."},
+                participant=participant,
+                media_settle_seconds=0.05,
+            )
+        )
+        self.assertGreaterEqual(time.monotonic() - started, 0.05)
+        self.assertIs(result, session.handle)
+        self.assertTrue(session.handle.played)
+        self.assertEqual(session.text, "Campaign greeting.")
+
     def test_tinkerism_calls_commit_turns_from_stt_and_other_calls_do_not(self):
         session = SimpleNamespace(update_options=lambda **kwargs: updates.append(kwargs))
         updates = []
@@ -571,28 +615,110 @@ class WorkerHandlerTests(unittest.TestCase):
         self.assertEqual(updates, [])
         self.assertFalse(is_tinkerism_call({"dynamic_variables": {"tinkerism_call": "0"}}))
 
+        from handlers.voice_provider_adapters import TINKERISM_STT_KEYTERMS
+
         configure_tinkerism_conversation(session, {"dynamic_variables": {"tinkerism_call": "1"}})
         self.assertEqual(updates, [{
             "turn_detection": "stt",
-            "endpointing_opts": {"mode": "fixed", "min_delay": 0.1, "max_delay": 0.3},
-            "keyterms": ["Tinkerism", "website", "websites"],
+            "endpointing_opts": {"mode": "fixed", "min_delay": 0.3, "max_delay": 0.9},
+            "keyterms": list(TINKERISM_STT_KEYTERMS),
         }])
         self.assertEqual(tinkerism_reply_language("hi-IN", "hello"), "hi")
+        self.assertEqual(tinkerism_reply_language("mr-IN", "नमस्कार"), "mr")
         self.assertEqual(tinkerism_reply_language("en", "website"), "en")
         self.assertEqual(tinkerism_reply_language(None, "नमस्ते"), "hi")
+        self.assertEqual(tinkerism_reply_language("en", "तुम्ही काय करत आहात"), "mr")
+        self.assertEqual(tinkerism_reply_language(None, "क्या आप ठीक हैं"), "hi")
+        self.assertEqual(tinkerism_reply_language("en", "barobar ahe tumhi"), "mr")
         self.assertIsNone(tinkerism_reply_language(None, "hello"))
+        self.assertFalse(should_update_tinkerism_reply_language("hi", "en", "Hello."))
+        self.assertFalse(should_update_tinkerism_reply_language("hi", "en", "Yes."))
+        self.assertFalse(should_update_tinkerism_reply_language("mr", "en", "Okay thanks"))
+        self.assertTrue(
+            should_update_tinkerism_reply_language(
+                "hi", "en", "I need a new website for my shop"
+            )
+        )
+        self.assertTrue(should_update_tinkerism_reply_language("en", "hi", "नहीं"))
+        self.assertTrue(should_update_tinkerism_reply_language("hi", "mr", "बरोबर आहे"))
         languages = []
+        reply_languages = []
         streaming = SimpleNamespace(
             tts=SimpleNamespace(update_options=lambda **kwargs: languages.append(kwargs)),
             update_options=lambda **kwargs: None,
             on=lambda event, handler: handlers.append((event, handler)),
         )
         handlers = []
-        configure_tinkerism_conversation(streaming, {"dynamic_variables": {"tinkerism_call": "1"}})
+        configure_tinkerism_conversation(
+            streaming,
+            {"dynamic_variables": {"tinkerism_call": "1"}},
+            on_reply_language=reply_languages.append,
+        )
         self.assertEqual(handlers[0][0], "user_input_transcribed")
         handlers[0][1](SimpleNamespace(is_final=False, language="hi", transcript="नमस्ते"))
         handlers[0][1](SimpleNamespace(is_final=True, language="hi-IN", transcript="क्या आप वेबसाइट बनाते हैं"))
         self.assertEqual(languages, [{"language": "hi"}])
+        self.assertEqual(reply_languages, ["hi"])
+        # Short English fillers must not pull the call out of Hindi.
+        handlers[0][1](SimpleNamespace(is_final=True, language="en", transcript="Hello."))
+        self.assertEqual(languages, [{"language": "hi"}])
+        self.assertEqual(reply_languages, ["hi"])
+        handlers[0][1](
+            SimpleNamespace(
+                is_final=True,
+                language="en",
+                transcript="I want a website for my company please",
+            )
+        )
+        self.assertEqual(languages, [{"language": "hi"}, {"language": "en"}])
+        self.assertEqual(reply_languages, ["hi", "en"])
+        # Marathi must clear language_code instead of sending mr (Flash closes with 1008).
+        from livekit.agents.types import NOT_GIVEN
+
+        marathi_tts = SimpleNamespace(
+            _opts=SimpleNamespace(language="en"),
+            _opts_revision=1,
+            _TTS__current_connection=None,
+            update_options=lambda **kwargs: languages.append(kwargs),
+        )
+        marathi_session = SimpleNamespace(
+            tts=marathi_tts,
+            update_options=lambda **kwargs: None,
+            on=lambda event, handler: marathi_handlers.append((event, handler)),
+        )
+        marathi_handlers = []
+        configure_tinkerism_conversation(
+            marathi_session,
+            {"dynamic_variables": {"tinkerism_call": "1"}},
+        )
+        before = len(languages)
+        marathi_handlers[0][1](
+            SimpleNamespace(is_final=True, language="mr", transcript="तुम्ही काय करत आहात")
+        )
+        self.assertEqual(languages[before:], [])
+        self.assertIs(marathi_tts._opts.language, NOT_GIVEN)
+        self.assertEqual(marathi_tts._opts_revision, 2)
+        # A bad TTS.update_options signature must not prevent language follow-up callbacks.
+        broken = SimpleNamespace(
+            tts=SimpleNamespace(
+                update_options=lambda **kwargs: (_ for _ in ()).throw(
+                    TypeError("unexpected keyword argument")
+                )
+            ),
+            update_options=lambda **kwargs: None,
+            on=lambda event, handler: broken_handlers.append((event, handler)),
+        )
+        broken_handlers = []
+        broken_languages = []
+        configure_tinkerism_conversation(
+            broken,
+            {"dynamic_variables": {"tinkerism_call": "1"}},
+            on_reply_language=broken_languages.append,
+        )
+        broken_handlers[0][1](
+            SimpleNamespace(is_final=True, language="hi", transcript="क्या आप ठीक हैं")
+        )
+        self.assertEqual(broken_languages, ["hi"])
         rendered = apply_metadata_overrides(
             {"system_prompt": "Saved prompt.", "first_message": "Saved greeting."},
             {
@@ -606,8 +732,19 @@ class WorkerHandlerTests(unittest.TestCase):
         self.assertEqual(rendered["first_message"], "Hi, this is Tinkerism.")
         instructions = build_agent_instructions(rendered)
         self.assertIn("Do not greet again", instructions)
+        self.assertIn("listen to the caller's full turn", instructions)
+        self.assertIn("language, tone, wording, intent", instructions)
         self.assertIn("natural spoken Hindi", instructions)
+        self.assertIn("natural spoken Marathi", instructions)
         self.assertIn("professional Indian English", instructions)
+        self.assertIn("Hmm", instructions)
+        self.assertIn("Devanagari", instructions)
+        self.assertIn("stop speaking immediately", instructions)
+        self.assertIn("politely offer to continue in Hindi or Marathi", instructions)
+        self.assertIn("Do not switch to English just because they said a short filler", instructions)
+        from handlers.worker_handler import TINKERISM_PREEMPTIVE_GENERATION
+        self.assertFalse(TINKERISM_PREEMPTIVE_GENERATION["enabled"])
+        self.assertFalse(TINKERISM_PREEMPTIVE_GENERATION["preemptive_tts"])
         self.assertNotIn("Do not greet again", build_agent_instructions({"system_prompt": "Saved prompt."}))
 
     def test_hindi_agent_localizes_standard_greeting_and_instruction(self):

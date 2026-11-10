@@ -13,6 +13,7 @@ export {
   blankCampaign as blankPromptCampaign,
   campaignError as promptCampaignError,
   campaignForCalls as promptCampaignForCalls,
+  campaignOpeningGreeting,
   cleanExtractedText,
   createCampaignId,
   knowledgeFileError,

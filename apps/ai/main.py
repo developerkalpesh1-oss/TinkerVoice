@@ -25,7 +25,12 @@ from handlers.calllog_handler import run_call_log_queue_consumer
 from handlers.post_call_webhook_handler import run_post_call_webhook_queue_consumer
 from handlers.config_handler import get_config
 from handlers.finalization_handler import CallFinalizer
-from handlers.livekit_handler import recording_path as build_recording_path, start_recording
+from handlers.livekit_handler import (
+    LocalCallRecorder,
+    recording_storage_mode,
+    resolve_uploaded_recording_path,
+    start_recording,
+)
 from handlers.live_transcript_publisher import LiveTranscriptPublisher
 from handlers.http_tool_handler import build_http_tool_instructions, call_http_tool, parse_http_tool_arguments
 from handlers.mcp_handler import build_mcp_tool_instructions, call_mcp_tool, describe_mcp_tool, parse_arguments_json
@@ -34,6 +39,10 @@ from handlers.rag_handler import RagRetrievalError, get_rag_context
 from handlers.transcript_collector import TranscriptCollector
 from handlers.worker_handler import (
     PREVIEW_TRANSCRIPT_TOPIC,
+    TINKERISM_CONVERSATION_INSTRUCTIONS,
+    TINKERISM_ENDPOINTING,
+    TINKERISM_INTERRUPTION,
+    TINKERISM_PREEMPTIVE_GENERATION,
     apply_initiation_webhook_metadata,
     apply_metadata_overrides,
     attach_call_limits,
@@ -47,6 +56,7 @@ from handlers.worker_handler import (
     parse_preview_user_transcript_packet,
     parse_metadata,
     speak_first_message,
+    speak_outbound_first_message,
     wait_for_sip_answer,
 )
 from handlers.voice_catalog import load_voice_catalog
@@ -194,12 +204,7 @@ def build_agent_instructions(config: dict, call_context: dict | None = None) -> 
             "explicitly asks for another language."
         )
     if is_tinkerism_call(config):
-        instructions += (
-            "\n\nThe opening greeting was already spoken. Do not greet again or repeat the introduction. "
-            "Listen, then answer only the caller's latest question in one or two short sentences. "
-            "If the caller speaks Hindi, answer in natural spoken Hindi. "
-            "If the caller speaks English, answer in professional Indian English."
-        )
+        instructions += TINKERISM_CONVERSATION_INSTRUCTIONS
     if config.get("use_rag"):
         instructions += RAG_TOOL_INSTRUCTIONS
     if ivr_navigation_enabled(config, call_context):
@@ -218,7 +223,7 @@ def build_agent_instructions(config: dict, call_context: dict | None = None) -> 
 
 
 
-def build_room_options() -> room_io.RoomOptions:
+def build_room_options(participant=None) -> room_io.RoomOptions:
     enable_noise_cancellation = os.getenv("LIVEKIT_ENABLE_NOISE_CANCELLATION", "").lower() in {
         "1",
         "true",
@@ -233,12 +238,21 @@ def build_room_options() -> room_io.RoomOptions:
             else noise_cancellation.BVC()
         )
 
-    return room_io.RoomOptions(
-        audio_input=room_io.AudioInputOptions(
+    options: dict = {
+        "audio_input": room_io.AudioInputOptions(
             noise_cancellation=noise_cancellation_selector,
         ),
-        text_output=room_io.TextOutputOptions(sync_transcription=False),
-    )
+        "text_output": room_io.TextOutputOptions(sync_transcription=False),
+    }
+    # Bind RoomIO to the SIP callee so agent TTS publishes into the Twilio/Telnyx RTP bridge.
+    if (
+        participant is not None
+        and getattr(participant, "kind", None) == rtc.ParticipantKind.PARTICIPANT_KIND_SIP
+        and getattr(participant, "identity", None)
+    ):
+        options["participant_identity"] = participant.identity
+        options["participant_kinds"] = [rtc.ParticipantKind.PARTICIPANT_KIND_SIP]
+    return room_io.RoomOptions(**options)
 
 
 def _transcription_chunk_text(chunk) -> str:
@@ -680,9 +694,9 @@ async def prepare_tinkerism_phone_call(room_name: str, metadata: dict) -> dict:
     vad_task = asyncio.create_task(
         asyncio.to_thread(
             silero.VAD.load,
-            min_silence_duration=0.15,
-            prefix_padding_duration=0.2,
-            min_speech_duration=0.05,
+            min_silence_duration=0.12,
+            prefix_padding_duration=0.18,
+            min_speech_duration=0.04,
         )
     )
     try:
@@ -866,6 +880,7 @@ async def _run_entrypoint(ctx: JobContext):
             }
         ),
     )
+    tinkerism_call = is_tinkerism_call(config)
     session = AgentSession(
         **provider_kwargs,
         user_away_timeout=None,
@@ -875,18 +890,28 @@ async def _run_entrypoint(ctx: JobContext):
         # https://docs.livekit.io/agents/logic/turns/
         aec_warmup_duration=None,
         turn_handling=TurnHandlingOptions(
-            turn_detection="stt" if is_tinkerism_call(config) else inference.TurnDetector(),
-            interruption={
-                "enabled": True,
-                "mode": "vad",
-                "min_duration": 0.25,
-                "min_words": 0,
-                "discard_audio_if_uninterruptible": False,
-            },
+            turn_detection="stt" if tinkerism_call else inference.TurnDetector(),
+            endpointing=dict(TINKERISM_ENDPOINTING) if tinkerism_call else {},
+            interruption=(
+                dict(TINKERISM_INTERRUPTION)
+                if tinkerism_call
+                else {
+                    "enabled": True,
+                    "mode": "vad",
+                    "min_duration": 0.25,
+                    "min_words": 0,
+                    "discard_audio_if_uninterruptible": False,
+                }
+            ),
+            # Outbound: wait for the full committed user turn before LLM/TTS.
+            preemptive_generation=(
+                dict(TINKERISM_PREEMPTIVE_GENERATION)
+                if tinkerism_call
+                else {"enabled": True, "preemptive_tts": False}
+            ),
         ),
         ivr_detection=config["ivr_navigation_enabled"],
     )
-    configure_tinkerism_conversation(session, config)
     shutdown_reason = "session_shutdown"
     call_ended_at: datetime | None = None
     billed_participant_identity = getattr(participant, "identity", None)
@@ -967,6 +992,7 @@ async def _run_entrypoint(ctx: JobContext):
     def on_session_usage_updated(event):
         billing_reporter.update_usage(getattr(event, "usage", None))
 
+    initial_reply_language = str(config.get("agent_language") or "en")
     call_limits = attach_call_limits(
         session,
         room=ctx.room,
@@ -975,6 +1001,12 @@ async def _run_entrypoint(ctx: JobContext):
         max_duration_seconds=config["max_conversation_duration_seconds"],
         connected_at_monotonic=participant_connected_monotonic,
         stop_session=billing_reporter.request_stop,
+        reply_language=initial_reply_language,
+    )
+    configure_tinkerism_conversation(
+        session,
+        config,
+        on_reply_language=call_limits.set_reply_language,
     )
 
     async def billing_shutdown_hook():
@@ -996,12 +1028,14 @@ async def _run_entrypoint(ctx: JobContext):
     live_transcript_publisher = None
     transcript_collector = None
     recording_task: asyncio.Task | None = None
+    local_recorder: LocalCallRecorder | None = None
 
     def on_preview_task_done(task: asyncio.Task) -> None:
         preview_tasks.discard(task)
         log_task_failure(task)
 
     async def run_unified_shutdown():
+        nonlocal local_recorder
         call_limits.close()
         if shutdown_reason == "participant_disconnected":
             try:
@@ -1029,19 +1063,34 @@ async def _run_entrypoint(ctx: JobContext):
                 "[LIVE_TRANSCRIPT] Failed to close publisher: {}",
                 redact_sensitive(str(error)),
             )
-        recording_id = None
-        if recording_task is not None:
+        recording_path = None
+        if local_recorder is not None:
             try:
-                recording_id = await asyncio.wait_for(asyncio.shield(recording_task), timeout=5)
-            except asyncio.TimeoutError:
-                recording_task.cancel()
-                await asyncio.gather(recording_task, return_exceptions=True)
-                logger.warning("[RECORDING] Startup did not finish before call shutdown")
-            except asyncio.CancelledError:
-                if not recording_task.cancelled():
-                    raise
+                recording_path = await local_recorder.finalize()
             except Exception as error:
-                logger.warning("[RECORDING] Startup failed during call shutdown: {}", redact_sensitive(str(error)))
+                logger.warning(
+                    "[RECORDING] Local finalize failed: {}",
+                    redact_sensitive(str(error)),
+                )
+            local_recorder = None
+        else:
+            recording = None
+            if recording_task is not None:
+                try:
+                    recording = await asyncio.wait_for(asyncio.shield(recording_task), timeout=5)
+                except asyncio.TimeoutError:
+                    recording_task.cancel()
+                    await asyncio.gather(recording_task, return_exceptions=True)
+                    logger.warning("[RECORDING] Startup did not finish before call shutdown")
+                except asyncio.CancelledError:
+                    if not recording_task.cancelled():
+                        raise
+                except Exception as error:
+                    logger.warning(
+                        "[RECORDING] Startup failed during call shutdown: {}",
+                        redact_sensitive(str(error)),
+                    )
+            recording_path = await resolve_uploaded_recording_path(recording)
         if preview_mode or transcript_collector is None or shutdown_reason == "session_start_failed":
             return
         try:
@@ -1049,7 +1098,7 @@ async def _run_entrypoint(ctx: JobContext):
                 config=config,
                 call_context=call_context,
                 started_at=call_start_time,
-                recording_path=build_recording_path(recording_id) if recording_id else None,
+                recording_path=recording_path,
                 transcript_reader=transcript_collector.read,
             )
             call_context.setdefault("metadata", {})["terminationReason"] = shutdown_reason
@@ -1093,9 +1142,13 @@ async def _run_entrypoint(ctx: JobContext):
         await unified_shutdown_hook()
         return
 
+    storage_mode = recording_storage_mode()
     if should_store_call_audio(config):
-        recording_task = asyncio.create_task(start_recording(ctx), name="call-recording-start")
-        recording_task.add_done_callback(log_task_failure)
+        if storage_mode == "s3":
+            recording_task = asyncio.create_task(start_recording(ctx), name="call-recording-start")
+            recording_task.add_done_callback(log_task_failure)
+        else:
+            logger.info("[RECORDING] Using local filesystem storage")
     else:
         logger.info("[RECORDING] skipped by agent privacy controls")
 
@@ -1187,13 +1240,27 @@ async def _run_entrypoint(ctx: JobContext):
         await session.start(
             room=ctx.room,
             agent=agent,
-            room_options=build_room_options(),
+            room_options=build_room_options(participant),
         )
     except Exception:
         shutdown_reason = "session_start_failed"
         await unified_shutdown_hook()
         raise
     session_started = True
+    if (
+        should_store_call_audio(config)
+        and storage_mode == "local"
+        and local_recorder is None
+    ):
+        try:
+            local_recorder = LocalCallRecorder(session)
+            await local_recorder.start()
+        except Exception as error:
+            local_recorder = None
+            logger.warning(
+                "[RECORDING] Local recorder failed to start: {}",
+                redact_sensitive(str(error)),
+            )
     if billing_termination_started or unified_shutdown_task is not None:
         session.shutdown(drain=False)
         await unified_shutdown_hook()
@@ -1202,7 +1269,10 @@ async def _run_entrypoint(ctx: JobContext):
     if unified_shutdown_task is not None:
         await unified_shutdown_hook()
         return
-    speak_first_message(session, config)
+    if is_tinkerism_call(config) or call_context.get("direction") == "outbound":
+        await speak_outbound_first_message(session, config, participant=participant)
+    else:
+        speak_first_message(session, config)
     if unified_shutdown_task is not None:
         await unified_shutdown_hook()
 

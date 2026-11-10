@@ -247,6 +247,21 @@ export const listAgentNamesForOrg = async (
   });
 };
 
+export const detachMissingRecording = async (
+  callId: string,
+  expectedRecordingPath: string,
+) => {
+  const result = await prisma.callLog.updateMany({
+    where: {
+      callId,
+      deleted: false,
+      audioRecordingPath: expectedRecordingPath,
+    },
+    data: { audioRecordingPath: null },
+  });
+  return result.count > 0;
+};
+
 export const deleteCallLog = async (
   callId: string,
   organizationId: string,

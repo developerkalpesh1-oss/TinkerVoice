@@ -389,6 +389,7 @@ test("call transcript drawer uses a wide review layout", () => {
   assert.match(sheet, /data-\[side=right\]:sm:max-w-none/);
   assert.match(sheet, /data-\[side=right\]:xl:w-\[1040px\]/);
   assert.match(sheet, /lg:grid-cols-\[340px_minmax\(0,1fr\)\]/);
+  assert.match(sheet, /absolute inset-0 overflow-y-auto overscroll-contain/);
   assert.match(sheet, /Review tip/);
   assert.match(audio, /rounded-2xl border bg-background p-5/);
   assert.match(transcript, /sm:max-w-\[76%\]/);

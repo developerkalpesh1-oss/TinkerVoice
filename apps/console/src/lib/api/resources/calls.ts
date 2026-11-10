@@ -59,6 +59,26 @@ export const callsApi = {
     );
     return res.data.data.url;
   },
+  recordingBlob: async (
+    callId: string,
+    options: { disposition?: "inline" | "attachment" } = {},
+  ): Promise<Blob> => {
+    const res = await apiClient.get<Blob>(
+      `/calls/${encodeURIComponent(callId)}/recording`,
+      {
+        responseType: "blob",
+        params:
+          options.disposition === "attachment"
+            ? { disposition: "attachment" }
+            : undefined,
+      },
+    );
+    const contentType = String(res.headers["content-type"] ?? "");
+    if (contentType.includes("application/json")) {
+      throw new Error("Recording not available");
+    }
+    return res.data;
+  },
   transcripts: async (
     callId: string,
     params: TranscriptParams = {}

@@ -69,6 +69,13 @@ router.get(
 );
 
 router.get(
+  "/:callId/recording",
+  authMiddleware,
+  requirePermission({ callLogs: ["read"] }),
+  calllogController.streamCallRecording
+);
+
+router.get(
   "/:callId/transcripts",
   authMiddleware,
   requirePermission({ callLogs: ["read"] }),

@@ -26,7 +26,24 @@ class CallerBargeInTests(unittest.IsolatedAsyncioTestCase):
             "AgentSession": AgentSession, "TurnHandlingOptions": TurnHandlingOptions,
             "provider_kwargs": {}, "config": {"ivr_navigation_enabled": False},
             "prepared_vad": None,
+            "tinkerism_call": False,
             "is_tinkerism_call": lambda config: False,
+            "TINKERISM_ENDPOINTING": {"mode": "fixed", "min_delay": 0.3, "max_delay": 0.9},
+            "TINKERISM_INTERRUPTION": {
+                "enabled": True,
+                "mode": "vad",
+                "min_duration": 0.2,
+                "min_words": 0,
+                "discard_audio_if_uninterruptible": False,
+                "resume_false_interruption": True,
+                "false_interruption_timeout": 1.0,
+            },
+            "TINKERISM_PREEMPTIVE_GENERATION": {
+                "enabled": False,
+                "preemptive_tts": False,
+                "max_speech_duration": 8.0,
+                "max_retries": 3,
+            },
             "silero": SimpleNamespace(VAD=SimpleNamespace(load=lambda: Mock())),
             "inference": SimpleNamespace(TurnDetector=lambda: "vad"),
         })
@@ -117,7 +134,13 @@ class LiveKitTurnHandlingTests(unittest.TestCase):
                 if keyword.arg is not None
             }
             self.assertIn("turn_detection", option_names)
-            self.assertNotIn("preemptive_generation", option_names)
+            self.assertIn("endpointing", option_names)
+            self.assertIn("preemptive_generation", option_names)
+            # Keep preemptive generation nested in TurnHandlingOptions (not a boolean kwarg).
+            self.assertNotIn(
+                "preemptive_generation",
+                {keyword.arg for keyword in session_call.keywords if keyword.arg is not None},
+            )
 
 
 if __name__ == "__main__":

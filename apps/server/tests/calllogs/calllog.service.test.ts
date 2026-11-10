@@ -1,14 +1,25 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+import { PassThrough, Readable } from "node:stream";
+
 import {
   getCallRecordingDownloadUrl,
   endLiveCall,
   listLiveCalls,
+  recordingContentType,
   signCallRecordingUrl,
+  streamCallRecording,
 } from "../../src/modules/calllogs/calllog.service.js";
 
-test("recording download signs the organization-owned S3 key as an attachment", async (t) => {
+test("recording download returns the authenticated API stream path", async (t) => {
+  const previous = process.env.RECORDING_STORAGE;
+  process.env.RECORDING_STORAGE = "s3";
+  t.after(() => {
+    if (previous === undefined) delete process.env.RECORDING_STORAGE;
+    else process.env.RECORDING_STORAGE = previous;
+  });
+
   const { default: prisma } = await import("../../src/config/prisma.js");
   const original = prisma.callLog.findFirst;
   prisma.callLog.findFirst = (async ({ where }: any) => {
@@ -17,30 +28,132 @@ test("recording download signs the organization-owned S3 key as an attachment", 
   }) as typeof original;
   t.after(() => { prisma.callLog.findFirst = original; });
 
-  const url = await getCallRecordingDownloadUrl("org-1", "call-1", async (key, expiry, fileName) => {
-    assert.equal(key, "Voice-agents/Recordings/call-1.ogg");
-    assert.equal(expiry, 3600);
-    assert.equal(fileName, "recording-call-1.ogg");
-    return "https://example.test/signed-attachment";
-  });
-  assert.equal(url, "https://example.test/signed-attachment");
+  const url = await getCallRecordingDownloadUrl("org-1", "call-1");
+  assert.equal(url, "/api/v1/calls/call-1/recording?disposition=attachment");
 });
 
-test("signCallRecordingUrl replaces a stored S3 key with a signed playback URL", async () => {
+test("signCallRecordingUrl keeps present storage keys opaque for API playback", async (t) => {
+  const previous = process.env.RECORDING_STORAGE;
+  process.env.RECORDING_STORAGE = "s3";
+  t.after(() => {
+    if (previous === undefined) delete process.env.RECORDING_STORAGE;
+    else process.env.RECORDING_STORAGE = previous;
+  });
+
   const call = {
     callId: "SCL_recording123",
     audioRecordingPath: "Voice-agents/Recordings/recording-123.ogg",
   };
 
-  const signed = await signCallRecordingUrl(call, async (key) => {
-    return `https://recordings.tinkervoice.test/${encodeURIComponent(key)}?signature=test`;
+  const signed = await signCallRecordingUrl(call, async () => {
+    throw new Error("should not sign opaque storage keys");
   });
 
   assert.equal(
     signed.audioRecordingPath,
-    "https://recordings.tinkervoice.test/Voice-agents%2FRecordings%2Frecording-123.ogg?signature=test"
+    "Voice-agents/Recordings/recording-123.ogg",
   );
   assert.equal(call.audioRecordingPath, "Voice-agents/Recordings/recording-123.ogg");
+  assert.equal(recordingContentType("Voice-agents/Recordings/a.mp3"), "audio/mpeg");
+  assert.equal(recordingContentType("Voice-agents/Recordings/a.wav"), "audio/wav");
+});
+
+test("signCallRecordingUrl hides missing local recordings", async (t) => {
+  const previous = process.env.RECORDING_STORAGE;
+  const previousDir = process.env.RECORDING_LOCAL_DIR;
+  process.env.RECORDING_STORAGE = "local";
+  process.env.RECORDING_LOCAL_DIR = "/tmp/tinkervoice-missing-recordings";
+  t.after(() => {
+    if (previous === undefined) delete process.env.RECORDING_STORAGE;
+    else process.env.RECORDING_STORAGE = previous;
+    if (previousDir === undefined) delete process.env.RECORDING_LOCAL_DIR;
+    else process.env.RECORDING_LOCAL_DIR = previousDir;
+  });
+
+  const { default: prisma } = await import("../../src/config/prisma.js");
+  const original = prisma.callLog.updateMany;
+  let detached: unknown;
+  prisma.callLog.updateMany = (async (args: unknown) => {
+    detached = args;
+    return { count: 1 };
+  }) as typeof original;
+  t.after(() => {
+    prisma.callLog.updateMany = original;
+  });
+
+  const signed = await signCallRecordingUrl({
+    callId: "call-missing",
+    audioRecordingPath: "Voice-agents/Recordings/missing.ogg",
+  });
+  assert.equal(signed.audioRecordingPath, null);
+  assert.deepEqual(detached, {
+    where: {
+      callId: "call-missing",
+      deleted: false,
+      audioRecordingPath: "Voice-agents/Recordings/missing.ogg",
+    },
+    data: { audioRecordingPath: null },
+  });
+});
+
+test("streamCallRecording serves local storage keys through the authenticated API", async (t) => {
+  const { mkdtemp, mkdir, writeFile, rm } = await import("node:fs/promises");
+  const os = await import("node:os");
+  const path = await import("node:path");
+  const root = await mkdtemp(path.join(os.tmpdir(), "tinkervoice-stream-"));
+  const previousStorage = process.env.RECORDING_STORAGE;
+  const previousDir = process.env.RECORDING_LOCAL_DIR;
+  process.env.RECORDING_STORAGE = "local";
+  process.env.RECORDING_LOCAL_DIR = root;
+  t.after(async () => {
+    if (previousStorage === undefined) delete process.env.RECORDING_STORAGE;
+    else process.env.RECORDING_STORAGE = previousStorage;
+    if (previousDir === undefined) delete process.env.RECORDING_LOCAL_DIR;
+    else process.env.RECORDING_LOCAL_DIR = previousDir;
+    await rm(root, { recursive: true, force: true });
+  });
+
+  const key = "Voice-agents/Recordings/local-1.ogg";
+  await mkdir(path.join(root, "Voice-agents/Recordings"), { recursive: true });
+  await writeFile(path.join(root, key), Buffer.from("OggS-local"));
+
+  const { default: prisma } = await import("../../src/config/prisma.js");
+  const original = prisma.callLog.findFirst;
+  prisma.callLog.findFirst = (async () => ({
+    audioRecordingPath: key,
+  })) as typeof original;
+  t.after(() => {
+    prisma.callLog.findFirst = original;
+  });
+
+  const chunks: Buffer[] = [];
+  const response = Object.assign(new PassThrough(), {
+    statusCode: 0,
+    headers: {} as Record<string, string>,
+    destroyed: false,
+    headersSent: false,
+    status(code: number) {
+      this.statusCode = code;
+      return this;
+    },
+    set(headers: Record<string, string>) {
+      this.headers = { ...this.headers, ...headers };
+      return this;
+    },
+  });
+  response.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
+  const ended = new Promise<void>((resolve) => response.once("finish", resolve));
+
+  await streamCallRecording("org-1", "call-1", response as any, {
+    disposition: "inline",
+  });
+  await ended;
+
+  assert.equal(response.statusCode, 200);
+  assert.equal(response.headers["Content-Type"], "audio/ogg");
+  assert.equal(response.headers["Content-Disposition"], "inline");
+  assert.equal(response.headers["Cache-Control"], "private, no-store");
+  assert.equal(Buffer.concat(chunks).toString(), "OggS-local");
 });
 
 test("signCallRecordingUrl leaves missing recordings and existing URLs unchanged", async () => {

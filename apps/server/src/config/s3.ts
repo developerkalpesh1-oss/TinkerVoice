@@ -17,7 +17,21 @@ const s3 = new S3Client({
   ...(CREDENTIALS ? { credentials: CREDENTIALS } : {}),
 });
 
+function isPlaceholderCredential(value: string | undefined): boolean {
+  if (!value) return true;
+  const normalized = value.trim().toLowerCase();
+  return (
+    normalized.length === 0 ||
+    normalized.startsWith("dev-") ||
+    normalized.includes("changeme") ||
+    normalized.includes("your-") ||
+    normalized.includes("example") ||
+    normalized === "placeholder"
+  );
+}
+
 function resolveCredentials(): S3Credentials | undefined {
+  // Placeholder .env.dev keys must not override the default AWS provider chain.
   return (
     readTemporaryCredentials(
       "AWS_ACCESS_KEY_ID",
@@ -44,11 +58,17 @@ function readTemporaryCredentials(
   const secretAccessKey = readEnv(secretKey);
   const token = readEnv(sessionToken);
 
-  if (!accessKeyId || !secretAccessKey || !token) return undefined;
+  if (
+    isPlaceholderCredential(accessKeyId) ||
+    isPlaceholderCredential(secretAccessKey) ||
+    !token
+  ) {
+    return undefined;
+  }
 
   return {
-    accessKeyId,
-    secretAccessKey,
+    accessKeyId: accessKeyId!,
+    secretAccessKey: secretAccessKey!,
     sessionToken: token,
   };
 }
@@ -60,11 +80,13 @@ function readCredentialPair(
   const accessKeyId = readEnv(accessKey);
   const secretAccessKey = readEnv(secretKey);
 
-  if (!accessKeyId || !secretAccessKey) return undefined;
+  if (isPlaceholderCredential(accessKeyId) || isPlaceholderCredential(secretAccessKey)) {
+    return undefined;
+  }
 
   return {
-    accessKeyId,
-    secretAccessKey,
+    accessKeyId: accessKeyId!,
+    secretAccessKey: secretAccessKey!,
   };
 }
 
@@ -94,10 +116,15 @@ export const generateDownloadUrl = async (
   disposition: "attachment" | "inline" = "attachment",
   contentType?: string,
 ): Promise<string> => {
+  const contentDisposition = fileName
+    ? `${disposition}; filename="${fileName}"`
+    : disposition === "inline"
+      ? "inline"
+      : undefined;
   const command = new GetObjectCommand({
     Bucket: getBucket(),
     Key: key,
-    ...(fileName ? { ResponseContentDisposition: `${disposition}; filename="${fileName}"` } : {}),
+    ...(contentDisposition ? { ResponseContentDisposition: contentDisposition } : {}),
     ...(contentType ? { ResponseContentType: contentType } : {}),
   });
   return getSignedUrl(s3, command, { expiresIn });

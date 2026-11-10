@@ -1,6 +1,6 @@
 import { kbStatus } from "../../../prisma/generated/prisma/client.js";
 import prisma from "../../config/prisma.js";
-import { deleteObject } from "../../config/s3.js";
+import { deleteRecordingObject } from "../../config/recording-storage.js";
 import { cleanupKnowledgeSourceAssets } from "../kb/kb-assets.service.js";
 
 const DEFAULT_TRANSCRIPT_RETENTION_DAYS = 90;
@@ -13,7 +13,7 @@ const MAX_CLEANUP_BATCH_SIZE = 250;
 
 type RetentionDependencies = {
   cleanupKnowledgeSourceAssetsImpl?: typeof cleanupKnowledgeSourceAssets;
-  deleteRecordingObjectImpl?: typeof deleteObject;
+  deleteRecordingObjectImpl?: typeof deleteRecordingObject;
 };
 
 type CleanupResult = {
@@ -45,7 +45,7 @@ export async function runRetention(
       cleanupExpiredRecordings(
         recordingCutoff,
         batchSize,
-        dependencies.deleteRecordingObjectImpl ?? deleteObject
+        dependencies.deleteRecordingObjectImpl ?? deleteRecordingObject
       ),
       prisma.mcpToolExecutionLog.deleteMany({
         where: { createdAt: { lt: mcpLogCutoff } },
@@ -139,7 +139,7 @@ async function deleteExpiredTranscripts(now: Date) {
 async function cleanupExpiredRecordings(
   cutoff: Date,
   batchSize: number,
-  deleteRecordingObject: typeof deleteObject
+  deleteRecordingObjectFn: typeof deleteRecordingObject
 ): Promise<CleanupResult & { detached: number }> {
   let cursor: string | undefined;
   let deleted = 0;
@@ -168,9 +168,9 @@ async function cleanupExpiredRecordings(
         if (!path) return { deleted: 0, detached: 0, failed: 0 };
 
         try {
-          const storedInS3 = !isHttpUrl(path);
-          if (storedInS3) {
-            await deleteRecordingObject(path);
+          const storedInObjectStorage = !isHttpUrl(path);
+          if (storedInObjectStorage) {
+            await deleteRecordingObjectFn(path);
           }
           const update = await prisma.callLog.updateMany({
             where: {
@@ -180,7 +180,7 @@ async function cleanupExpiredRecordings(
             data: { audioRecordingPath: null },
           });
           return {
-            deleted: storedInS3 ? 1 : 0,
+            deleted: storedInObjectStorage ? 1 : 0,
             detached: update.count,
             failed: 0,
           };

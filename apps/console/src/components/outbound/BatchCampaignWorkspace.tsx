@@ -32,9 +32,11 @@ import {
   outboundCallsToStop,
   terminateOutboundCall,
 } from "@/src/lib/outbound/call-control";
-import { tinkerismCampaignPrompt } from "@/src/lib/outbound/prompt-campaigns";
+import {
+  campaignOpeningGreeting,
+  tinkerismCampaignPrompt,
+} from "@/src/lib/outbound/prompt-campaigns";
 import { contactsToCall } from "@/src/lib/outbound/saved-contacts";
-import { TINKERISM_FIRST_MESSAGE } from "@/src/lib/tinkerism/contacts";
 import { quickCallSchema } from "@/src/models/outbound/quickCall";
 import { queryKeys } from "@/src/lib/query-keys";
 
@@ -103,13 +105,14 @@ export function BatchCampaignWorkspace() {
     phoneNumber: string;
     username: string;
     systemPrompt: string;
+    firstMessage: string;
   }) {
     const parsed = quickCallSchema.safeParse({
       agentId,
       phoneNumber: input.phoneNumber,
       fromNumber,
       username: input.username,
-      firstMessage: TINKERISM_FIRST_MESSAGE,
+      firstMessage: input.firstMessage,
       systemPrompt: input.systemPrompt,
       dynamicVariables: { tinkerism_call: "1" },
     });
@@ -140,6 +143,7 @@ export function BatchCampaignWorkspace() {
           const outboundId = await placeOneCall({
             phoneNumber: contact.phoneNumber,
             username: contact.name,
+            firstMessage: campaignOpeningGreeting(campaign),
             systemPrompt: tinkerismCampaignPrompt(
               campaign,
               contact.name,

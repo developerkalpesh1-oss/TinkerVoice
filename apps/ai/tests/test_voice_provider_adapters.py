@@ -1,6 +1,7 @@
 import os
 import sys
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -144,13 +145,22 @@ class VoiceProviderAdapterTests(unittest.TestCase):
             ):
                 build_voice_provider_adapters(config)
 
+        from handlers.voice_provider_adapters import (
+            TINKERISM_STT_KEYTERMS,
+            TINKERISM_STT_PREVIOUS_TEXT,
+        )
+
         kwargs = stt.call_args.kwargs
         self.assertEqual(kwargs["server_vad"], TINKERISM_SERVER_VAD)
-        self.assertEqual(kwargs["keyterms"], ["Tinkerism", "website", "websites"])
-        self.assertEqual(kwargs["secondary_languages"], ["en", "hi"])
+        self.assertEqual(kwargs["keyterms"], list(TINKERISM_STT_KEYTERMS))
+        self.assertEqual(kwargs["secondary_languages"], ["en", "hi", "mr"])
+        self.assertEqual(kwargs["previous_text"], TINKERISM_STT_PREVIOUS_TEXT)
         self.assertNotIn("language_code", kwargs)
         self.assertEqual(kwargs["audio_chunk_duration_ms"], 20)
-        self.assertLess(TINKERISM_SERVER_VAD["min_silence_duration_ms"], 250)
+        self.assertGreaterEqual(TINKERISM_SERVER_VAD["min_silence_duration_ms"], 350)
+        self.assertLessEqual(TINKERISM_SERVER_VAD["min_silence_duration_ms"], 500)
+        self.assertTrue(all(len(term) <= 20 for term in TINKERISM_STT_KEYTERMS))
+        self.assertLessEqual(len(TINKERISM_STT_KEYTERMS), 50)
 
     def test_tinkerism_calls_stream_an_indian_english_voice_and_keep_other_voices(self):
         from handlers.voice_provider_adapters import TINKERISM_TTS_CHUNK_SCHEDULE, TINKERISM_VOICE_ID
@@ -175,12 +185,47 @@ class VoiceProviderAdapterTests(unittest.TestCase):
             api_key="e",
             chunk_length_schedule=TINKERISM_TTS_CHUNK_SCHEDULE,
             streaming_latency=4,
+            apply_language_text_normalization=True,
         )
         self.assertEqual(TINKERISM_TTS_CHUNK_SCHEDULE[0], 50)
+        self.assertTrue(all(50 <= value <= 500 for value in TINKERISM_TTS_CHUNK_SCHEDULE))
         llm.assert_called_once_with(
             model="openai/gpt-4.1-mini",
-            extra_kwargs={"max_completion_tokens": 100},
+            extra_kwargs={"max_completion_tokens": 140, "temperature": 0.7},
         )
+
+    def test_flash_tts_omits_unsupported_marathi_language_code(self):
+        from handlers.voice_provider_adapters import (
+            apply_tinkerism_tts_language,
+            build_tts_adapter,
+            clear_elevenlabs_tts_language,
+        )
+        from livekit.agents.types import NOT_GIVEN
+
+        with patch.dict(os.environ, {"ELEVENLABS_API_KEY": "e"}, clear=True):
+            with patch("handlers.voice_provider_adapters.elevenlabs.TTS") as tts:
+                build_tts_adapter(
+                    {"provider": "elevenlabs", "model": "eleven_flash_v2_5", "voice": "v"},
+                    "mr",
+                )
+        self.assertNotIn("language", tts.call_args.kwargs)
+
+        updates = []
+        fake = SimpleNamespace(
+            update_options=lambda **kwargs: updates.append(kwargs),
+            _opts=SimpleNamespace(language="hi"),
+            _opts_revision=3,
+            _TTS__current_connection=None,
+        )
+        self.assertEqual(apply_tinkerism_tts_language(fake, "hi"), "hi")
+        self.assertEqual(updates, [{"language": "hi"}])
+        self.assertIsNone(apply_tinkerism_tts_language(fake, "mr"))
+        self.assertEqual(updates, [{"language": "hi"}])
+        self.assertIs(fake._opts.language, NOT_GIVEN)
+        self.assertEqual(fake._opts_revision, 4)
+        fake._opts.language = "en"
+        clear_elevenlabs_tts_language(fake)
+        self.assertIs(fake._opts.language, NOT_GIVEN)
 
     def test_build_voice_provider_adapters_rejects_deepgram(self):
         config = {

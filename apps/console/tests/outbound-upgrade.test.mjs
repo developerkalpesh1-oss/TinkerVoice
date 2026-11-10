@@ -92,9 +92,27 @@ test("selected campaign prompt includes knowledge and bilingual rules like Tinke
     "+919876543210",
   );
   assert.match(prompt, /49 per seat/);
-  assert.match(prompt, /English or Hindi/);
+  assert.match(prompt, /English, Hindi, or Marathi/);
+  assert.match(prompt, /ChatGPT voice mode/);
+  assert.match(prompt, /Hmm/);
+  assert.match(prompt, /Opening greeting already spoken for this campaign/);
   assert.match(prompt, /Do not greet again/);
   assert.match(prompt, /Asha/);
+});
+
+test("selected campaign owns the opening greeting without Tinkerism fallback", () => {
+  const renewals = campaigns.normalizeCampaign({
+    ...campaigns.blankCampaign(20),
+    name: "Renewals",
+    role: "You represent renewals.",
+    purpose: "Confirm renewals.",
+    instructions: "Ask one question.",
+    behaviour: "Be brief.",
+    greeting: "Hi, this is the renewals desk. Got a minute?",
+  });
+  assert.equal(campaigns.campaignOpeningGreeting(renewals), "Hi, this is the renewals desk. Got a minute?");
+  assert.doesNotMatch(campaigns.campaignOpeningGreeting(renewals), /Tinkerism/);
+  assert.match(campaigns.DEFAULT_TINKERISM_CAMPAIGN.greeting, /Tinkerism/);
 });
 
 test("stop helpers cover scheduled and live outbound statuses", () => {
@@ -140,7 +158,7 @@ test("quick call uses saved-contact dropdown and the Tinkerism dial pipeline", (
   const field = read("src/components/outbound/QuickCallContactField.tsx");
   assert.match(quick, /QuickCallContactField/);
   assert.match(quick, /useOutboundSavedContacts/);
-  assert.match(quick, /TINKERISM_FIRST_MESSAGE/);
+  assert.match(quick, /campaignOpeningGreeting/);
   assert.match(quick, /tinkerismCampaignPrompt/);
   assert.match(quick, /tinkerism_call/);
   assert.match(field, /role="combobox"/);
@@ -150,7 +168,7 @@ test("quick call uses saved-contact dropdown and the Tinkerism dial pipeline", (
 
 test("batch workspace dials selected contacts like Tinkerism Call", () => {
   const workspace = read("src/components/outbound/BatchCampaignWorkspace.tsx");
-  assert.match(workspace, /TINKERISM_FIRST_MESSAGE/);
+  assert.match(workspace, /campaignOpeningGreeting/);
   assert.match(workspace, /tinkerismCampaignPrompt/);
   assert.match(workspace, /tinkerism_call/);
   assert.match(workspace, /SavedContactsPanel/);

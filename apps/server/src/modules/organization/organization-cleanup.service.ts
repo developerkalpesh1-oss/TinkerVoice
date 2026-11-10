@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma.js";
+import { deleteRecordingObject } from "../../config/recording-storage.js";
 import { deleteObject } from "../../config/s3.js";
 import { stripeClient } from "../../config/stripe.js";
 import { isHostedBilling } from "../../config/billing-mode.js";
@@ -304,7 +305,7 @@ async function defaultListRecordings(organizationId: string) {
 
 async function defaultClearRecording(callId: string, key: string) {
   if (!isHttpUrl(key)) {
-    await deleteObject(key);
+    await deleteRecordingObject(key);
   }
   await prisma.callLog.updateMany({
     where: { callId, audioRecordingPath: key },

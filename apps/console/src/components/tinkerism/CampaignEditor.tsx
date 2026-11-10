@@ -300,6 +300,12 @@ export function CampaignEditor({
           <form className="space-y-4" onSubmit={saveDraft}>
             <Field label="Campaign name" value={current.name} onChange={(name) => updateDraft({ name })} />
             <Field label="Role" value={current.role} onChange={(role) => updateDraft({ role })} multiline />
+            <Field
+              label="Opening greeting"
+              value={current.greeting}
+              onChange={(greeting) => updateDraft({ greeting })}
+              multiline
+            />
             <Field label="Calling purpose" value={current.purpose} onChange={(purpose) => updateDraft({ purpose })} multiline />
             <Field label="Instructions" value={current.instructions} onChange={(instructions) => updateDraft({ instructions })} multiline />
             <Field label="Conversation behaviour" value={current.behaviour} onChange={(behaviour) => updateDraft({ behaviour })} multiline />
@@ -403,6 +409,7 @@ export function CampaignEditor({
           <div className="grid gap-3 text-sm sm:grid-cols-2">
             <Summary label="Role" value={selected.role} />
             <Summary label="Calling purpose" value={selected.purpose} />
+            <Summary label="Opening greeting" value={selected.greeting} />
           </div>
         )}
       </div>
@@ -524,6 +531,7 @@ function campaignSnapshot(campaign: TinkerismCampaign): string {
     name: campaign.name,
     role: campaign.role,
     purpose: campaign.purpose,
+    greeting: campaign.greeting,
     instructions: campaign.instructions,
     behaviour: campaign.behaviour,
     sources: campaign.sources.map((source) => [source.id, source.kind, source.name, source.locator, source.text]),

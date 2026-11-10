@@ -76,10 +76,24 @@ class WorkerShutdownTests(unittest.IsolatedAsyncioTestCase):
             "build_agent_instructions": lambda *_: "", "Assistant": Mock(),
             "consume_preview_user_transcript_stream": self.consume, "PREVIEW_TRANSCRIPT_TOPIC": "preview",
             "build_room_options": Mock(), "speak_first_message": Mock(),
+            "speak_outbound_first_message": AsyncMock(),
+            "is_tinkerism_call": lambda _: False,
+            "configure_tinkerism_conversation": Mock(),
             "should_store_call_audio": lambda _: False, "CallFinalizer": Mock(return_value=self.finalizer),
             "delete_call_room": AsyncMock(), "end_call_without_billing": AsyncMock(),
-            "start_recording": AsyncMock(return_value="recording-1"),
-            "build_recording_path": lambda value: f"recordings/{value}.ogg",
+            # Existing recording tests exercise the S3 egress path; local mode is covered separately.
+            "recording_storage_mode": lambda: "s3",
+            "LocalCallRecorder": Mock(side_effect=AssertionError("local recorder should not start in s3 mode")),
+            "start_recording": AsyncMock(
+                return_value={"recording_id": "recording-1", "egress_id": "egress-1"}
+            ),
+            "resolve_uploaded_recording_path": AsyncMock(
+                side_effect=lambda value, **_kwargs: (
+                    None
+                    if value is None
+                    else f"recordings/{value['recording_id'] if isinstance(value, dict) else value}.ogg"
+                )
+            ),
         }
         self.scope = scope
         load_function(ROOT / "handlers/worker_handler.py", "log_task_failure", scope)
@@ -223,13 +237,14 @@ class WorkerShutdownTests(unittest.IsolatedAsyncioTestCase):
         async def record(_ctx):
             self.room.emit("participant_disconnected", SimpleNamespace(identity="caller"))
             await asyncio.sleep(0)
-            return "recording-1"
+            return {"recording_id": "recording-1", "egress_id": "egress-1"}
         self.scope["start_recording"].side_effect = record
         await self.run_worker(self.ctx)
         await self.callbacks[0]()
         self.reporter.close.assert_awaited_once()
         self.finalizer.finalize.assert_awaited_once()
         self.assertEqual(self.scope["CallFinalizer"].call_args.kwargs["recording_path"], "recordings/recording-1.ogg")
+        self.scope["resolve_uploaded_recording_path"].assert_awaited()
         self.scope["delete_call_room"].assert_awaited_once()
         self.session.start.assert_not_called()
         self.scope["speak_first_message"].assert_not_called()
@@ -240,7 +255,7 @@ class WorkerShutdownTests(unittest.IsolatedAsyncioTestCase):
         async def record(_ctx):
             entered.set()
             await release.wait()
-            return "recording-1"
+            return {"recording_id": "recording-1", "egress_id": "egress-1"}
         self.scope["start_recording"].side_effect = record
         startup = asyncio.create_task(self.run_worker(self.ctx))
         try:
@@ -306,6 +321,25 @@ class WorkerShutdownTests(unittest.IsolatedAsyncioTestCase):
         self.reporter.close.assert_awaited_once()
         self.finalizer.finalize.assert_awaited_once()
         self.assertIsNone(self.scope["CallFinalizer"].call_args.kwargs["recording_path"])
+
+    async def test_local_storage_finalizes_recorder_instead_of_s3_egress(self):
+        self.scope["should_store_call_audio"] = lambda _: True
+        self.scope["recording_storage_mode"] = lambda: "local"
+        recorder = SimpleNamespace(
+            start=AsyncMock(),
+            finalize=AsyncMock(return_value="Voice-agents/Recordings/local-1.ogg"),
+        )
+        self.scope["LocalCallRecorder"] = Mock(return_value=recorder)
+        await self.run_worker(self.ctx)
+        self.scope["start_recording"].assert_not_called()
+        recorder.start.assert_awaited_once()
+        await self.callbacks[0]()
+        recorder.finalize.assert_awaited_once()
+        self.assertEqual(
+            self.scope["CallFinalizer"].call_args.kwargs["recording_path"],
+            "Voice-agents/Recordings/local-1.ogg",
+        )
+        self.scope["resolve_uploaded_recording_path"].assert_not_called()
 
 
 if __name__ == "__main__":

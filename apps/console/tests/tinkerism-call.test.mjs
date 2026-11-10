@@ -6,8 +6,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const contactsUrl = pathToFileURL(join(root, "src/lib/tinkerism/contacts.ts")).href;
+const campaignsUrl = pathToFileURL(join(root, "src/lib/tinkerism/campaigns.ts")).href;
 const readinessUrl = pathToFileURL(join(root, "src/lib/tinkerism/call-readiness.ts")).href;
 const contacts = await import(contactsUrl);
+const campaigns = await import(campaignsUrl);
 const readiness = await import(readinessUrl);
 
 function read(relativePath) {
@@ -70,13 +72,17 @@ test("the agent speaks a short Tinkerism greeting and answers without repeating 
     contacts.TINKERISM_FIRST_MESSAGE,
     "Hi, this is Tinkerism. We help businesses with websites and digital work. Is now a good time to talk?",
   );
+  assert.equal(contacts.TINKERISM_FIRST_MESSAGE, campaigns.DEFAULT_TINKERISM_CAMPAIGN.greeting);
   assert.ok(contacts.TINKERISM_FIRST_MESSAGE.length < 140);
   const prompt = contacts.tinkerismSystemPrompt("Asha", "+919876543210");
   assert.match(prompt, /Do not greet again/);
   assert.match(prompt, /answer the question they just asked/);
-  assert.match(prompt, /English or Hindi/);
+  assert.match(prompt, /English, Hindi, or Marathi/);
+  assert.match(prompt, /ChatGPT voice mode/);
   assert.match(prompt, /natural spoken Hindi/);
+  assert.match(prompt, /natural spoken Marathi/);
   assert.match(prompt, /professional Indian English/);
+  assert.match(prompt, /Hmm/);
   assert.match(prompt, /websites and digital solutions/);
   assert.match(prompt, /ask one relevant question at a time/);
   assert.match(prompt, /follow up and confirm/);
@@ -235,7 +241,7 @@ test("Tinkerism Call is a sidebar page with status, logs, and selected-only dial
   assert.match(panel, /contactsToCall\(contacts\)/);
   assert.match(panel, /cancelOutboundCall|endLive/);
   assert.match(panel, /retryOutboundCall/);
-  assert.match(panel, /TINKERISM_FIRST_MESSAGE/);
+  assert.match(panel, /campaignOpeningGreeting/);
   assert.match(panel, /tinkerismCampaignPrompt/);
   assert.match(panel, /CampaignEditor/);
   assert.match(editor, /Campaign prompt/);

@@ -72,6 +72,35 @@ async def wait_for_sip_answer(room: Any, participant: Any) -> None:
         room.off("participant_disconnected", on_disconnected)
 
 
+SILENCE_FOLLOW_UPS = {
+    "en": (
+        "Are you still there?",
+        "I'll end the call now if this isn't a good time. Take care.",
+    ),
+    "hi": (
+        "क्या आप अभी भी लाइन पर हैं?",
+        "अगर अभी बात करना मुश्किल है तो मैं कॉल काट देता हूँ। धन्यवाद।",
+    ),
+    "mr": (
+        "तुम्ही अजून लाइनवर आहात का?",
+        "जर आता बोलणे शक्य नसेल तर मी कॉल बंद करतो. धन्यवाद.",
+    ),
+}
+
+
+def silence_follow_up_message(language: str | None, stage: int) -> str:
+    """Return a polite silence prompt. stage is 0 (check-in) or 1 (final courtesy)."""
+    code = str(language or "en").strip().lower().replace("_", "-")
+    if code.startswith("hi"):
+        messages = SILENCE_FOLLOW_UPS["hi"]
+    elif code.startswith("mr"):
+        messages = SILENCE_FOLLOW_UPS["mr"]
+    else:
+        messages = SILENCE_FOLLOW_UPS["en"]
+    index = 0 if stage <= 0 else 1
+    return messages[index]
+
+
 class CallLimitGuard:
     """End calls on meaningful inactivity without trusting noisy VAD state."""
 
@@ -85,19 +114,24 @@ class CallLimitGuard:
         max_duration_seconds: float,
         connected_at_monotonic: float,
         stop_session: Callable[[str], Awaitable[None]],
+        reply_language: str = "en",
     ) -> None:
         self._session = session
         self._room = room
         self._participant_identity = participant_identity
         self._silence_timeout_seconds = silence_timeout_seconds
         self._stop_session = stop_session
+        self._reply_language = reply_language or "en"
         self._closed = False
         self._agent_listening = False
-        self._warning_sent = False
-        self._warning_remaining_seconds = silence_timeout_seconds * (2 / 3)
+        self._follow_ups_sent = 0
+        # Soft check-in, final courtesy, then hang up at the configured timeout.
+        self._first_follow_up_remaining_seconds = silence_timeout_seconds * 0.4
+        self._second_follow_up_remaining_seconds = silence_timeout_seconds * 0.7
         self._hangup_remaining_seconds = silence_timeout_seconds
         self._inactivity_timer_started_at: float | None = None
-        self._warning_timer: asyncio.TimerHandle | None = None
+        self._first_follow_up_timer: asyncio.TimerHandle | None = None
+        self._second_follow_up_timer: asyncio.TimerHandle | None = None
         self._hangup_timer: asyncio.TimerHandle | None = None
         self._stop_task: asyncio.Task | None = None
 
@@ -115,13 +149,23 @@ class CallLimitGuard:
         if room is not None:
             room.on("sip_dtmf_received", self._on_sip_dtmf_received)
 
+    def set_reply_language(self, language: str | None) -> None:
+        code = str(language or "").strip().lower().replace("_", "-")
+        if code.startswith("hi"):
+            self._reply_language = "hi"
+        elif code.startswith("mr"):
+            self._reply_language = "mr"
+        elif code.startswith("en"):
+            self._reply_language = "en"
+
     def record_user_activity(self, source: str) -> None:
         if self._closed:
             return
         logger.info("[INACTIVITY] meaningful user activity source={}", source)
-        self._warning_sent = False
+        self._follow_ups_sent = 0
         self._cancel_inactivity_timers()
-        self._warning_remaining_seconds = self._silence_timeout_seconds * (2 / 3)
+        self._first_follow_up_remaining_seconds = self._silence_timeout_seconds * 0.4
+        self._second_follow_up_remaining_seconds = self._silence_timeout_seconds * 0.7
         self._hangup_remaining_seconds = self._silence_timeout_seconds
         if self._agent_listening:
             self._start_inactivity_timer()
@@ -143,7 +187,7 @@ class CallLimitGuard:
         if agent_listening == self._agent_listening:
             return
         self._agent_listening = agent_listening
-        if self._warning_sent:
+        if self._follow_ups_sent >= 2:
             return
         if self._agent_listening:
             self._start_inactivity_timer()
@@ -160,17 +204,22 @@ class CallLimitGuard:
     def _start_inactivity_timer(self) -> None:
         if self._inactivity_timer_started_at is not None:
             return
-        warning_delay = self._warning_remaining_seconds
+        first_delay = self._first_follow_up_remaining_seconds
+        second_delay = self._second_follow_up_remaining_seconds
         hangup_delay = self._hangup_remaining_seconds
         logger.info(
-            "[INACTIVITY] timer started warning_seconds={} hangup_seconds={}",
-            round(warning_delay, 3),
+            "[INACTIVITY] timer started first_follow_up_seconds={} "
+            "second_follow_up_seconds={} hangup_seconds={}",
+            round(first_delay, 3),
+            round(second_delay, 3),
             round(hangup_delay, 3),
         )
         loop = asyncio.get_running_loop()
         self._inactivity_timer_started_at = loop.time()
-        if not self._warning_sent:
-            self._warning_timer = loop.call_later(warning_delay, self._warn)
+        if self._follow_ups_sent < 1:
+            self._first_follow_up_timer = loop.call_later(first_delay, self._follow_up, 0)
+        if self._follow_ups_sent < 2:
+            self._second_follow_up_timer = loop.call_later(second_delay, self._follow_up, 1)
         self._hangup_timer = loop.call_later(
             hangup_delay, self._request_stop, "silence_timeout",
         )
@@ -182,25 +231,33 @@ class CallLimitGuard:
             0.0,
             asyncio.get_running_loop().time() - self._inactivity_timer_started_at,
         )
-        self._warning_remaining_seconds = max(
-            0.0, self._warning_remaining_seconds - elapsed,
+        self._first_follow_up_remaining_seconds = max(
+            0.0, self._first_follow_up_remaining_seconds - elapsed,
+        )
+        self._second_follow_up_remaining_seconds = max(
+            0.0, self._second_follow_up_remaining_seconds - elapsed,
         )
         self._hangup_remaining_seconds = max(
             0.0, self._hangup_remaining_seconds - elapsed,
         )
         self._cancel_inactivity_timers()
 
-    def _warn(self) -> None:
-        if self._closed or self._warning_sent:
+    def _follow_up(self, stage: int) -> None:
+        if self._closed or self._follow_ups_sent > stage:
             return
-        self._warning_timer = None
-        self._warning_remaining_seconds = 0.0
-        self._warning_sent = True
-        logger.warning("[INACTIVITY] warning sent")
+        if stage == 0:
+            self._first_follow_up_timer = None
+            self._first_follow_up_remaining_seconds = 0.0
+        else:
+            self._second_follow_up_timer = None
+            self._second_follow_up_remaining_seconds = 0.0
+        self._follow_ups_sent = stage + 1
+        message = silence_follow_up_message(self._reply_language, stage)
+        logger.warning("[INACTIVITY] follow-up stage={} language={}", stage, self._reply_language)
         try:
-            self._session.say("Are you still there?", allow_interruptions=True)
+            self._session.say(message, allow_interruptions=True)
         except Exception as error:
-            logger.warning("[INACTIVITY] warning failed: {}", str(error))
+            logger.warning("[INACTIVITY] follow-up failed: {}", str(error))
 
     def _request_stop(self, reason: str) -> None:
         if not self._closed and self._stop_task is None:
@@ -212,9 +269,12 @@ class CallLimitGuard:
         self.close()
 
     def _cancel_inactivity_timers(self) -> None:
-        if self._warning_timer is not None:
-            self._warning_timer.cancel()
-            self._warning_timer = None
+        if self._first_follow_up_timer is not None:
+            self._first_follow_up_timer.cancel()
+            self._first_follow_up_timer = None
+        if self._second_follow_up_timer is not None:
+            self._second_follow_up_timer.cancel()
+            self._second_follow_up_timer = None
         if self._hangup_timer is not None:
             self._hangup_timer.cancel()
             self._hangup_timer = None
@@ -230,6 +290,7 @@ def attach_call_limits(
     max_duration_seconds: float,
     connected_at_monotonic: float,
     stop_session: Callable[[str], Awaitable[None]],
+    reply_language: str = "en",
 ) -> CallLimitGuard:
     return CallLimitGuard(
         session,
@@ -239,6 +300,7 @@ def attach_call_limits(
         max_duration_seconds=max_duration_seconds,
         connected_at_monotonic=connected_at_monotonic,
         stop_session=stop_session,
+        reply_language=reply_language,
     )
 
 
@@ -677,44 +739,266 @@ def is_tinkerism_call(config: dict[str, Any]) -> bool:
     return str(variables.get(TINKERISM_CALL_VARIABLE) or "").strip() == "1"
 
 
-def tinkerism_reply_language(language: Any, transcript: str) -> str | None:
-    """Map a detected caller turn to the TTS language. Unknown results leave the current voice language."""
-    code = str(language or "").strip().lower().replace("_", "-")
-    if code.startswith("hi"):
+_MARATHI_MARKERS = (
+    "आहे",
+    "आहात",
+    "तुम्ही",
+    "आम्ही",
+    "तुला",
+    "मला",
+    "आपण",
+    "काय",
+    "कसे",
+    "कशी",
+    "कुठे",
+    "केव्हा",
+    "होय",
+    "नाहीतर",
+    "पाहिजे",
+    "हवं",
+    "हवे",
+    "बरोबर",
+    "नक्कीच",
+    "अजून",
+    "सांगा",
+    "बोलूया",
+    "म्हणून",
+)
+_HINDI_MARKERS = (
+    "है",
+    "हूँ",
+    "हूं",
+    "क्या",
+    "आप",
+    "जी",
+    "ठीक",
+    "नहीं",
+    "चाहिए",
+    "बताइए",
+    "बिल्कुल",
+    "अच्छा",
+    "नमस्ते",
+    "कर सकते",
+)
+_ROMAN_MARATHI_MARKERS = (
+    "ahe",
+    "aahot",
+    "tumhi",
+    "kay",
+    "barobar",
+    "nakkich",
+    "nakki",
+    "sangaa",
+    "boluya",
+)
+_ROMAN_HINDI_MARKERS = (
+    "kya",
+    "hai",
+    "aap",
+    "theek",
+    "bilkul",
+    "nahi",
+    "namaste",
+    "samajh",
+)
+
+
+def _contains_devanagari(text: str) -> bool:
+    return any("\u0900" <= character <= "\u097f" for character in text)
+
+
+def _marker_hits(text: str, markers: tuple[str, ...]) -> int:
+    return sum(1 for marker in markers if marker in text)
+
+
+def _devanagari_reply_language(transcript: str) -> str:
+    marathi_hits = _marker_hits(transcript, _MARATHI_MARKERS)
+    hindi_hits = _marker_hits(transcript, _HINDI_MARKERS)
+    if marathi_hits > hindi_hits:
+        return "mr"
+    if hindi_hits > marathi_hits:
         return "hi"
-    if code.startswith("en"):
-        return "en"
-    if any("\u0900" <= character <= "\u097f" for character in transcript):
+    # Ambiguous Devanagari on these outbound calls is usually Hindi.
+    return "hi"
+
+
+def _romanized_reply_language(transcript: str) -> str | None:
+    lowered = f" {transcript.lower()} "
+    marathi_hits = sum(1 for marker in _ROMAN_MARATHI_MARKERS if f" {marker} " in lowered)
+    hindi_hits = sum(1 for marker in _ROMAN_HINDI_MARKERS if f" {marker} " in lowered)
+    if marathi_hits > hindi_hits and marathi_hits > 0:
+        return "mr"
+    if hindi_hits > marathi_hits and hindi_hits > 0:
         return "hi"
     return None
 
 
-# One short pause ends the turn. The max delay is the cap, not an extra wait after STT.
-TINKERISM_ENDPOINTING = {"mode": "fixed", "min_delay": 0.1, "max_delay": 0.3}
+def tinkerism_reply_language(language: Any, transcript: str) -> str | None:
+    """Map a detected caller turn to the TTS language. Unknown results leave the current voice language."""
+    code = str(language or "").strip().lower().replace("_", "-")
+    text = str(transcript or "")
+    if code.startswith("mr"):
+        return "mr"
+    if code.startswith("hi"):
+        return "hi"
+    if _contains_devanagari(text):
+        # Prefer script cues when STT reports English/unknown for Devanagari speech.
+        return _devanagari_reply_language(text)
+    if code.startswith("en"):
+        return _romanized_reply_language(text) or "en"
+    return _romanized_reply_language(text)
 
 
-def configure_tinkerism_conversation(session: Any, config: dict[str, Any]) -> None:
-    """Phone turns for Tinkerism only: committed STT ends the turn, then the LLM and TTS reply."""
+# Short English acknowledgments should not yank an established Hindi/Marathi call to English.
+_ENGLISH_FILLERS = frozenset({
+    "a", "ah", "alright", "bye", "hello", "hey", "hi", "hmm", "hmmm", "huh",
+    "i", "mm", "mmm", "no", "nope", "ok", "okay", "oh", "please", "right",
+    "sure", "thanks", "thank", "you", "uh", "um", "yeah", "yep", "yes", "yup",
+})
+_SUBSTANTIAL_ENGLISH_MIN_WORDS = 4
+
+
+def _english_content_words(transcript: str) -> list[str]:
+    return [
+        token
+        for token in re.findall(r"[a-z']+", str(transcript or "").lower())
+        if token not in _ENGLISH_FILLERS
+    ]
+
+
+def should_update_tinkerism_reply_language(
+    current: str | None,
+    detected: str | None,
+    transcript: str,
+) -> bool:
+    """Keep hi/mr sticky across short English fillers; allow real language switches."""
+    if not detected:
+        return False
+    current_code = str(current or "").strip().lower()
+    if not current_code or current_code == detected:
+        return True
+    # Strong evidence of Hindi or Marathi always wins.
+    if detected in {"hi", "mr"}:
+        return True
+    if current_code in {"hi", "mr"} and detected == "en":
+        text = str(transcript or "").strip()
+        if not text or _contains_devanagari(text):
+            return False
+        if _romanized_reply_language(text) in {"hi", "mr"}:
+            return False
+        # Require clear English content—not "Hello." / "Yes." mid-Hindi call.
+        return len(_english_content_words(text)) >= _SUBSTANTIAL_ENGLISH_MIN_WORDS
+    return True
+
+
+# Listen-first: wait through breath pauses before ending the turn, then reply.
+TINKERISM_ENDPOINTING = {"mode": "fixed", "min_delay": 0.3, "max_delay": 0.9}
+# Do not start LLM/TTS until the caller's turn is fully committed.
+TINKERISM_PREEMPTIVE_GENERATION = {
+    "enabled": False,
+    "preemptive_tts": False,
+    "max_speech_duration": 8.0,
+    "max_retries": 3,
+}
+TINKERISM_INTERRUPTION = {
+    "enabled": True,
+    "mode": "vad",
+    # Ignore brief noise; stop agent audio quickly on a real barge-in.
+    "min_duration": 0.2,
+    "min_words": 0,
+    "discard_audio_if_uninterruptible": False,
+    "resume_false_interruption": True,
+    "false_interruption_timeout": 1.0,
+}
+
+TINKERISM_CONVERSATION_INSTRUCTIONS = (
+    "\n\nThe opening greeting was already spoken. Do not greet again or repeat the introduction. "
+    "Always listen to the caller's full turn before you reply. Do not cut them off, talk over them, "
+    "or answer from a partial thought. "
+    "If they interrupt you, stop speaking immediately, listen to their complete new thought, then answer "
+    "only what they just said—never restart the interrupted sentence. "
+    "First understand their language, tone, wording, intent, and emotion; then give the best helpful reply "
+    "in that same language and tone. Support English, Hindi, and Marathi, including mid-call switches "
+    "and mixed phrases. Once the caller settles on a language, keep replying in that language for the rest "
+    "of the call. Do not switch to English just because they said a short filler like \"Hello\", \"Yes\", "
+    "\"Okay\", or \"Hmm\"—stay in Hindi or Marathi until they clearly continue in English. "
+    "Mirror their vocabulary and formality (आप/तुम्ही/तू), simplicity, and pace. "
+    "Reply like a natural phone conversation: warm, present, and concise—usually one or two short spoken sentences. "
+    "Occasionally, when it fits the moment, use one brief acknowledgment such as \"Hmm\", \"Right\", "
+    "or \"Absolutely\" in English; \"हम्म\", \"ठीक है\", or \"बिल्कुल\" in Hindi; "
+    "\"हम्म\", \"बरोबर\", or \"नक्कीच\" in Marathi. Use these sparingly—not every turn, never stacked, "
+    "and never as empty filler. "
+    "When speaking Hindi or Marathi, write the reply in natural Devanagari script (not Latin transliteration) "
+    "so pronunciation stays clear. Hindi should sound like natural spoken Hindi. Marathi should sound like "
+    "natural spoken Marathi. English should sound like professional Indian English. "
+    "If they hesitate, mix languages, or clearly struggle with English, politely offer to continue in Hindi or Marathi. "
+    "Stay context-aware across the call and keep the next step clear without sounding scripted."
+)
+
+
+def configure_tinkerism_conversation(
+    session: Any,
+    config: dict[str, Any],
+    *,
+    on_reply_language: Callable[[str], None] | None = None,
+) -> None:
+    """Phone turns for outbound Tinkerism calls: committed STT ends the turn, then streamed LLM/TTS reply."""
     if not is_tinkerism_call(config):
         return
+    from handlers.voice_provider_adapters import TINKERISM_STT_KEYTERMS
+
     session.update_options(
         turn_detection="stt",
         endpointing_opts=dict(TINKERISM_ENDPOINTING),
-        keyterms=["Tinkerism", "website", "websites"],
+        keyterms=list(TINKERISM_STT_KEYTERMS),
     )
     tts = getattr(session, "tts", None)
     if tts is None or not hasattr(tts, "update_options") or not hasattr(session, "on"):
         return
 
+    initial = str(config.get("agent_language") or "en").strip().lower().replace("_", "-")
+    current_language = (
+        "hi" if initial.startswith("hi") else "mr" if initial.startswith("mr") else "en"
+    )
+
     def follow_caller_language(event: Any) -> None:
+        nonlocal current_language
         if not getattr(event, "is_final", False):
             return
+        transcript = str(getattr(event, "transcript", "") or "")
         language = tinkerism_reply_language(
             getattr(event, "language", None),
-            str(getattr(event, "transcript", "") or ""),
+            transcript,
         )
-        if language:
-            tts.update_options(language=language)
+        if not language:
+            return
+        if not should_update_tinkerism_reply_language(current_language, language, transcript):
+            logger.info(
+                "[OUTBOUND_AUDIO] sticky language kept={} ignored={} transcript={!r}",
+                current_language,
+                language,
+                transcript[:80],
+            )
+            return
+        current_language = language
+        try:
+            from handlers.voice_provider_adapters import apply_tinkerism_tts_language
+
+            # Flash rejects language_code=mr (1008) and publishes silence to SIP.
+            # Never raise here: errors abort turn handling and mute subsequent replies.
+            applied = apply_tinkerism_tts_language(tts, language)
+            logger.info(
+                "[OUTBOUND_AUDIO] TTS language follow caller={} applied={}",
+                language,
+                applied or "auto",
+            )
+        except Exception as error:
+            logger.warning(
+                "[OUTBOUND_AUDIO] TTS language update failed: {}",
+                redact_sensitive(str(error)),
+            )
+        if on_reply_language is not None:
+            on_reply_language(language)
 
     session.on("user_input_transcribed", follow_caller_language)
 
@@ -748,6 +1032,41 @@ def speak_first_message(session: Any, config: dict[str, Any]):
             allow_interruptions=True,
         )
     return session.say(first_message, allow_interruptions=True)
+
+
+async def speak_outbound_first_message(
+    session: Any,
+    config: dict[str, Any],
+    *,
+    participant: Any | None = None,
+    media_settle_seconds: float = 0.45,
+) -> Any:
+    """Speak the campaign opening only after the SIP/RTP bridge can take agent audio."""
+    if participant is not None:
+        attributes = getattr(participant, "attributes", None) or {}
+        status = attributes.get("sip.callStatus")
+        if status not in {None, "active", "automation"}:
+            logger.warning(
+                "[OUTBOUND_AUDIO] Skipping opening greeting; SIP status is {}",
+                redact_sensitive(str(status)),
+            )
+            return None
+    if media_settle_seconds > 0:
+        # Give LiveKit SIP time to subscribe to the agent track after 200 OK.
+        await asyncio.sleep(media_settle_seconds)
+    handle = speak_first_message(session, config)
+    if handle is None:
+        return None
+    wait_for_playout = getattr(handle, "wait_for_playout", None)
+    if callable(wait_for_playout):
+        try:
+            await wait_for_playout()
+        except Exception as error:
+            logger.warning(
+                "[OUTBOUND_AUDIO] Opening greeting playout ended early: {}",
+                redact_sensitive(str(error)),
+            )
+    return handle
 
 
 def parse_preview_user_transcript_packet(

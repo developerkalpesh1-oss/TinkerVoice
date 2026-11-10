@@ -1,5 +1,13 @@
+import { pipeline } from "node:stream/promises";
+import type { Response } from "express";
+
 import { NotFoundError } from "../../common/errors/notFound.js";
 import { livekitRoomServiceClient } from "../../config/livekit.js";
+import {
+  deleteRecordingObject,
+  readRecordingStream,
+  recordingObjectExists,
+} from "../../config/recording-storage.js";
 import { deleteObject, generateDownloadUrl } from "../../config/s3.js";
 import { reportCallMinutesUsage } from "../billing/metered-usage.service.js";
 import {
@@ -15,7 +23,7 @@ import type {
 import type { LiveTranscriptStore } from "../../realtime/live-transcript.store.js";
 import type { CallStartedEvent } from "../../realtime/live-transcript.contract.js";
 
-type RecordingSigner = (key: string) => Promise<string>;
+type RecordingSigner = typeof generateDownloadUrl;
 type CallWithRecording = { audioRecordingPath: string | null };
 const LIVEKIT_REGISTRY_STALE_GRACE_MS = 30_000;
 
@@ -28,18 +36,40 @@ const isHttpUrl = (value: string) => {
   }
 };
 
-export const signCallRecordingUrl = async <T extends CallWithRecording>(
+export const recordingContentType = (key: string): string => {
+  const lower = key.toLowerCase();
+  if (lower.endsWith(".mp3")) return "audio/mpeg";
+  if (lower.endsWith(".wav")) return "audio/wav";
+  if (lower.endsWith(".webm")) return "audio/webm";
+  if (lower.endsWith(".mp4") || lower.endsWith(".m4a")) return "audio/mp4";
+  // LiveKit room composite audio-only egress writes OGG/Opus by default.
+  return "audio/ogg";
+};
+
+export const signCallRecordingUrl = async <T extends CallWithRecording & { callId?: string }>(
   call: T,
-  signer: RecordingSigner = generateDownloadUrl,
+  _signer: RecordingSigner = generateDownloadUrl,
 ): Promise<T> => {
+  // Keep the storage key opaque. Browser Play/Download must use the authenticated
+  // /calls/:callId/recording API instead of direct object-storage URLs.
   if (!call.audioRecordingPath || isHttpUrl(call.audioRecordingPath)) {
     return call;
   }
-
-  return {
-    ...call,
-    audioRecordingPath: await signer(call.audioRecordingPath),
-  };
+  if (await recordingObjectExists(call.audioRecordingPath)) {
+    return call;
+  }
+  // Orphan keys (failed egress / wiped local disk) must not advertise Play/Download.
+  if (call.callId) {
+    void calllogRepository
+      .detachMissingRecording(call.callId, call.audioRecordingPath)
+      .catch((error) => {
+        console.warn("[calllogs] failed to detach missing recording", {
+          callId: call.callId,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      });
+  }
+  return { ...call, audioRecordingPath: null };
 };
 
 export const ingestCallLog = async (args: IngestCallLogArgs) => {
@@ -87,17 +117,90 @@ export const getCallLog = async (organizationId: string, callId: string) => {
   return signCallRecordingUrl(row);
 };
 
+export const recordingFileName = (callId: string, key: string): string => {
+  const extension = key.includes(".") ? key.slice(key.lastIndexOf(".")) : ".ogg";
+  const safeExt = /^\.[a-z0-9]+$/i.test(extension) ? extension : ".ogg";
+  return `recording-${callId.replace(/[^a-zA-Z0-9_-]/g, "_")}${safeExt}`;
+};
+
 export const getCallRecordingDownloadUrl = async (
   organizationId: string,
   callId: string,
-  signer: typeof generateDownloadUrl = generateDownloadUrl,
 ) => {
   const call = await calllogRepository.getCallByIdForOrg(callId, organizationId);
   if (!call?.audioRecordingPath || isHttpUrl(call.audioRecordingPath)) {
     throw new NotFoundError("Recording not available for download");
   }
-  const fileName = `recording-${callId.replace(/[^a-zA-Z0-9_-]/g, "_")}.ogg`;
-  return signer(call.audioRecordingPath, 3600, fileName);
+  if (!(await recordingObjectExists(call.audioRecordingPath))) {
+    await calllogRepository.detachMissingRecording(callId, call.audioRecordingPath);
+    throw new NotFoundError("Recording not available for download");
+  }
+  // Prefer same-origin authenticated streaming over exposing object-storage URLs.
+  return `/api/v1/calls/${encodeURIComponent(callId)}/recording?disposition=attachment`;
+};
+
+export const streamCallRecording = async (
+  organizationId: string,
+  callId: string,
+  response: Response,
+  options: {
+    disposition?: "inline" | "attachment";
+    reader?: typeof readRecordingStream;
+  } = {},
+) => {
+  const call = await calllogRepository.getCallByIdForOrg(callId, organizationId);
+  if (!call?.audioRecordingPath || isHttpUrl(call.audioRecordingPath)) {
+    throw new NotFoundError("Recording not available");
+  }
+  const key = call.audioRecordingPath;
+  if (!(await recordingObjectExists(key))) {
+    await calllogRepository.detachMissingRecording(callId, key);
+    throw new NotFoundError("Recording not available");
+  }
+  const contentType = recordingContentType(key);
+  const disposition = options.disposition === "attachment" ? "attachment" : "inline";
+  const fileName = recordingFileName(callId, key);
+  const cancellation = new AbortController();
+  const timeout = setTimeout(() => cancellation.abort(), 60_000);
+  timeout.unref?.();
+  const cancel = () => cancellation.abort();
+  response.once("close", cancel);
+  let body: Awaited<ReturnType<typeof readRecordingStream>>["body"] | undefined;
+  try {
+    if (response.destroyed) return;
+    const object = await (options.reader ?? readRecordingStream)(key, cancellation.signal);
+    body = object.body;
+    response.status(200);
+    response.set({
+      "Content-Type": contentType,
+      "Content-Disposition":
+        disposition === "attachment"
+          ? `attachment; filename="${fileName}"`
+          : "inline",
+      "Accept-Ranges": "bytes",
+      "Cache-Control": "private, no-store",
+      "X-Content-Type-Options": "nosniff",
+      ...(object.contentLength !== undefined
+        ? { "Content-Length": String(object.contentLength) }
+        : {}),
+    });
+    await pipeline(body, response, { signal: cancellation.signal });
+  } catch (error) {
+    if (response.destroyed || response.headersSent) {
+      response.destroy();
+      return;
+    }
+    if (error instanceof Error && ["NoSuchKey", "NotFound", "InvalidAccessKeyId", "AccessDenied"].includes(error.name)) {
+      await calllogRepository.detachMissingRecording(callId, key).catch(() => undefined);
+      throw new NotFoundError("Recording not available");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+    response.off("close", cancel);
+    cancellation.abort();
+    body?.destroy();
+  }
 };
 
 export const getTranscripts = async (args: ListTranscriptsArgs) => {
@@ -466,7 +569,9 @@ export const deleteCallLog = async (
   }
 
   if (call.audioRecordingPath && !isHttpUrl(call.audioRecordingPath)) {
-    const deleteRecording = dependencies.deleteObjectImpl ?? deleteObject;
+    const deleteRecording =
+      dependencies.deleteObjectImpl ??
+      ((key: string) => deleteRecordingObject(key));
     await deleteRecording(call.audioRecordingPath);
   }
 

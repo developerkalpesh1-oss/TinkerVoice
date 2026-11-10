@@ -31,9 +31,11 @@ import {
   normalizeAgentVariables,
   uniqueDynamicVariableNames,
 } from "@/src/lib/agents/dynamic-variables";
-import { tinkerismCampaignPrompt } from "@/src/lib/outbound/prompt-campaigns";
+import {
+  campaignOpeningGreeting,
+  tinkerismCampaignPrompt,
+} from "@/src/lib/outbound/prompt-campaigns";
 import type { OutboundSavedContact } from "@/src/lib/outbound/saved-contacts";
-import { TINKERISM_FIRST_MESSAGE } from "@/src/lib/tinkerism/contacts";
 import { quickCallSchema } from "@/src/models/outbound/quickCall";
 import { queryKeys } from "@/src/lib/query-keys";
 
@@ -162,7 +164,7 @@ export function QuickCallForm({
     try {
       const toNumber = phoneNumber.trim();
       const contactName = username.trim() || "the recipient";
-      const greeting = firstMessage.trim() || TINKERISM_FIRST_MESSAGE;
+      const greeting = firstMessage.trim() || campaignOpeningGreeting(selectedCampaign);
       const parsed = quickCallSchema.safeParse({
         agentId,
         phoneNumber: toNumber,
@@ -315,7 +317,7 @@ export function QuickCallForm({
             <Textarea
               id="firstMessage"
               rows={3}
-              placeholder={TINKERISM_FIRST_MESSAGE}
+              placeholder={campaignOpeningGreeting(selectedCampaign)}
               value={firstMessage}
               onChange={(event) => setFirstMessage(event.target.value)}
             />
@@ -326,7 +328,7 @@ export function QuickCallForm({
             <Textarea
               id="systemPrompt"
               rows={4}
-              placeholder="Optional. Leave blank to use the shared Tinkerism Call campaign prompt."
+              placeholder="Optional. Leave blank to use the selected campaign prompt, knowledge, and behaviour."
               value={systemPrompt}
               onChange={(event) => setSystemPrompt(event.target.value)}
             />

@@ -51,6 +51,7 @@ import {
 } from "@/src/lib/tinkerism/call-readiness";
 import {
   campaignForCalls,
+  campaignOpeningGreeting,
   DEFAULT_TINKERISM_CAMPAIGN,
   parseStoredCampaignSelection,
   parseStoredCampaigns,
@@ -72,7 +73,6 @@ import {
   removeContact,
   setContactSelected,
   TINKERISM_CONTACTS_STORAGE_KEY,
-  TINKERISM_FIRST_MESSAGE,
   TINKERISM_LOGS_STORAGE_KEY,
   TINKERISM_STOPPED_DETAIL,
   terminateTinkerismCall,
@@ -375,7 +375,9 @@ export function TinkerismCallPanel() {
             fromNumber,
             phoneNumber: contact.phoneNumber,
             username: contact.name,
-          firstMessage: TINKERISM_FIRST_MESSAGE,
+          firstMessage: campaignOpeningGreeting(
+            campaignForCalls(campaigns, selectedCampaignId),
+          ),
           systemPrompt: tinkerismCampaignPrompt(
             campaignForCalls(campaigns, selectedCampaignId),
             contact.name,

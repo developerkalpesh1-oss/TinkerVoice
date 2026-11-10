@@ -55,5 +55,8 @@ yarn-error.log*
 *.pem
 __pycache__/
 
+# Local call recordings (RECORDING_STORAGE=local)
+.data/
+
 # Local migration secrets and scratch exports
 docs/temp/

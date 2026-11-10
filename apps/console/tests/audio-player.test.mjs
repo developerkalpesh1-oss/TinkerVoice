@@ -22,13 +22,26 @@ vm.runInNewContext(compiled, {
 });
 
 test("recordings expose accessible seeking, skip, replay, and download controls", () => {
-  const html = renderToStaticMarkup(React.createElement(moduleValue.exports.AudioPlayer, { src: "/recording.wav", callId: "call-1" }));
+  const source = readFileSync(new URL("../src/components/calls/AudioPlayer.tsx", import.meta.url), "utf8");
+  assert.match(source, /callsApi\.recordingBlob\(callId\)/);
+  assert.match(source, /callsApi\.recordingBlob\(callId, \{ disposition: "attachment" \}\)/);
+  assert.doesNotMatch(source, /recordingDownloadUrl/);
+
+  const html = renderToStaticMarkup(React.createElement(moduleValue.exports.AudioPlayer, {
+    src: "Voice-agents/Recordings/recording-1.ogg",
+    callId: "call-1",
+    durationSeconds: 75,
+  }));
   for (const label of ["Recording position", "Back 10 seconds", "Play recording", "Forward 10 seconds", "Replay recording"]) {
     assert.ok(html.includes(`aria-label="${label}"`), label);
   }
   assert.match(html, /type="range"/);
+  assert.match(html, /max="75"/);
+  assert.match(html, /1:15/);
+  assert.match(html, /aria-label="Play recording"/);
   assert.match(html, /<button[^>]*>.*Download<\/button>/s);
-  assert.doesNotMatch(html, /href="\/recording.wav"/);
+  assert.doesNotMatch(html, /Voice-agents\/Recordings/);
+  assert.doesNotMatch(html, /<audio/);
 
   const empty = renderToStaticMarkup(React.createElement(moduleValue.exports.AudioPlayer, { src: null, callId: "call-1" }));
   assert.match(empty, /No recording available/);

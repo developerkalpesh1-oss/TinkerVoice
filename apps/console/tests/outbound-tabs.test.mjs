@@ -28,12 +28,12 @@ test("outbound batch creation and campaign management share one tab", () => {
   assert.match(workspace, /SavedContactsPanel/);
   assert.match(workspace, /CampaignsPanel/);
   assert.match(workspace, /tinkerismCampaignPrompt/);
-  assert.match(workspace, /TINKERISM_FIRST_MESSAGE/);
+  assert.match(workspace, /campaignOpeningGreeting/);
   assert.match(workspace, /callSelectedContacts/);
   assert.doesNotMatch(quick, /PromptCampaignPanel/);
   assert.doesNotMatch(quick, /SavedContactsPanel/);
   assert.match(quick, /QuickCallContactField/);
   assert.match(quick, /tinkerismCampaignPrompt/);
-  assert.match(quick, /TINKERISM_FIRST_MESSAGE/);
+  assert.match(quick, /campaignOpeningGreeting/);
   assert.match(quick, /tinkerism_call/);
 });

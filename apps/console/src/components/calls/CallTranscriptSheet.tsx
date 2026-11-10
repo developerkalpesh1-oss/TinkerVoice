@@ -81,9 +81,9 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
     <Sheet open={!!call} onOpenChange={(open) => { if (!open) onClose(); }}>
       <SheetContent
         side="right"
-        className="gap-0 overflow-hidden p-0 data-[side=right]:w-full data-[side=right]:sm:w-[min(92vw,1040px)] data-[side=right]:sm:max-w-none data-[side=right]:xl:w-[1040px]"
+        className="h-full gap-0 overflow-hidden p-0 data-[side=right]:w-full data-[side=right]:sm:w-[min(92vw,1040px)] data-[side=right]:sm:max-w-none data-[side=right]:xl:w-[1040px]"
       >
-        <SheetHeader className="border-b bg-muted/30 px-6 py-5 sm:px-8">
+        <SheetHeader className="shrink-0 border-b bg-muted/30 px-6 py-5 sm:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0 space-y-2">
               <SheetDescription className="font-medium text-muted-foreground">
@@ -114,8 +114,8 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
           </div>
         </SheetHeader>
 
-        <div className="flex min-h-0 flex-1 flex-col bg-background">
-          <div className="grid gap-3 border-b bg-background/95 p-4 sm:grid-cols-3 sm:p-5 xl:p-6">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-background">
+          <div className="grid shrink-0 gap-3 border-b bg-background/95 p-4 sm:grid-cols-3 sm:p-5 xl:p-6">
             <DetailStat
               icon={CalendarClock}
               label="Started"
@@ -133,9 +133,13 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
             />
           </div>
 
-          <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[340px_minmax(0,1fr)]">
-            <aside className="border-b bg-muted/20 p-4 sm:p-6 lg:border-r lg:border-b-0 lg:p-6">
-              <AudioPlayer src={call?.audioRecordingPath ?? null} callId={call?.callId ?? ""} />
+          <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-[minmax(0,auto)_minmax(16rem,1fr)] overflow-hidden lg:grid-cols-[340px_minmax(0,1fr)] lg:grid-rows-[minmax(0,1fr)]">
+            <aside className="min-h-0 overflow-y-auto overscroll-contain border-b bg-muted/20 p-4 sm:p-6 lg:border-r lg:border-b-0 lg:p-6">
+              <AudioPlayer
+                src={call?.audioRecordingPath ?? null}
+                callId={call?.callId ?? ""}
+                durationSeconds={call?.durationSeconds ?? null}
+              />
               <div className="mt-5 rounded-xl border bg-background/70 p-4 text-sm text-muted-foreground">
                 <p className="font-medium text-foreground">Review tip</p>
                 <p className="mt-1 leading-relaxed">
@@ -144,15 +148,17 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
               </div>
             </aside>
 
-            <section className="flex min-h-0 flex-col">
-              <div className="flex items-center justify-between border-b px-4 py-3 sm:px-6">
+            <section className="flex min-h-0 min-w-0 flex-col overflow-hidden">
+              <div className="flex shrink-0 items-center justify-between border-b px-4 py-3 sm:px-6">
                 <div>
                   <h3 className="text-sm font-semibold text-foreground">Transcript</h3>
                   <p className="text-xs text-muted-foreground">Conversation messages in chronological order.</p>
                 </div>
               </div>
-              <div className="min-h-0 flex-1 overflow-y-auto bg-muted/10 p-4 sm:p-6">
-                {call ? <Transcript callId={call.callId} /> : null}
+              <div className="relative min-h-0 flex-1 bg-muted/10">
+                <div className="absolute inset-0 overflow-y-auto overscroll-contain p-4 sm:p-6">
+                  {call ? <Transcript callId={call.callId} /> : null}
+                </div>
               </div>
             </section>
           </div>

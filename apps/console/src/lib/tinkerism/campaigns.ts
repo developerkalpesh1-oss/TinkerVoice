@@ -14,6 +14,8 @@ export type TinkerismCampaign = {
   purpose: string;
   instructions: string;
   behaviour: string;
+  /** Spoken opening line for this campaign only. Never reuse another campaign's greeting. */
+  greeting: string;
   sources: TinkerismKnowledgeSource[];
   updatedAt: string;
 };
@@ -32,6 +34,7 @@ const FIELD_LIMITS = {
   purpose: 2_000,
   instructions: 4_000,
   behaviour: 4_000,
+  greeting: 280,
 } as const;
 
 export const DEFAULT_TINKERISM_CAMPAIGN: TinkerismCampaign = {
@@ -43,10 +46,27 @@ export const DEFAULT_TINKERISM_CAMPAIGN: TinkerismCampaign = {
   instructions:
     "If they want more information, ask one relevant question at a time and offer to follow up and confirm the details. Do not invent prices, timelines, features, customers, case studies, or commitments.",
   behaviour:
-    "Listen until the person finishes speaking. Then answer the question they just asked in one or two short sentences. The caller may speak English or Hindi. Answer in the language they just used. Hindi answers should be natural spoken Hindi. English answers should sound like professional Indian English. If they are busy, not interested, finished, or ask you to stop, agree with a brief polite goodbye and end the call.",
+    "Speak like a natural phone conversation similar to ChatGPT voice mode. Listen until they finish; do not interrupt. Answer in one or two short spoken sentences. Occasionally use a brief acknowledgment such as Hmm, I understand, Right, or Absolutely, but do not overuse them. Detect English, Hindi, or Marathi immediately and reply in that language. Match their speaking style, vocabulary, simplicity, and tone. If they hesitate or struggle with English, politely offer Hindi or Marathi. If they are busy, not interested, finished, or ask you to stop, agree with a brief polite goodbye and end the call.",
+  // Keep in sync with TINKERISM_FIRST_MESSAGE in contacts.ts.
+  greeting:
+    "Hi, this is Tinkerism. We help businesses with websites and digital work. Is now a good time to talk?",
   sources: [],
   updatedAt: "2026-11-05T00:00:00.000Z",
 };
+
+/**
+ * Opening line for the selected campaign. Never falls back to the Tinkerism
+ * greeting when another campaign is selected.
+ */
+export function campaignOpeningGreeting(campaign: TinkerismCampaign): string {
+  const greeting = campaign.greeting.trim();
+  if (greeting) return greeting;
+  if (campaign.id === DEFAULT_TINKERISM_CAMPAIGN.id) {
+    return DEFAULT_TINKERISM_CAMPAIGN.greeting;
+  }
+  const brand = campaign.name.trim() || "our team";
+  return `Hi, this is ${brand}. Is now a good time to talk?`;
+}
 
 export function cleanExtractedText(value: string): string {
   return value
@@ -114,6 +134,7 @@ export function blankCampaign(now = Date.now()): TinkerismCampaign {
     ...DEFAULT_TINKERISM_CAMPAIGN,
     id: createCampaignId(now),
     name: "",
+    greeting: "",
     sources: [],
     updatedAt: new Date(now).toISOString(),
   };
@@ -145,6 +166,7 @@ export function normalizeCampaign(campaign: TinkerismCampaign, updatedAt = new D
     purpose: clampField(campaign.purpose, FIELD_LIMITS.purpose),
     instructions: clampField(campaign.instructions, FIELD_LIMITS.instructions),
     behaviour: clampField(campaign.behaviour, FIELD_LIMITS.behaviour),
+    greeting: clampField(campaign.greeting, FIELD_LIMITS.greeting),
     sources: campaign.sources.slice(0, MAX_KNOWLEDGE_SOURCES).flatMap((source) => {
       if (!isSource(source)) return [];
       const text = cleanExtractedText(source.text);
@@ -168,6 +190,7 @@ export function campaignError(campaign: TinkerismCampaign): string | null {
   if (!campaign.purpose.trim()) return "Describe the calling purpose.";
   if (!campaign.instructions.trim()) return "Add the instructions the agent should follow.";
   if (!campaign.behaviour.trim()) return "Describe how the conversation should behave.";
+  if (!campaign.greeting.trim()) return "Add the opening greeting this campaign should speak.";
   if (campaign.sources.length > MAX_KNOWLEDGE_SOURCES) {
     return `A campaign can use up to ${MAX_KNOWLEDGE_SOURCES} knowledge sources.`;
   }
@@ -183,6 +206,12 @@ export function parseStoredCampaigns(raw: string | null): TinkerismCampaign[] {
       if (!entry || typeof entry !== "object") return [];
       const campaign = entry as Partial<TinkerismCampaign>;
       if (typeof campaign.id !== "string" || !campaign.id) return [];
+      const migratedGreeting =
+        typeof campaign.greeting === "string" && campaign.greeting.trim()
+          ? campaign.greeting
+          : campaign.id === DEFAULT_TINKERISM_CAMPAIGN.id
+            ? DEFAULT_TINKERISM_CAMPAIGN.greeting
+            : `Hi, this is ${typeof campaign.name === "string" && campaign.name.trim() ? campaign.name.trim() : "our team"}. Is now a good time to talk?`;
       const normalized = normalizeCampaign({
         id: campaign.id,
         name: campaign.name ?? "",
@@ -190,6 +219,7 @@ export function parseStoredCampaigns(raw: string | null): TinkerismCampaign[] {
         purpose: campaign.purpose ?? "",
         instructions: campaign.instructions ?? "",
         behaviour: campaign.behaviour ?? "",
+        greeting: migratedGreeting,
         sources: Array.isArray(campaign.sources) ? campaign.sources.filter(isSource) : [],
         updatedAt: typeof campaign.updatedAt === "string" ? campaign.updatedAt : DEFAULT_TINKERISM_CAMPAIGN.updatedAt,
       }, typeof campaign.updatedAt === "string" ? campaign.updatedAt : DEFAULT_TINKERISM_CAMPAIGN.updatedAt);
@@ -249,9 +279,13 @@ export function tinkerismCampaignPrompt(
     `Calling purpose: ${campaign.purpose.trim()}`,
     `Instructions: ${campaign.instructions.trim()}`,
     `Conversation behaviour: ${campaign.behaviour.trim()}`,
-    "A short greeting was already spoken. Do not greet again, do not introduce yourself again, and do not repeat why you called.",
-    "Listen until the person finishes speaking. Then answer the question they just asked in one or two short sentences.",
-    "The caller may speak English or Hindi. Answer in the language they just used. Hindi answers should be natural spoken Hindi. English answers should sound like professional Indian English.",
+    `Opening greeting already spoken for this campaign: ${campaignOpeningGreeting(campaign)}`,
+    "Do not greet again, do not introduce yourself again, and do not repeat why you called.",
+    "Speak like a natural phone conversation similar to ChatGPT voice mode: warm, present, and concise.",
+    "Listen until the person finishes speaking. Do not interrupt or talk over them. Then answer the question they just asked in one or two short spoken sentences.",
+    "Occasionally use a brief acknowledgment such as \"Hmm\", \"I understand\", \"Right\", or \"Absolutely\" (or the matching Hindi/Marathi equivalent), but not on every turn.",
+    "Detect English, Hindi, or Marathi immediately and answer in the language they just used. Hindi should be natural spoken Hindi. Marathi should be natural spoken Marathi. English should sound like professional Indian English.",
+    "Match their speaking style, vocabulary, simplicity, and tone. If they hesitate, mix languages, or struggle with English, politely offer to continue in Hindi or Marathi.",
     "Answer from the campaign instructions and the knowledge sources. If they do not contain the answer, say so and offer to confirm it on a follow-up. Do not invent prices, timelines, features, customers, case studies, or commitments.",
     "If they are busy, not interested, finished, or ask you to stop, agree with a brief polite goodbye and end the call.",
     knowledge.text

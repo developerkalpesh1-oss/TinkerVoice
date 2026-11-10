@@ -35,8 +35,9 @@ test("the selected campaign prompt and knowledge are applied to each recipient",
   assert.match(prompt, /website review/);
   assert.match(prompt, /pages they want rebuilt/);
   assert.match(prompt, /brochure websites from 12 pages/);
+  assert.match(prompt, /Opening greeting already spoken for this campaign/);
   assert.match(prompt, /Do not greet again/);
-  assert.match(prompt, /English or Hindi/);
+  assert.match(prompt, /English, Hindi, or Marathi/);
   assert.match(prompt, /Do not invent/);
   assert.match(prompt, /Asha/);
   assert.match(prompt, /\+919876543210/);
