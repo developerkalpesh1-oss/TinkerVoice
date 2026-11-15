@@ -8,6 +8,7 @@ export async function getReadiness() {
   const checks = {
     db,
     redis,
+    serviceUrls: checkProductionServiceUrls(),
     auth: checkEnv(
       ["BETTER_AUTH_SECRET"],
       "Better Auth secret is not configured",
@@ -122,6 +123,33 @@ export async function getReadiness() {
       .filter(Boolean)
       .join(","),
   );
+}
+
+const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "::1", "[::1]", "0.0.0.0"]);
+
+// Hosted deployments inherit local dev URLs when the env is copied from a
+// .env.dev file. Those resolve to the function's own loopback, so name the
+// variable rather than surfacing a generic connectivity failure.
+export function checkProductionServiceUrls(
+  env: NodeJS.ProcessEnv = process.env,
+): ReadinessCheck {
+  if (env.NODE_ENV !== "production") return { status: "ok", message: "not production" };
+  const problems = ["DATABASE_URL", "REDIS_URL"].flatMap((name) => {
+    const raw = env[name]?.trim();
+    if (!raw) return [`${name} is not set`];
+    let hostname: string;
+    try {
+      hostname = new URL(raw).hostname.toLowerCase();
+    } catch {
+      return [`${name} is not a valid URL`];
+    }
+    return LOCAL_HOSTNAMES.has(hostname)
+      ? [`${name} points at a local host (${hostname}) in production`]
+      : [];
+  });
+  return problems.length === 0
+    ? { status: "ok" }
+    : { status: "error", message: problems.join("; ") };
 }
 
 function checkStripeTaxConfiguration(): ReadinessCheck {
