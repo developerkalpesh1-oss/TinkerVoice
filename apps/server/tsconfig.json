@@ -4,6 +4,7 @@
   "compilerOptions": {
     "declaration": false,
     "declarationMap": false,
+    "lib": ["ES2022", "DOM"],
     "outDir": "dist",
     "rootDir": ".",
     "types": ["node"]
