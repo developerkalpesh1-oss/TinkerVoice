@@ -2,7 +2,7 @@ import "dotenv/config";
 import { createServer } from "node:http";
 import { setTimeout as settle } from "node:timers/promises";
 import path from "node:path";
-import express, { Request } from "express";
+import express, { type Request, type RequestHandler } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
@@ -78,8 +78,11 @@ app.use(
  * =========================
  */
 
-// Security headers
-app.use(helmet());
+// Security headers.
+// Helmet 8's package types can resolve as a module namespace under NodeNext on
+// some CI/Vercel installs, so call through a narrow RequestHandler factory type.
+const helmetMiddleware = helmet as unknown as (options?: object) => RequestHandler;
+app.use(helmetMiddleware());
 
 // Public widgets use their own origin allowlist, including on error responses.
 const consoleCors = cors({
