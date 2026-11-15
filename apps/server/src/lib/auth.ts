@@ -33,6 +33,12 @@ export const auth = betterAuth({
   advanced: {
     ipAddress: AUTH_IP_ADDRESS_OPTIONS,
     useSecureCookies: isSecureServerUrl,
+    // The Console and API are different sites (both on vercel.app), so the
+    // session cookie must be sent on cross-site credentialed requests.
+    // SameSite=None requires Secure, which HTTPS deployments already set.
+    defaultCookieAttributes: isSecureServerUrl
+      ? { sameSite: "none", secure: true }
+      : undefined,
     crossSubDomainCookies: {
       enabled: !!process.env.COOKIE_DOMAIN,
       domain: process.env.COOKIE_DOMAIN,

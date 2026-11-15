@@ -12,9 +12,15 @@ export const serverBaseUrl = trimTrailingSlashes(
 
 export const isSecureServerUrl = serverBaseUrl.startsWith("https://");
 
+// The deployed Console is always allowed, even when CONSOLE_URL is missing or
+// stale in the hosting env. Better Auth uses this list for origin checks, and
+// the console CORS middleware uses it for credentialed API requests.
+export const PRODUCTION_CONSOLE_ORIGIN = "https://tinker-voice.vercel.app";
+
 export const trustedOrigins = Array.from(
   new Set(
     [
+      PRODUCTION_CONSOLE_ORIGIN,
       ...splitOrigins(process.env.CONSOLE_URL),
       ...splitOrigins(process.env.WEB_URL),
       ...splitOrigins(process.env.DOCS_URL),

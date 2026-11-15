@@ -85,10 +85,15 @@ const helmetMiddleware = helmet as unknown as (options?: object) => RequestHandl
 app.use(helmetMiddleware());
 
 // Public widgets use their own origin allowlist, including on error responses.
+// Answers OPTIONS preflights (204) before any route, parser or auth handler.
+// Allowed request headers are reflected from the preflight, so Content-Type,
+// Authorization, X-API-Key and Better Auth headers pass without a fixed list.
 const consoleCors = cors({
   origin: trustedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  methods: ["GET", "HEAD", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   credentials: true,
+  optionsSuccessStatus: 204,
+  maxAge: 600,
   exposedHeaders: [
     "Retry-After",
     "RateLimit-Limit",
