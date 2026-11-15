@@ -5,7 +5,7 @@ import {
   type ErrorRequestHandler,
   type RequestHandler,
 } from "express";
-import rateLimit, { ipKeyGenerator } from "express-rate-limit";
+import { ipKeyGenerator, rateLimit } from "express-rate-limit";
 
 import { sendContactSubmission } from "../../lib/mailer.js";
 import { rateLimitStore } from "../../middleware/rate-limit-store.js";
