@@ -357,15 +357,18 @@ async function sendComposedEmail(args: {
   if (process.env.ZEPTOMAIL_TOKEN) {
     try {
       await withDeliveryTimeout(async (signal) => {
-        const response = await fetch(getZeptoMailEndpoint(), {
-          method: "POST",
-          headers: {
-            Authorization: getZeptoMailToken(),
-            "Content-Type": "application/json",
+        const response: Awaited<ReturnType<typeof fetch>> = await fetch(
+          getZeptoMailEndpoint(),
+          {
+            method: "POST",
+            headers: {
+              Authorization: getZeptoMailToken(),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+            ...(signal ? { signal } : {}),
           },
-          body: JSON.stringify(payload),
-          ...(signal ? { signal } : {}),
-        });
+        );
         const body = await response.text();
 
         if (!response.ok) {

@@ -249,7 +249,7 @@ async function main() {
       const token = process.env.TWILIO_AUTH_TOKEN;
       if (!account || !token)
         throw new Error("Twilio account credentials are missing");
-      const response = await fetch(
+      const response: Awaited<ReturnType<typeof fetch>> = await fetch(
         `https://pricing.twilio.com/v2/Voice/Countries/${country}`,
         {
           headers: {

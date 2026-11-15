@@ -161,9 +161,12 @@ export const getAgents = async (organizationId: string) => {
 export const getVoiceCatalog = async (): Promise<VoiceCatalog> => {
   const aiApiUrl = process.env.AI_API_URL ?? "http://localhost:5555";
   const internalApiKey = requireInternalApiKey();
-  const response = await fetch(`${aiApiUrl.replace(/\/$/, "")}/voice/catalog`, {
-    headers: { "x-internal-key": internalApiKey },
-  });
+  const response: Awaited<ReturnType<typeof fetch>> = await fetch(
+    `${aiApiUrl.replace(/\/$/, "")}/voice/catalog`,
+    {
+      headers: { "x-internal-key": internalApiKey },
+    },
+  );
 
   if (!response.ok) {
     throw new CustomApiError("Voice catalog is unavailable", 503);
@@ -181,7 +184,7 @@ export const validateConfiguredVoice = async (configuration: {
   voiceId: string;
 }) => {
   const aiApiUrl = process.env.AI_API_URL ?? "http://localhost:5555";
-  let response: Response;
+  let response: Awaited<ReturnType<typeof fetch>>;
   try {
     response = await fetch(`${aiApiUrl.replace(/\/$/, "")}/voice/config/resolve`, {
       method: "POST",
@@ -378,7 +381,7 @@ export const requestVoiceSession = async (
 ): Promise<AgentPreviewSession> => {
   const aiApiUrl = process.env.AI_API_URL ?? "http://localhost:5555";
   const internalApiKey = requireInternalApiKey();
-  const response = await fetch(
+  const response: Awaited<ReturnType<typeof fetch>> = await fetch(
     `${aiApiUrl.replace(/\/$/, "")}/voice/sessions`,
     {
       method: "POST",

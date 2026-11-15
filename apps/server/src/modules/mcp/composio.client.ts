@@ -26,7 +26,7 @@ export async function composioRequest(
     throw new BadRequestError(
       "Integrations are not configured. Ask an administrator to set COMPOSIO_API_KEY.",
     );
-  let response: Response;
+  let response: Awaited<ReturnType<typeof fetch>>;
   try {
     response = await fetch(`${BASE_URL}${path}`, {
       method,

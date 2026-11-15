@@ -706,7 +706,9 @@ async function fetchReportText(urlValue: string) {
   if (url.protocol !== "https:" || !allowedTelnyxReportHost(url.hostname)) {
     throw new Error("Telnyx returned an untrusted CDR download URL");
   }
-  const response = await fetch(url, { redirect: "error" });
+  const response: Awaited<ReturnType<typeof fetch>> = await fetch(url, {
+    redirect: "error",
+  });
   if (!response.ok) {
     throw new Error(`Telnyx CDR download failed with HTTP ${response.status}`);
   }

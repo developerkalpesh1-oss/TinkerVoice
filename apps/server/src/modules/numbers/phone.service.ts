@@ -1,3 +1,4 @@
+import type { CountryCoverage } from "telnyx/resources/country-coverage.js";
 import { Prisma, TelephonyProvider } from "../../../prisma/generated/prisma/client.js";
 import CustomApiError from "../../common/errors/customApiError.js";
 import { BadRequestError } from "../../common/errors/badRequest.js";
@@ -66,8 +67,15 @@ export const listNumberCountries = async (
       const response = await telnyxClient.countryCoverage.retrieve();
       if (!response.data) throw new Error("Missing country coverage");
       const names = new Intl.DisplayNames(["en"], { type: "region" });
-      countries = Object.entries(response.data)
-        .filter(([, row]) => row.local && (row.local.features ?? row.features)?.includes("voice"))
+      // Object.entries widens mapped values to unknown under some NodeNext checkers.
+      const coverageEntries = Object.keys(response.data).flatMap((key) => {
+        const row: CountryCoverage | undefined = response.data?.[key];
+        return row ? ([[key, row]] as const) : [];
+      });
+      countries = coverageEntries
+        .filter(([, row]) =>
+          Boolean(row.local && (row.local.features ?? row.features)?.includes("voice")),
+        )
         .map(([key, row]) => {
           const code = (row.code ?? key).toUpperCase();
           return { code, name: names.of(code) ?? code };

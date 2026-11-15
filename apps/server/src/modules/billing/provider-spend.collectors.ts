@@ -27,7 +27,7 @@ export async function fetchSpendJson(
   url: string,
   init: RequestInit = {},
 ): Promise<unknown> {
-  const response = await fetch(url, {
+  const response: Awaited<ReturnType<typeof fetch>> = await fetch(url, {
     ...init,
     redirect: "error",
     signal: AbortSignal.timeout(15_000),

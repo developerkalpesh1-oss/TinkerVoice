@@ -23,7 +23,7 @@ export async function createVoiceSample(
   if (!key) throw new CustomApiError("Voice samples are not configured", 503);
   const url = (process.env.AI_API_URL ?? "http://localhost:5555").replace(/\/$/, "");
   try {
-    const response = await fetch(`${url}/voice/sample`, {
+    const response: Awaited<ReturnType<typeof fetch>> = await fetch(`${url}/voice/sample`, {
       method: "POST",
       headers: { "content-type": "application/json", "x-internal-key": key },
       body: JSON.stringify(input),

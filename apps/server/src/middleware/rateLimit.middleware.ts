@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import rateLimit from "express-rate-limit";
+import { rateLimit } from "express-rate-limit";
 import authMiddleware, { getBearerToken, matchesInternalApiKey } from "./auth.middleware.js";
 import { rateLimitStore } from "./rate-limit-store.js";
 

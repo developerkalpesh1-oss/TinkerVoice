@@ -9,7 +9,10 @@ const INBOUND_URL = "https://assets.cdn.prod.twilio.com/pricing-csv/SiteNumbersP
 type OwnedNumber = { number: string; billingCountryIso: string | null; billingNumberType: string | null };
 
 async function downloadCsv(url: string) {
-  const response = await fetch(url, { redirect: "error", signal: AbortSignal.timeout(30_000) });
+  const response: Awaited<ReturnType<typeof fetch>> = await fetch(url, {
+    redirect: "error",
+    signal: AbortSignal.timeout(30_000),
+  });
   if (!response.ok || !response.body) throw new Error(`Rate download failed: HTTP ${response.status}`);
   const chunks: Uint8Array[] = [];
   let bytes = 0;

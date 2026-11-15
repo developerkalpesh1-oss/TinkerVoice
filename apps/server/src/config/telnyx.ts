@@ -1,4 +1,4 @@
-import Telnyx from "telnyx";
+import { Telnyx } from "telnyx";
 
 // Singleton Telnyx client. TELNYX_CONNECTION_ID is the SIP Connection that
 // routes PSTN traffic to LiveKit; consumers should validate it is set before

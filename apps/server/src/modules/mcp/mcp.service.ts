@@ -675,7 +675,7 @@ export const disconnectSmitheryConnection = async (
 ) => {
   const key = process.env.SMITHERY_API_KEY;
   if (!key) return;
-  const response = await fetch(
+  const response: Awaited<ReturnType<typeof fetch>> = await fetch(
     `https://api.smithery.ai/connect/${encodeURIComponent(namespace)}/${encodeURIComponent(connectionId)}`,
     {
       method: "DELETE",
