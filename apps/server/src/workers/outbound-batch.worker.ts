@@ -1,6 +1,4 @@
 import { Worker } from "bullmq";
-import { Redis } from "ioredis";
-import { closeRedisClient } from "./shutdown.js";
 
 import {
   recoverActiveCampaignDispatches,
@@ -8,13 +6,12 @@ import {
   dispatchBatchOutboundCall,
   importBatchCampaignRecipients,
 } from "../modules/outbound/outbound-batch.service.js";
+import { bullmqConnection } from "../queues/bullmq-connection.js";
 import { getOutboundBatchQueue } from "../queues/outbound-batch.queue.js";
 import type {
   OutboundBatchJobData,
   OutboundBatchJobName,
 } from "../queues/outbound-batch.queue.js";
-
-let redisConnection: Redis | undefined;
 
 export async function processOutboundBatchJob(job: {
   name: OutboundBatchJobName;
@@ -51,7 +48,7 @@ export const outboundBatchWorker = new Worker<
   void,
   OutboundBatchJobName
 >("outbound-batch", processOutboundBatchJob, {
-  connection: getRedisConnection(),
+  connection: bullmqConnection(),
   concurrency: 5,
 });
 
@@ -72,27 +69,18 @@ outboundBatchWorker.on("error", (error) => {
 });
 
 export async function closeOutboundBatchWorker() {
-  try {
-    await outboundBatchWorker.close();
-  } finally {
-    if (redisConnection) {
-      await closeRedisClient(redisConnection);
-      redisConnection = undefined;
-    }
-  }
-}
-
-function getRedisConnection() {
-  redisConnection ??= new Redis(
-    process.env.REDIS_URL ?? "redis://localhost:6379",
-    { maxRetriesPerRequest: null }
-  );
-  return redisConnection;
+  await outboundBatchWorker.close();
 }
 
 // The scheduler is stored in Redis, so recovery survives API restarts.
 export async function startOutboundDispatchRecovery() {
-  await getOutboundBatchQueue().upsertJobScheduler("recover-campaigns", { every: 60_000 }, {
-    name: "recover-campaigns", data: {}, opts: { removeOnComplete: true, removeOnFail: 20 },
-  });
+  await getOutboundBatchQueue().upsertJobScheduler(
+    "recover-campaigns",
+    { every: 60_000 },
+    {
+      name: "recover-campaigns",
+      data: {},
+      opts: { removeOnComplete: true, removeOnFail: 20 },
+    },
+  );
 }

@@ -16,7 +16,7 @@ import { requestJson } from "../helpers/http-client.js";
 
 const secret = "whsec_wallet_route_test";
 const stripe = new Stripe("sk_test_wallet_route_test", {
-  apiVersion: "2026-06-24.dahlia",
+  apiVersion: "2026-08-26.dahlia",
 });
 
 test("a valid Stripe signature routes the untouched raw event body", async () => {
@@ -178,7 +178,7 @@ function eventPayload(id: string) {
   return JSON.stringify({
     id,
     object: "event",
-    api_version: "2026-06-24.dahlia",
+    api_version: "2026-08-26.dahlia",
     created: Math.floor(Date.now() / 1_000),
     data: { object: { id: "cs_test", object: "checkout.session" } },
     livemode: false,

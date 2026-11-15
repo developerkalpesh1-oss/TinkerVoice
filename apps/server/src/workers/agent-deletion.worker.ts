@@ -1,6 +1,4 @@
 import { Worker } from "bullmq";
-import { Redis } from "ioredis";
-import { closeRedisClient } from "./shutdown.js";
 
 import { deleteAgent } from "../modules/agent/agent.service.js";
 import * as agentRepository from "../modules/agent/agent.repository.js";
@@ -8,8 +6,7 @@ import type {
   AgentDeletionJobData,
   AgentDeletionJobName,
 } from "../queues/agent-deletion.queue.js";
-
-let redisConnection: Redis | undefined;
+import { bullmqConnection } from "../queues/bullmq-connection.js";
 
 export async function processAgentDeletionJob(job: {
   data: AgentDeletionJobData;
@@ -39,7 +36,7 @@ export const agentDeletionWorker = new Worker<
   void,
   AgentDeletionJobName
 >("agent-deletion", processAgentDeletionJob, {
-  connection: getRedisConnection(),
+  connection: bullmqConnection(),
   concurrency: 2,
 });
 
@@ -57,20 +54,5 @@ agentDeletionWorker.on("error", (error) => {
 });
 
 export async function closeAgentDeletionWorker() {
-  try {
-    await agentDeletionWorker.close();
-  } finally {
-    if (redisConnection) {
-      await closeRedisClient(redisConnection);
-      redisConnection = undefined;
-    }
-  }
-}
-
-function getRedisConnection() {
-  redisConnection ??= new Redis(
-    process.env.REDIS_URL ?? "redis://localhost:6379",
-    { maxRetriesPerRequest: null },
-  );
-  return redisConnection;
+  await agentDeletionWorker.close();
 }

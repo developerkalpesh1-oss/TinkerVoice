@@ -1,6 +1,6 @@
 import { Worker } from "bullmq";
-import { redisConnection } from "../config/redis.js";
 import { generateDownloadUrl } from "../config/s3.js";
+import { bullmqConnection } from "../queues/bullmq-connection.js";
 import {
   deleteKbDocumentVectors,
   processKbDocuments,
@@ -110,7 +110,7 @@ export const kbWorker = new Worker<KbJobData, void, KbJobName>(
     );
   },
   {
-    connection: redisConnection,
+    connection: bullmqConnection(),
     concurrency: 5,
   },
 );

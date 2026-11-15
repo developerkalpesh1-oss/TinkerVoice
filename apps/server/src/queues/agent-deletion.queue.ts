@@ -1,6 +1,5 @@
 import { Queue } from "bullmq";
-import { Redis } from "ioredis";
-import { closeRedisClient } from "../workers/shutdown.js";
+import { bullmqConnection } from "./bullmq-connection.js";
 
 export type AgentDeletionJobName = "delete";
 
@@ -12,23 +11,28 @@ export interface AgentDeletionJobData {
 let agentDeletionQueue:
   | Queue<AgentDeletionJobData, void, AgentDeletionJobName>
   | undefined;
-let agentDeletionRedisConnection: Redis | undefined;
 
-export function getAgentDeletionQueue() {
-  agentDeletionQueue ??= new Queue<
-    AgentDeletionJobData,
-    void,
-    AgentDeletionJobName
-  >("agent-deletion", {
-    connection: getAgentDeletionRedisConnection(),
-    defaultJobOptions: {
-      attempts: 10,
-      backoff: { type: "exponential", delay: 5_000 },
-      removeOnComplete: true,
-      // Recovery re-enqueues permanently failed operations by deterministic id.
-      removeOnFail: true,
-    },
-  });
+export function getAgentDeletionQueue(): Queue<
+  AgentDeletionJobData,
+  void,
+  AgentDeletionJobName
+> {
+  if (!agentDeletionQueue) {
+    agentDeletionQueue = new Queue<
+      AgentDeletionJobData,
+      void,
+      AgentDeletionJobName
+    >("agent-deletion", {
+      connection: bullmqConnection(),
+      defaultJobOptions: {
+        attempts: 10,
+        backoff: { type: "exponential", delay: 5_000 },
+        removeOnComplete: true,
+        // Recovery re-enqueues permanently failed operations by deterministic id.
+        removeOnFail: true,
+      },
+    });
+  }
   return agentDeletionQueue;
 }
 
@@ -47,17 +51,5 @@ export async function closeAgentDeletionQueue() {
     await agentDeletionQueue?.close();
   } finally {
     agentDeletionQueue = undefined;
-    if (agentDeletionRedisConnection) {
-      await closeRedisClient(agentDeletionRedisConnection);
-      agentDeletionRedisConnection = undefined;
-    }
   }
-}
-
-function getAgentDeletionRedisConnection() {
-  agentDeletionRedisConnection ??= new Redis(
-    process.env.REDIS_URL ?? "redis://localhost:6379",
-    { maxRetriesPerRequest: null },
-  );
-  return agentDeletionRedisConnection;
 }

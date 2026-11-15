@@ -1,6 +1,5 @@
 import { Queue } from "bullmq";
-import { Redis } from "ioredis";
-import { closeRedisClient } from "../workers/shutdown.js";
+import { bullmqConnection } from "./bullmq-connection.js";
 
 export type OutboundBatchJobName =
   | "recover-campaigns"
@@ -13,23 +12,30 @@ export interface OutboundBatchJobData {
   outboundId?: string;
 }
 
-let outboundBatchQueue: Queue<OutboundBatchJobData, void, OutboundBatchJobName> | undefined;
-let outboundBatchRedisConnection: Redis | undefined;
+let outboundBatchQueue:
+  | Queue<OutboundBatchJobData, void, OutboundBatchJobName>
+  | undefined;
 
-export function getOutboundBatchQueue() {
-  outboundBatchQueue ??= new Queue<
-    OutboundBatchJobData,
-    void,
-    OutboundBatchJobName
-  >("outbound-batch", {
-    connection: getOutboundBatchRedisConnection(),
-    defaultJobOptions: {
-      attempts: 3,
-      backoff: { type: "exponential", delay: 5000 },
-      removeOnComplete: 100,
-      removeOnFail: 200,
-    },
-  });
+export function getOutboundBatchQueue(): Queue<
+  OutboundBatchJobData,
+  void,
+  OutboundBatchJobName
+> {
+  if (!outboundBatchQueue) {
+    outboundBatchQueue = new Queue<
+      OutboundBatchJobData,
+      void,
+      OutboundBatchJobName
+    >("outbound-batch", {
+      connection: bullmqConnection(),
+      defaultJobOptions: {
+        attempts: 3,
+        backoff: { type: "exponential", delay: 5000 },
+        removeOnComplete: 100,
+        removeOnFail: 200,
+      },
+    });
+  }
   return outboundBatchQueue;
 }
 
@@ -38,17 +44,5 @@ export async function closeOutboundBatchQueue() {
     await outboundBatchQueue?.close();
   } finally {
     outboundBatchQueue = undefined;
-    if (outboundBatchRedisConnection) {
-      await closeRedisClient(outboundBatchRedisConnection);
-      outboundBatchRedisConnection = undefined;
-    }
   }
-}
-
-function getOutboundBatchRedisConnection() {
-  outboundBatchRedisConnection ??= new Redis(
-    process.env.REDIS_URL ?? "redis://localhost:6379",
-    { maxRetriesPerRequest: null }
-  );
-  return outboundBatchRedisConnection;
 }

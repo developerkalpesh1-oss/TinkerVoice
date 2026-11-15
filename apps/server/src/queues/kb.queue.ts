@@ -1,6 +1,5 @@
 import { Queue } from "bullmq";
-import { Redis } from "ioredis";
-import { closeRedisClient } from "../workers/shutdown.js";
+import { bullmqConnection } from "./bullmq-connection.js";
 
 export type KbJobName = "process";
 
@@ -24,18 +23,19 @@ export interface KbJobData {
 }
 
 let kbQueue: Queue<KbJobData, void, KbJobName> | undefined;
-let kbRedisConnection: Redis | undefined;
 
-export function getKbQueue() {
-  kbQueue ??= new Queue<KbJobData, void, KbJobName>("kb-ingest", {
-    connection: getKbRedisConnection(),
-    defaultJobOptions: {
-      attempts: 3,
-      backoff: { type: "exponential", delay: 5000 },
-      removeOnComplete: 100,
-      removeOnFail: 200,
-    },
-  });
+export function getKbQueue(): Queue<KbJobData, void, KbJobName> {
+  if (!kbQueue) {
+    kbQueue = new Queue<KbJobData, void, KbJobName>("kb-ingest", {
+      connection: bullmqConnection(),
+      defaultJobOptions: {
+        attempts: 3,
+        backoff: { type: "exponential", delay: 5000 },
+        removeOnComplete: 100,
+        removeOnFail: 200,
+      },
+    });
+  }
   return kbQueue;
 }
 
@@ -44,17 +44,5 @@ export async function closeKbQueue() {
     await kbQueue?.close();
   } finally {
     kbQueue = undefined;
-    if (kbRedisConnection) {
-      await closeRedisClient(kbRedisConnection);
-      kbRedisConnection = undefined;
-    }
   }
-}
-
-function getKbRedisConnection() {
-  kbRedisConnection ??= new Redis(
-    process.env.REDIS_URL ?? "redis://localhost:6379",
-    { maxRetriesPerRequest: null },
-  );
-  return kbRedisConnection;
 }

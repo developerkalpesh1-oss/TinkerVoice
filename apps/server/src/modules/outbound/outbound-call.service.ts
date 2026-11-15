@@ -651,7 +651,7 @@ export async function cancelOutboundCall(
     reason?: string;
   },
   deps: {
-    repository?: CancelOutboundCallDeps;
+    repository?: OutboundCallWorkflowRepository;
     roomClient?: RoomServiceClientLike;
   } = {},
 ) {
