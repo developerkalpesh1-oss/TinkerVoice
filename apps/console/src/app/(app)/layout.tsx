@@ -7,7 +7,7 @@ import {
 import { AppSidebar } from "@/src/components/shell/AppSidebar";
 import { Topbar } from "@/src/components/shell/Topbar";
 import { PageActionsProvider } from "@/src/components/shell/PageActionsSlot";
-import { LiveCallsDock } from "@/src/components/calls/LiveCallsDock";
+import { LiveCallsDock } from "@/src/components/calls/LiveCallsDockBoundary";
 import { requireSession } from "@/src/lib/server-session";
 import { LiveCallsProvider } from "@/src/providers/live-calls-provider";
 

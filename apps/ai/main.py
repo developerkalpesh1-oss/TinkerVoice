@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 
-from livekit import agents, rtc
+from livekit import agents, api as livekit_api, rtc
 from livekit.agents import (
     AgentSession,
     Agent,
@@ -158,7 +158,30 @@ async def wait_for_billed_participant(
             if identity else ctx.wait_for_participant()
         )
         if wait_for_answer and getattr(participant, "kind", None) == rtc.ParticipantKind.PARTICIPANT_KIND_SIP:
-            await wait_for_sip_answer(ctx.room, participant)
+            # RTC attribute events can be missed during LiveKit reconnects; the
+            # server API still reflects the current SIP call status.
+            preferred = identity or getattr(participant, "identity", None)
+
+            async def poll_status() -> str | None:
+                response = await ctx.api.room.list_participants(
+                    livekit_api.ListParticipantsRequest(room=ctx.room.name)
+                )
+                for info in getattr(response, "participants", []) or []:
+                    if preferred and getattr(info, "identity", None) != preferred:
+                        continue
+                    attributes = getattr(info, "attributes", None) or {}
+                    status = attributes.get("sip.callStatus")
+                    if status is not None:
+                        return str(status)
+                    if preferred:
+                        return None
+                return None
+
+            await wait_for_sip_answer(
+                ctx.room,
+                participant,
+                poll_status=poll_status,
+            )
         return participant
 
     participant = await asyncio.wait_for(

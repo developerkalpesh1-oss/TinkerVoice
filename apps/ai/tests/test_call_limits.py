@@ -416,6 +416,39 @@ class CallLimitTests(unittest.IsolatedAsyncioTestCase):
             await asyncio.wait_for(wait_for_sip_answer(room, caller), 0.01)
         self.assertFalse(any(room.handlers.values()))
 
+    async def test_sip_answer_poll_recovers_when_attribute_event_is_missed(self):
+        room = Events()
+        caller = SimpleNamespace(identity="caller", attributes={"sip.callStatus": "dialing"})
+        room.remote_participants = {"caller": caller}
+        waiting = asyncio.create_task(
+            wait_for_sip_answer(room, caller, poll_interval_seconds=0.02)
+        )
+        await asyncio.sleep(0.03)
+        self.assertFalse(waiting.done())
+        caller.attributes = {"sip.callStatus": "active"}
+        await asyncio.wait_for(waiting, 0.5)
+        self.assertFalse(any(room.handlers.values()))
+
+    async def test_sip_answer_api_poll_recovers_when_local_state_stays_dialing(self):
+        room = Events()
+        caller = SimpleNamespace(identity="caller", attributes={"sip.callStatus": "dialing"})
+        room.remote_participants = {"caller": caller}
+        statuses = iter(["dialing", "active"])
+
+        async def poll_status():
+            return next(statuses)
+
+        await asyncio.wait_for(
+            wait_for_sip_answer(
+                room,
+                caller,
+                poll_status=poll_status,
+                poll_interval_seconds=0.02,
+            ),
+            0.5,
+        )
+        self.assertFalse(any(room.handlers.values()))
+
     async def test_final_billing_duration_excludes_shutdown_and_retry_time(self):
         now = [100.0]
         requests = []

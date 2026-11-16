@@ -17,15 +17,33 @@ export const isSecureServerUrl = serverBaseUrl.startsWith("https://");
 // the console CORS middleware uses it for credentialed API requests.
 export const PRODUCTION_CONSOLE_ORIGIN = "https://tinker-voice.vercel.app";
 
-export const trustedOrigins = Array.from(
-  new Set(
-    [
-      PRODUCTION_CONSOLE_ORIGIN,
-      ...splitOrigins(process.env.CONSOLE_URL),
-      ...splitOrigins(process.env.WEB_URL),
-      ...splitOrigins(process.env.DOCS_URL),
-      ...splitOrigins(process.env.CORS_ORIGINS),
-      serverBaseUrl,
-    ].map(trimTrailingSlashes),
-  ),
-);
+// Local Console dev servers (next dev defaults to port 3000).
+export const LOCAL_CONSOLE_ORIGINS = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+];
+
+// Local Console origins are trusted outside production, or when
+// CONSOLE_ALLOW_LOCALHOST_ORIGINS=true is set (e.g. a local Console pointed at
+// a deployed server). Leave the flag unset in real production: a local page
+// with credentials would otherwise be able to call the API as a signed-in user.
+export function buildTrustedOrigins(env: NodeJS.ProcessEnv = process.env): string[] {
+  const allowLocalConsole =
+    env.CONSOLE_ALLOW_LOCALHOST_ORIGINS === "true" || env.NODE_ENV !== "production";
+
+  return Array.from(
+    new Set(
+      [
+        PRODUCTION_CONSOLE_ORIGIN,
+        ...(allowLocalConsole ? LOCAL_CONSOLE_ORIGINS : []),
+        ...splitOrigins(env.CONSOLE_URL),
+        ...splitOrigins(env.WEB_URL),
+        ...splitOrigins(env.DOCS_URL),
+        ...splitOrigins(env.CORS_ORIGINS),
+        serverBaseUrl,
+      ].map(trimTrailingSlashes),
+    ),
+  );
+}
+
+export const trustedOrigins = buildTrustedOrigins();

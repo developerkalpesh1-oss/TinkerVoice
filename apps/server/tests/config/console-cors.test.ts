@@ -66,3 +66,19 @@ test("credentialed preflight from the Console origin succeeds before routes run"
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
 });
+
+test("local Console origins are trusted only when allowed", async () => {
+  const { buildTrustedOrigins, LOCAL_CONSOLE_ORIGINS } = await import(
+    "../../src/config/origins.js"
+  );
+  const prod = { NODE_ENV: "production" } as NodeJS.ProcessEnv;
+  for (const origin of LOCAL_CONSOLE_ORIGINS) {
+    assert.equal(buildTrustedOrigins(prod).includes(origin), false);
+    assert.equal(
+      buildTrustedOrigins({ ...prod, CONSOLE_ALLOW_LOCALHOST_ORIGINS: "true" }).includes(origin),
+      true,
+    );
+    assert.equal(buildTrustedOrigins({ NODE_ENV: "development" } as NodeJS.ProcessEnv).includes(origin), true);
+  }
+  assert.ok(buildTrustedOrigins(prod).includes(PRODUCTION_CONSOLE_ORIGIN));
+});

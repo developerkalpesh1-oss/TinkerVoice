@@ -39,25 +39,83 @@ async def delete_call_room(ctx: Any) -> None:
             raise
 
 
-async def wait_for_sip_answer(room: Any, participant: Any) -> None:
-    """A SIP participant can join the room while the phone is still ringing."""
+SIP_ANSWERED_STATUSES = frozenset({"active", "automation"})
+SIP_ANSWER_POLL_INTERVAL_SECONDS = 0.5
+
+
+def _sip_call_status(attributes: Any) -> str | None:
+    if not isinstance(attributes, dict):
+        return None
+    status = attributes.get("sip.callStatus")
+    return str(status) if status is not None else None
+
+
+async def wait_for_sip_answer(
+    room: Any,
+    participant: Any,
+    *,
+    poll_status: Callable[[], Awaitable[str | None]] | None = None,
+    poll_interval_seconds: float = SIP_ANSWER_POLL_INTERVAL_SECONDS,
+) -> None:
+    """A SIP participant can join the room while the phone is still ringing.
+
+    Attribute-change events alone are not enough: LiveKit RTC blips can drop the
+    answered transition. Poll local room state (and optional API status) so the
+    agent still starts after the callee picks up.
+    """
     answered = asyncio.get_running_loop().create_future()
+
+    def resolve_status(status: str | None) -> None:
+        if answered.done() or status is None:
+            return
+        if status in SIP_ANSWERED_STATUSES:
+            answered.set_result(None)
+        elif status == "hangup":
+            answered.set_exception(RuntimeError("SIP call ended before answering"))
 
     def on_attributes_changed(changed: dict, remote: Any) -> None:
         if remote.identity != participant.identity or answered.done():
             return
-        status = changed.get("sip.callStatus", remote.attributes.get("sip.callStatus"))
-        if status in {"active", "automation"}:
-            answered.set_result(None)
-        elif status == "hangup":
-            answered.set_exception(RuntimeError("SIP call ended before answering"))
+        status = changed.get("sip.callStatus", _sip_call_status(getattr(remote, "attributes", None)))
+        resolve_status(str(status) if status is not None else None)
 
     def on_disconnected(remote: Any) -> None:
         if remote.identity == participant.identity and not answered.done():
             answered.set_exception(RuntimeError("SIP caller disconnected before answering"))
 
+    def local_status() -> str | None:
+        participants = getattr(room, "remote_participants", None)
+        if participants is None:
+            return _sip_call_status(getattr(participant, "attributes", None))
+        current = participants.get(participant.identity)
+        if current is None:
+            return None
+        return _sip_call_status(getattr(current, "attributes", None))
+
+    async def poll_until_answered() -> None:
+        while not answered.done():
+            participants = getattr(room, "remote_participants", None)
+            if participants is not None and participant.identity not in participants:
+                on_disconnected(participant)
+                return
+            resolve_status(local_status())
+            if answered.done():
+                return
+            if poll_status is not None:
+                try:
+                    resolve_status(await poll_status())
+                except Exception as error:
+                    logger.warning(
+                        "SIP answer status poll failed: {}",
+                        redact_sensitive(str(error)),
+                    )
+            if answered.done():
+                return
+            await asyncio.sleep(poll_interval_seconds)
+
     room.on("participant_attributes_changed", on_attributes_changed)
     room.on("participant_disconnected", on_disconnected)
+    poll_task = asyncio.create_task(poll_until_answered(), name="sip-answer-poll")
     try:
         # The SIP participant can leave after wait_for_participant resolves but
         # before these listeners attach. Do not wait for an event already missed.
@@ -68,6 +126,11 @@ async def wait_for_sip_answer(room: Any, participant: Any) -> None:
             on_attributes_changed({}, participant)
         await answered
     finally:
+        poll_task.cancel()
+        try:
+            await poll_task
+        except asyncio.CancelledError:
+            pass
         room.off("participant_attributes_changed", on_attributes_changed)
         room.off("participant_disconnected", on_disconnected)
 
